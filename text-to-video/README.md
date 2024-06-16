@@ -1,6 +1,10 @@
 ## Introduction
 Text to video AI models.
 ## Implementation
+Install dependencies: 
+```
+pip install -r requirement.txt
+```
 ### Data preparation
 Download UCF101 - Action Recognition Data Set [here](https://www.crcv.ucf.edu/data/UCF101.php), and put it into raw_data.
 ### Resize videos
