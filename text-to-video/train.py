@@ -261,7 +261,6 @@ def bp_v(inputs, y, retain=False):
 
     labelv = Variable(label)
     outputs, _ = dis_v(inputs)
-    print("outputs", outputs)
    
     err = criterion(outputs, labelv)
     err.backward(retain_graph=retain)
