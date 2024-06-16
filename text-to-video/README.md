@@ -1,6 +1,11 @@
 ## Introduction
 Text to video AI models.
 ## Implementation
+Install ffmpeg: 
+```
+sudo apt update
+sudo apt-get install ffmpeg
+```
 Install dependencies: 
 ```
 pip install -r requirement.txt
