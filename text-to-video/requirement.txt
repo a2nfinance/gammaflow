@@ -1,0 +1,7 @@
+imageio
+imageio[ffmpeg]
+sk-video
+torch 
+torchvision
+matplotlib
+    
