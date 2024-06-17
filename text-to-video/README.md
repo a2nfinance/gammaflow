@@ -17,7 +17,8 @@ Download UCF101 - Action Recognition Data Set [here](https://www.crcv.ucf.edu/da
 ```
 python resize.py
 ```
-### Trai models
+### Train models
+If using GPUs then don't need to set --cuda, --niter = number of epoches:
 ```
 python train.py --cuda -1 --ngpu 1 --niter 1 --pre-train -1 
 ```
