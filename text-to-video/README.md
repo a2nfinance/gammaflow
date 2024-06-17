@@ -6,6 +6,11 @@ Install ffmpeg:
 sudo apt update
 sudo apt-get install ffmpeg
 ```
+Replace np.float and np.int by float and int in ffmpeg.py:
+```
+vim ~/.local/lib/python3.8/site-packages/skvideo/io/ffmpeg.py
+```
+
 Install dependencies: 
 ```
 pip install -r requirement.txt
