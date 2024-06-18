@@ -204,10 +204,7 @@ optim_GRU = optim.Adam(gru.parameters(),   lr=lr, betas=betas)
 
 
 ''' use pre-trained models '''
-if torch.cuda.is_available():
-            model.load_state_dict(torch.load(path + f'/{modelName}{addString}.model'), strict=False)
-        else:
-            model.load_state_dict(torch.load(path + f'/{modelName}{addString}.model', map_location=torch.device('cpu')), strict=False)
+
 if pre_train == True:
     if torch.cuda.is_available():
         dis_i.load_state_dict(torch.load(trained_path + '/pre_trained_models/Discriminator_I.model'), strict=False)
