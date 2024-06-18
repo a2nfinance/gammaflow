@@ -47,35 +47,14 @@ class LSTM(nn.Module):
         # Process through RNN
         x,_ = self.rnn(x)
         # Get final state
-        # - x is (batch, time, features)
-        # - we want, for all batches, the features at the last time step
-        # - x[:,-1,:] -> (batch, features)
         x = x[:,-1,:]
         # Classify
         x = self.output(x)
         return x
 
-    
-    def loadState(self, epoch):
-        state_dict = torch.load(self.checkpoint[:-4] +  f'-{epoch}.pth')
-        self.load_state_dict(state_dict)
-
-    '''
-    def loadState(self, epoch):
-        check_point = torch.load(self.checkpoint[:-4] +  f'-{epoch}.pth')
-        model_dict = self.state_dict()
-
-        # Filter out unnecessary keys and resize mismatched layers
-        pretrained_dict = {k: v for k, v in check_point.items() if k in model_dict}
-        for k, v in check_point.items():
-            if k in model_dict and model_dict[k].shape != v.shape:
-                if 'embedding.weight' in k:
-                    pretrained_dict[k] = v[:model_dict[k].size(0)]
-        
-        model_dict.update(pretrained_dict)
-        self.load_state_dict(model_dict)
-    '''
-    
+    def loadState(self, epoch, path):
+        state_dict = torch.load(path + self.checkpoint[:-4] +  f'-{epoch}.pth')
+        self.load_state_dict(state_dict)    
 
     def saveState(self, epoch):
         state_dict = self.state_dict()

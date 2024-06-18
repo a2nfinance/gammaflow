@@ -1,17 +1,11 @@
 # coding: utf-8
 
-## Additions for integration with UCF-101
 import os
 import math
 import imageio
-import skvideo.io
 import numpy as np
 from glob import glob
 from torch.utils.data import Dataset
-from skvideo.io import FFmpegReader
-#### End of additions.
-
-
 import torch
 import torch.nn as nn
 from torch.autograd import Variable
@@ -122,47 +116,6 @@ class Discriminator_V(nn.Module):
         return result, labels
 
 
-class VideoDiscriminator(nn.Module):
-    def __init__(self, n_channels, n_categories, n_output_neurons=1, use_noise=False, noise_sigma=None, ndf=64, cuda = False):
-        super(VideoDiscriminator, self).__init__()
-
-        self.n_channels = n_channels
-        self.n_output_neurons = n_output_neurons + n_categories
-        self.use_noise = use_noise
-        self.n_categories = n_categories
-
-        self.main = nn.Sequential(
-            #Noise(use_noise, sigma=noise_sigma, use_gpu= cuda),
-            nn.Conv3d(n_channels, ndf, 4, stride=(1, 2, 2), padding=(0, 1, 1), bias=False),
-            nn.LeakyReLU(0.2, inplace=True),
-
-            #Noise(use_noise, sigma=noise_sigma, use_gpu= cuda),
-            nn.Conv3d(ndf, ndf * 2, 4, stride=(1, 2, 2), padding=(0, 1, 1), bias=False),
-            nn.BatchNorm3d(ndf * 2),
-            nn.LeakyReLU(0.2, inplace=True),
-
-            #Noise(use_noise, sigma=noise_sigma, use_gpu= cuda),
-            nn.Conv3d(ndf * 2, ndf * 4, 4, stride=(1, 2, 2), padding=(0, 1, 1), bias=False),
-            nn.BatchNorm3d(ndf * 4),
-            nn.LeakyReLU(0.2, inplace=True),
-
-            #Noise(use_noise, sigma=noise_sigma, use_gpu= cuda),
-            nn.Conv3d(ndf * 4, ndf * 8, 4, stride=(1, 2, 2), padding=(0, 1, 1), bias=False),
-            nn.BatchNorm3d(ndf * 8),
-            nn.LeakyReLU(0.2, inplace=True),
-            
-            nn.Conv3d(ndf * 8, self.n_output_neurons, 4, 3, 0, bias=False)
-        )
-    
-    def split(self, input):
-        return input[:, :input.size(1) - self.n_categories], input[:, input.size(1) - self.n_categories:]
-
-    def forward(self, input):
-        h = self.main(input).squeeze()
-        labels, categ = self.split(h)
-        return labels, categ
-        
-
 # see: _netG in https://github.com/pytorch/examples/blob/master/dcgan/main.py
 class Generator_I(nn.Module):
     '''
@@ -255,8 +208,44 @@ class Generator_I(nn.Module):
             output = self.main(input)
             
         return output
+    
+    def sample_z_categ(self, num_samples, video_len, category = None):
+        video_len = video_len if video_len is not None else 16
+        dim_z_category = 60
 
+        if category:
+            classes_to_generate = np.array(category)
 
+        else:
+            classes_to_generate = np.random.randint(dim_z_category, size=num_samples)
+
+        one_hot = np.zeros((num_samples, dim_z_category), dtype=np.float32)
+        one_hot[np.arange(num_samples), classes_to_generate] = 1
+        one_hot_video = np.repeat(one_hot, video_len, axis=0)
+
+        one_hot_video = torch.from_numpy(one_hot_video)
+
+        if torch.cuda.is_available():
+            one_hot_video = one_hot_video.cuda()
+
+        return Variable(one_hot_video), classes_to_generate
+
+    def sample_videos(self, num_samples, video_len=None, category = None):
+        n_channels = 3
+        video_len = video_len if video_len is not None else 16
+        z, z_category_labels = self.sample_z_categ(num_samples, video_len, category)
+
+        h = self.main(z.view(z.size(0), z.size(1), 1, 1))
+        h = h.view( int( h.size(0) / video_len), video_len, n_channels, h.size(3), h.size(3))
+
+        z_category_labels = torch.from_numpy(z_category_labels)
+
+        if torch.cuda.is_available():
+            z_category_labels = z_category_labels.cuda()
+
+        h = h.permute(0, 2, 1, 3, 4)
+        return h, z_category_labels
+    
 class GRU(nn.Module):
     def __init__(self, input_size = 10, hidden_size = 10, gpu=True):
         super(GRU, self).__init__()
@@ -311,160 +300,6 @@ class GRU(nn.Module):
 class Flatten(nn.Module):
     def forward(self, input):
         return input.view(input.size(0), -1)
-
-class VideoGenerator(nn.Module):
-    def __init__(self, n_channels, dim_z_content, dim_z_category, dim_z_motion,
-                 video_length, cuda = False, ngf=64, class_to_idx = None):
-        super(VideoGenerator, self).__init__()
-
-        self.n_channels = n_channels
-        self.dim_z_content = dim_z_content
-        self.dim_z_category = dim_z_category
-        self.dim_z_motion = dim_z_motion
-        self.video_length = video_length
-        self.gpu = cuda
-
-        self.class_to_idx = class_to_idx
-
-        dim_z = dim_z_motion + dim_z_category + dim_z_content
-
-        self.recurrent = nn.GRUCell(dim_z_motion, dim_z_motion)
-
-        self.main = nn.Sequential(
-            nn.ConvTranspose2d(dim_z, ngf * 8, 6, 1, 0, bias=False),
-            nn.BatchNorm2d(ngf * 8),
-            nn.ReLU(True),
-            nn.ConvTranspose2d(ngf * 8, ngf * 4, 4, 2, 1, bias=False),
-            nn.BatchNorm2d(ngf * 4),
-            nn.ReLU(True),
-            nn.ConvTranspose2d(ngf * 4, ngf * 2, 4, 2, 1, bias=False),
-            nn.BatchNorm2d(ngf * 2),
-            nn.ReLU(True),
-            nn.ConvTranspose2d(ngf * 2, ngf, 4, 2, 1, bias=False),
-            nn.BatchNorm2d(ngf),
-            nn.ReLU(True),
-            nn.ConvTranspose2d(ngf, self.n_channels, 4, 2, 1, bias=False),
-            nn.Tanh()
-        )
-
-    def init_weigths(self, init_forget_bias=1):
-        for name, params in self.recurrent.named_parameters():
-            if 'weight' in name:
-                init.xavier_uniform_(params)
-
-            # initialize forget gate bias
-            elif 'gru.bias_ih_l' in name:
-                b_ir, b_iz, b_in = params.chunk(3, 0)
-                init.constant_(b_iz, init_forget_bias)
-            elif 'gru.bias_hh_l' in name:
-                b_hr, b_hz, b_hn = params.chunk(3, 0)
-                init.constant_(b_hz, init_forget_bias)
-            else:
-                init.constant_(params, 0)
-
-
-    def sample_z_m(self, num_samples, video_len=None):
-        video_len = video_len if video_len is not None else self.video_length
-
-        h_t = [self.get_gru_initial_state(num_samples)]
-
-        for frame_num in range(video_len):
-            e_t = self.get_iteration_noise(num_samples)
-            h_t.append(self.recurrent(e_t, h_t[-1]))
-
-        z_m_t = [h_k.view(-1, 1, self.dim_z_motion) for h_k in h_t]
-        z_m = torch.cat(z_m_t[1:], dim=1).view(-1, self.dim_z_motion)
-
-        return z_m
-
-    def sample_z_categ(self, num_samples, video_len, category = None):
-        video_len = video_len if video_len is not None else self.video_length
-
-        if self.dim_z_category <= 0:
-            return None, np.zeros(num_samples)
-
-        if category:
-            classes_to_generate = np.array(category)
-
-        else:
-            classes_to_generate = np.random.randint(self.dim_z_category, size=num_samples)
-
-        one_hot = np.zeros((num_samples, self.dim_z_category), dtype=np.float32)
-        one_hot[np.arange(num_samples), classes_to_generate] = 1
-        one_hot_video = np.repeat(one_hot, video_len, axis=0)
-
-        one_hot_video = torch.from_numpy(one_hot_video)
-
-        if self.gpu:
-            one_hot_video = one_hot_video.cuda()
-
-        return Variable(one_hot_video), classes_to_generate
-
-    def sample_z_content(self, num_samples, video_len=None):
-        video_len = video_len if video_len is not None else self.video_length
-
-        content = np.random.normal(0, 1, (num_samples, self.dim_z_content)).astype(np.float32)
-        content = np.repeat(content, video_len, axis=0)
-        content = torch.from_numpy(content)
-
-        if self.gpu:
-            content = content.cuda()
-
-        return Variable(content)
-
-    def sample_z_video(self, num_samples, video_len=None, category = None):
-        z_content = self.sample_z_content(num_samples, video_len)
-        z_category, z_category_labels = self.sample_z_categ(num_samples, video_len, category)
-        z_motion = self.sample_z_m(num_samples, video_len)
-
-        if z_category is not None:
-            z = torch.cat([z_content, z_category, z_motion], dim=1)
-        else:
-            z = torch.cat([z_content, z_motion], dim=1)
-
-        return z, z_category_labels
-
-    def sample_videos(self, num_samples, video_len=None, category = None):
-        video_len = video_len if video_len is not None else self.video_length
-
-        z, z_category_labels = self.sample_z_video(num_samples, video_len, category)
-
-        h = self.main(z.view(z.size(0), z.size(1), 1, 1))
-        h = h.view( int( h.size(0) / video_len), video_len, self.n_channels, h.size(3), h.size(3))
-
-        z_category_labels = torch.from_numpy(z_category_labels)
-
-        if self.gpu:
-            z_category_labels = z_category_labels.cuda()
-
-        h = h.permute(0, 2, 1, 3, 4)
-        return h, z_category_labels
-
-    def sample_images(self, num_samples):
-        z, z_category_labels = self.sample_z_video(num_samples * self.video_length * 2)
-
-        j = np.sort(np.random.choice(z.size(0), num_samples, replace=False)).astype(np.int64)
-        z = z[j, ::]
-        z = z.view(z.size(0), z.size(1), 1, 1)
-        h = self.main(z)
-        return h, None
-
-    def get_gru_initial_state(self, num_samples):
-        return Variable(torch.cuda.FloatTensor(num_samples, self.dim_z_motion).normal_()) if self.gpu else Variable(torch.FloatTensor(num_samples, self.dim_z_motion).normal_())
-
-    def get_iteration_noise(self, num_samples):
-        return Variable(torch.cuda.FloatTensor(num_samples, self.dim_z_motion).normal_()) if self.gpu else Variable(torch.FloatTensor(num_samples, self.dim_z_motion).normal_())
-
-
-    def getCorrectClassName(self, classIdx):
-        if self.class_to_idx:
-            for action, index in self.class_to_idx.items():
-                if index == classIdx:
-                    return action
-        else:
-            raise ValueError(f'No dictionary found on this instance of {self.__class__.__name__}')
-
-## Addition for loading target & videoPath from UCF-101 class.
    
 
 def getNumFrames(reader):

@@ -72,7 +72,7 @@ class Trainer(nn.Module):
             index += 1
         
         self.loadState(self.start_epoch)
-        # Improved Techniques for Training GANs ## Link: https://arxiv.org/pdf/1606.03498.pdf
+        
         self.trueLabel  = 1 if not self.soft_labels else 0.9
         self.trueLabel  = self.trueLabel + 0.05 if self.random_labels and self.soft_labels else self.trueLabel
         self.falseLabel = 0
@@ -332,11 +332,16 @@ def loadState(epoch, model, optimizer = None, path = ''):
         loadEpoch = epoch
         addString = f"_epoch-{loadEpoch}" if loadEpoch is not None else ""
         modelName = f"{model.__class__.__name__}"
-        
-        model.load_state_dict(torch.load(path + f'/{modelName}{addString}.model'))
+        if torch.cuda.is_available():
+            model.load_state_dict(torch.load(path + f'/{modelName}{addString}.model'), strict=False)
+        else:
+            model.load_state_dict(torch.load(path + f'/{modelName}{addString}.model', map_location=torch.device('cpu')), strict=False)
 
         if optimizer:
-            optimizer.load_state_dict(torch.load(path + f'/{modelName}{addString}.state'))
+            if torch.cuda.is_available():
+                optimizer.load_state_dict(torch.load(path + f'/{modelName}{addString}.state'), strict=False)
+            else:
+                optimizer.load_state_dict(torch.load(path + f'/{modelName}{addString}.state', map_location=torch.device('cpu')), strict=False)
 
 
 def save_video(fake_video, category, epoch, stdDev = 0, mean = 0, path = None):

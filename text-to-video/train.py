@@ -131,16 +131,6 @@ def trim_noise(noise):
     #print("-----END OF TRIMMING NOISE-----")
     return noise[:, start:end, :, :, :]
 
-def random_choice():
-    X = []
-    for _ in range(batch_size):
-        video = videos[np.random.randint(0, n_videos-1)]
-        video = torch.Tensor(trim(video))
-        X.append(video)
-    X = torch.stack(X)
-    return X
-
-
 
 # video length distribution
 #video_lengths = [video.shape[1] for video in videos]
