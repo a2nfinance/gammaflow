@@ -27,3 +27,7 @@ If using GPUs then don't need to set --cuda, --niter = number of epoches:
 ```
 python train.py --cuda -1 --ngpu 1 --niter 1 --pre-train -1 
 ```
+## Text to video
+```
+python main.py
+```
