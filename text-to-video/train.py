@@ -204,16 +204,29 @@ optim_GRU = optim.Adam(gru.parameters(),   lr=lr, betas=betas)
 
 
 ''' use pre-trained models '''
-
+if torch.cuda.is_available():
+            model.load_state_dict(torch.load(path + f'/{modelName}{addString}.model'), strict=False)
+        else:
+            model.load_state_dict(torch.load(path + f'/{modelName}{addString}.model', map_location=torch.device('cpu')), strict=False)
 if pre_train == True:
-    dis_i.load_state_dict(torch.load(trained_path + '/Discriminator_I.model'))
-    dis_v.load_state_dict(torch.load(trained_path + '/Discriminator_V.model'))
-    gen_i.load_state_dict(torch.load(trained_path + '/Generator_I.model'))
-    gru.load_state_dict(torch.load(trained_path + '/GRU.model'))
-    optim_Di.load_state_dict(torch.load(trained_path + '/Discriminator_I.state'))
-    optim_Dv.load_state_dict(torch.load(trained_path + '/Discriminator_V.state'))
-    optim_Gi.load_state_dict(torch.load(trained_path + '/Generator_I.state'))
-    optim_GRU.load_state_dict(torch.load(trained_path + '/GRU.state'))
+    if torch.cuda.is_available():
+        dis_i.load_state_dict(torch.load(trained_path + '/pre_trained_models/Discriminator_I.model'), strict=False)
+        dis_v.load_state_dict(torch.load(trained_path + '/pre_trained_models/Discriminator_V.model'), strict=False)
+        gen_i.load_state_dict(torch.load(trained_path + '/pre_trained_models/Generator_I.model'), strict=False)
+        gru.load_state_dict(torch.load(trained_path + '/pre_trained_models/GRU.model'), strict=False)
+        optim_Di.load_state_dict(torch.load(trained_path + '/pre_trained_models/Discriminator_I.state'), strict=False)
+        optim_Dv.load_state_dict(torch.load(trained_path + '/pre_trained_models/Discriminator_V.state'), strict=False)
+        optim_Gi.load_state_dict(torch.load(trained_path + '/pre_trained_models/Generator_I.state'), strict=False)
+        optim_GRU.load_state_dict(torch.load(trained_path + '/pre_trained_models/GRU.state'), strict=False)
+    else:
+        dis_i.load_state_dict(torch.load(trained_path + '/pre_trained_models/Discriminator_I.model', map_location=torch.device('cpu')), strict=False)
+        dis_v.load_state_dict(torch.load(trained_path + '/pre_trained_models/Discriminator_V.model', map_location=torch.device('cpu')), strict=False)
+        gen_i.load_state_dict(torch.load(trained_path + '/pre_trained_models/Generator_I.model', map_location=torch.device('cpu')), strict=False)
+        gru.load_state_dict(torch.load(trained_path + '/pre_trained_models/GRU.model', map_location=torch.device('cpu')), strict=False)
+        optim_Di.load_state_dict(torch.load(trained_path + '/pre_trained_models/Discriminator_I.state', map_location=torch.device('cpu')), strict=False)
+        optim_Dv.load_state_dict(torch.load(trained_path + '/pre_trained_models/Discriminator_V.state', map_location=torch.device('cpu')), strict=False)
+        optim_Gi.load_state_dict(torch.load(trained_path + '/pre_trained_models/Generator_I.state', map_location=torch.device('cpu')), strict=False)
+        optim_GRU.load_state_dict(torch.load(trained_path + '/pre_trained_models/GRU.state', map_location=torch.device('cpu')), strict=False)
 
 
 ''' calc grad of models '''
