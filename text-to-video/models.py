@@ -232,10 +232,31 @@ class Generator_I(nn.Module):
 
     def sample_videos(self, num_samples, video_len=None, category = None):
         n_channels = 3
+        dim_z = 60
         video_len = video_len if video_len is not None else 16
-        z, z_category_labels = self.sample_z_categ(num_samples, video_len, category)
+        # Sample initial and final latent vectors for each video
+        start_z = torch.randn(num_samples, dim_z)
+        end_z = torch.randn(num_samples, dim_z)
+
+        if torch.cuda.is_available():
+            start_z = start_z.cuda()
+            end_z = end_z.cuda()
+
+        # Interpolate between start_z and end_z to create a smooth transition
+        z = []
+        for i in range(num_samples):
+            interpolated_z = self.interpolate_z(start_z[i], end_z[i], video_len)
+            z.append(interpolated_z)
+        # Convert list to tensor
+        z = torch.stack([torch.stack(z_i) for z_i in z]).view(-1, dim_z)
+
+        _, z_category_labels = self.sample_z_categ(num_samples, video_len, category)
+
+        # Create temporal variations in z
+        #z = torch.randn(num_samples * video_len, dim_z).to(z.device)
 
         h = self.main(z.view(z.size(0), z.size(1), 1, 1))
+
         h = h.view( int( h.size(0) / video_len), video_len, n_channels, h.size(3), h.size(3))
 
         z_category_labels = torch.from_numpy(z_category_labels)
@@ -246,6 +267,9 @@ class Generator_I(nn.Module):
         h = h.permute(0, 2, 1, 3, 4)
         return h, z_category_labels
     
+    def interpolate_z(self, start_z, end_z, num_steps):
+        # Interpolates between start_z and end_z over num_steps steps
+        return [start_z + (end_z - start_z) * i / (num_steps - 1) for i in range(num_steps)]
 class GRU(nn.Module):
     def __init__(self, input_size = 10, hidden_size = 10, gpu=True):
         super(GRU, self).__init__()
@@ -391,126 +415,3 @@ def make_dataset(dir, class_to_idx, extensions=None, classes = []):
                 videos.append(item)
                     
     return videos
-
-
-## Addition for loading videos avoiding to get Out Of Memory
-
-class UCF_101(Dataset):
-    """
-        Summary
-        ----------
-            A class that extends the abstract Dataset class to load lazily videos from disk.
-
-        Parameters
-        ----------
-
-        rootDir: string
-            Absolute path to the directory in which the subfolders of UCF-101 (named with "Action") are found.
-
-        videoHandler: module
-            Hook to add new module to handles video loading.
-            
-        supportedExtensions: List of Strings
-            A list of extensions to load. E.g. ["mp4", "avi"]
-            
-        transform: torchvision.transforms.Compose
-            Sequence of transformation to apply to the dataset while loading.
-            
-        Constructor:
-        ----------
-            It requires that the in the previous directory with respect to @Param rootDir it can find the directory ucfTrainTestList
-            where it can read the file named classInd.txt where the mapping "Target" "Index" can be loaded.
-            
-        Attributes:
-        ----------
-            videoLengths: 
-                A dictionary that contains as key the filepath and as value the nframes of the video.
-                This is populated in a lazy way, every time that a video is loaded for the first time into memory.
-        
-    """    
-    
-    def __init__(self, rootDir, dictClassDir = '', videoHandler = readVideoImageio, supportedExtensions= [], transform= None, classes = []):
-        
-        ucfDictFilename = "classInd.txt"                    #Used to load the file classes.
-        ucfTrainTestDirname = "ucfTrainTestlist"            #Used to find the class file.
-        
-        if dictClassDir == '':
-            previousDir = [*(os.path.split(rootDir)[:-1])][0]
-            self.dictPath = os.path.join(previousDir, ucfTrainTestDirname, ucfDictFilename)
-        
-        else:
-            self.dictPath = dictClassDir
-            
-        self.currentDir     = os.path.dirname(__file__)
-        self.rootDir        = os.path.join(self.currentDir, rootDir)
-        self.videoHandler   = videoHandler
-        self.transform      = transform
-        self.videoLengths   = {}
-        self.classes        = classes
-        
-        self.class_to_idx   = self.loadDict(self.dictPath)
-        
-        self.samples        = make_dataset(self.rootDir, self.class_to_idx, supportedExtensions, classes = classes)
-        
-
-    def __len__(self):
-        return len(self.samples)
-
-
-    def __getitem__(self, index):
-        
-        path, target = self.samples[index]
-        
-        #readVideo = self.videoHandler(path, verbosity= 1)
-        #readVideo = self.videoHandler(path, verbosity= 1)
-        
-        
-        #inputdict = {"-threads": "4", "-s": "96x96", "-pix_fmt" : "yuv420p"}
-        
-        #with open(path, "r") as _:
-            #with FFmpegReader(path, inputdict= inputdict, verbosity= 0) as reader:
-                
-                #T, M, N, C = reader.getShape()
-
-                #readVideo = np.empty((T, M, N, C), dtype=reader.dtype)
-                #for idx, frame in enumerate(reader.nextFrame()):
-                    #readVideo[idx, :, :, :] = frame
-        
-        
-        readVideo = self.videoHandler(path)
-        
-        
-        self.videoLengths[path] = readVideo.shape[0] #getNumFrames(path)
-        
-        if self.transform:
-            readVideo = self.transform(readVideo)
-        
-        return readVideo, target
-
-
-    def loadDict(self, filepath):
-
-        dictClassesIdx = {}
-
-        try:
-            assert self.classes[0]
-            dictClassesIdx = {self.classes[idx] : idx + 1 for idx in range(len(self.classes))}
-
-        except:
-
-            try:
-                with open(filepath) as file:
-                    for line in file:
-                        dictClassesIdx[ line.split() [1]] = int( line.split() [0] )
-                    
-            except IsADirectoryError as _:
-                classes = glob(os.path.join(filepath, '*'))
-                assert classes[0]
-                classes = [os.path.split(action)[1] for action in classes]
-                dictClassesIdx = {classes[idx] : idx + 1 for idx in range(len(classes))}
-
-            except FileNotFoundError as error:
-                print(error)
-
-        return dictClassesIdx
-#### End of Addition.

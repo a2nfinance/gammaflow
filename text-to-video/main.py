@@ -14,10 +14,10 @@ gen = Generator_I(nc=3, ngf=64, nz=60, ngpu=1, nClasses= 102, batch_size= 16)
 
 # Definde a state path
 current_path = os.getcwd()
-trained_path = os.path.join(current_path, 'trained_models')
+trained_path = os.path.join(current_path, 'trained_models', 'pre_trained_models')
 
 # Load pre_trained states
-loadState(9, gen, path = trained_path)
+loadState(120000, gen, path = trained_path)
 
 # Load LSTM model to get the category predicted from natural language
 rnnType     = nn.LSTM
@@ -59,18 +59,20 @@ except KeyError as err:
 
 mean   = (100.99800554447337/255, 96.7195209000943/255, 89.63882431650443/255)
 std    = (72.07041943699456/255, 70.41506399740703/255, 71.55581999303428/255)
+
+
+
 if torch.cuda.is_available():
     gen      = gen.cuda()
 
-n_videos = 1
-n_frames = 25 * 3 # 3s
+n_videos = 24
+n_frames = 25 * 7 # 3s
 
-
+'''
 n_channels      = 3
-dim_z_category  = 60
-dim_z_motion    = 10
 video_length    = 16
-
+'''
+dim_z_category  = 60
 
 save_path =  current_path
 actionIDx       = torch.tensor(dim_z_category - 2) if actionIDx.item() >= dim_z_category else actionIDx
