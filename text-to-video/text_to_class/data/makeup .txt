@@ -1,0 +1,80 @@
+ApplyEyeMakeup, carefully applying eyeliner along the lash line.
+ApplyEyeMakeup, blending eyeshadow with a brush.
+ApplyEyeMakeup, curling eyelashes with a curler.
+ApplyEyeMakeup, applying mascara to lashes.
+ApplyEyeMakeup, using a primer on eyelids.
+ApplyEyeMakeup, highlighting the brow bone.
+ApplyEyeMakeup, defining eyebrows with a pencil.
+ApplyEyeMakeup, applying false eyelashes.
+ApplyEyeMakeup, using an eyeshadow palette.
+ApplyEyeMakeup, applying eyeshadow base.
+ApplyEyeMakeup, using a blending brush for a smoky eye.
+ApplyEyeMakeup, applying glitter to eyelids.
+ApplyEyeMakeup, creating a winged eyeliner look.
+ApplyEyeMakeup, using a pencil liner for the waterline.
+ApplyEyeMakeup, applying concealer around the eyes.
+ApplyEyeMakeup, adding inner corner highlight.
+ApplyEyeMakeup, using a liquid liner for precision.
+ApplyEyeMakeup, defining the crease with darker shadow.
+ApplyEyeMakeup, using a fluffy brush for blending.
+ApplyEyeMakeup, setting eye makeup with powder.
+ApplyEyeMakeup, using a makeup sponge for blending.
+ApplyEyeMakeup, applying eyeshadow primer.
+ApplyEyeMakeup, creating a cut crease look.
+ApplyEyeMakeup, adding a pop of color to the lower lash line.
+ApplyEyeMakeup, using a brow gel to set eyebrows.
+ApplyEyeMakeup, applying multiple layers of mascara.
+ApplyEyeMakeup, using a highlighter under the brow.
+ApplyEyeMakeup, applying eyeshadow with a flat brush.
+ApplyEyeMakeup, using an angled brush for eyeliner.
+ApplyEyeMakeup, blending different eyeshadow colors.
+ApplyEyeMakeup, using a magnifying mirror for detail work.
+ApplyEyeMakeup, cleaning up fallout with makeup wipes.
+ApplyEyeMakeup, using a cream shadow for a base.
+ApplyEyeMakeup, lining the eyes with a gel liner.
+ApplyEyeMakeup, filling in sparse eyebrows.
+ApplyEyeMakeup, applying eyeshadow with fingers.
+ApplyEyeMakeup, using a pencil sharpener for eyeliner.
+ApplyEyeMakeup, setting eyeshadow with a setting spray.
+ApplyEyeMakeup, using a small brush for detailed work.
+ApplyEyeMakeup, creating a gradient eyeshadow look.
+ApplyLipstick, applying a base coat of lip balm.
+ApplyLipstick, outlining lips with a lip liner.
+ApplyLipstick, filling in lips with lipstick.
+ApplyLipstick, blotting lips with tissue.
+ApplyLipstick, applying a second coat of lipstick.
+ApplyLipstick, using a lip brush for precision.
+ApplyLipstick, applying lip gloss over lipstick.
+ApplyLipstick, using a lip scrub before application.
+ApplyLipstick, selecting a shade to match the outfit.
+ApplyLipstick, cleaning up edges with concealer.
+ApplyLipstick, using a matte lipstick for a long-lasting finish.
+ApplyLipstick, applying lip primer before lipstick.
+ApplyLipstick, using a lip stain for a natural look.
+ApplyLipstick, creating an ombre lip effect.
+ApplyLipstick, applying a bright red lipstick.
+ApplyLipstick, using a liquid lipstick for bold color.
+ApplyLipstick, setting lipstick with translucent powder.
+ApplyLipstick, exfoliating lips with a toothbrush.
+ApplyLipstick, using a nude lipstick for a natural look.
+ApplyLipstick, applying a moisturizing lipstick.
+ApplyLipstick, using a bold lipstick for a dramatic look.
+ApplyLipstick, applying a lip plumper before lipstick.
+ApplyLipstick, using a lip liner to correct lip shape.
+ApplyLipstick, applying lipstick with a doe-foot applicator.
+ApplyLipstick, using a lip gloss for a shiny finish.
+ApplyLipstick, layering lipstick for a deeper color.
+ApplyLipstick, applying a lip tint for a subtle look.
+ApplyLipstick, using a lip balm with SPF.
+ApplyLipstick, applying a lip pencil for a defined look.
+ApplyLipstick, using a lip crayon for easy application.
+ApplyLipstick, applying a lip primer for smooth application.
+ApplyLipstick, using a bold color for an evening look.
+ApplyLipstick, applying a light color for a day look.
+ApplyLipstick, using a long-lasting lipstick for all-day wear.
+ApplyLipstick, applying lipstick with a finger for a softer look.
+ApplyLipstick, using a satin finish lipstick for a smooth look.
+ApplyLipstick, applying a lip conditioner before lipstick.
+ApplyLipstick, using a shimmer lipstick for a festive look.
+ApplyLipstick, applying a lip gloss with glitter.
+ApplyLipstick, using a retractable lip liner for easy use.

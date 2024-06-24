@@ -1,4 +1,4 @@
-from models import Generator_I
+from models import VideoGenerator
 import os
 from trainer import loadState, save_video
 import torch.nn as nn
@@ -9,8 +9,20 @@ from text_to_class.dataloading import TextLoader
 import torch
 import torch
 
+'''
+n_channels      = 3
+dim_z_content   = 39
+dim_z_category  = 11 #101
+dim_z_motion    = 10
+video_length    = 16
+cuda            = True
 
-gen = Generator_I(nc=3, ngf=64, nz=60, ngpu=1, nClasses= 102, batch_size= 16)
+trained_classes = {"Surfing" : 1, "PlayingPiano": 2}
+
+gen = VideoGenerator(n_channels, dim_z_content, dim_z_category, dim_z_motion, video_length, cuda, class_to_idx = trained_classes)
+'''
+
+gen = VideoGenerator(nc=3, ngf=64, nz=60, ngpu=1, nClasses= 11, batch_size= 16)
 
 # Definde a state path
 current_path = os.getcwd()
@@ -60,23 +72,18 @@ except KeyError as err:
 mean   = (100.99800554447337/255, 96.7195209000943/255, 89.63882431650443/255)
 std    = (72.07041943699456/255, 70.41506399740703/255, 71.55581999303428/255)
 
-
-
 if torch.cuda.is_available():
     gen      = gen.cuda()
 
-n_videos = 24
-n_frames = 25 * 7 # 3s
 
-'''
-n_channels      = 3
-video_length    = 16
-'''
+num_samples = 1
+video_len = 16
 dim_z_category  = 60
 
 save_path =  current_path
 actionIDx       = torch.tensor(dim_z_category - 2) if actionIDx.item() >= dim_z_category else actionIDx
-
-fakeVideo, _ = gen.sample_videos(n_videos, n_frames, [actionIDx.item()])
+# actionIDx.item()
+fakeVideo, _ = gen.sample_videos(num_samples, video_len, [4])
 fakeVideo    = fakeVideo[0].detach().cpu().numpy().transpose(1, 2, 3, 0)
 save_video(fakeVideo, actionClassName, 0, std, mean, save_path)
+

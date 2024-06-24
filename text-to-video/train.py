@@ -15,20 +15,22 @@ from torch.utils.data import DataLoader
 from torchvision.datasets import DatasetFolder
 from torchvision.transforms import Lambda, Compose
 
-from models import Discriminator_I, Discriminator_V, Generator_I, GRU
+from models import VideoDiscriminator, VideoGenerator, GRU
 
 
 parser = argparse.ArgumentParser(description='Start trainning GammaFlow.....')
-parser.add_argument('--cuda', type=int, default=1,
-                     help='set -1 when you use cpu')
+parser.add_argument('--cuda', type=bool, default=False,
+                     help='set True when you use gpu')
 parser.add_argument('--ngpu', type=int, default=1,
                      help='set the number of gpu you use')
-parser.add_argument('--batch-size', type=int, default=16,
+parser.add_argument('--batch_size', type=int, default=16,
                      help='set batch_size, default: 16')
-parser.add_argument('--niter', type=int, default=120000,
+parser.add_argument('--n_epochs', type=int, default=120000,
                      help='set num of iterations, default: 120000')
-parser.add_argument('--pre-train', type=int, default=-1,
+parser.add_argument('--pre_train', type=int, default=-1,
                      help='set 1 when you use pre-trained models')
+parser.add_argument('--trim_video', type=int, default=16,
+                     help='set number of frames, default: 16')
 
 ## Additions for training on UCF-101
 EXPLORATORY_DATA_ANALYSIS = False
@@ -45,8 +47,9 @@ args       = parser.parse_args()
 cuda       = args.cuda
 ngpu       = args.ngpu
 batch_size = args.batch_size
-n_iter     = args.niter
+n_epochs     = args.n_epochs
 pre_train  = args.pre_train
+trim_video  = args.trim_video
 
 ## Addition for training on UCF-101
 n_epochs_saveV      = args.i_epochs_saveV
@@ -58,7 +61,7 @@ max_frame           = 25
 seed = 0
 torch.manual_seed(seed)
 np.random.seed(seed)
-if cuda == True:
+if cuda:
     torch.cuda.set_device(0)
 
 
@@ -77,7 +80,7 @@ transformation = Compose([Lambda(lambda video: video.transpose(3, 0, 1, 2)/255.0
 filenameDictClassesIdx = "classInd.txt"
 dictClassesIdx = {}
 
-with open(os.path.join(current_path, "ucfTrainTestlist", filenameDictClassesIdx)) as file:
+with open(os.path.join(current_path, "classes", filenameDictClassesIdx)) as file:
     for line in file:
         dictClassesIdx[ line.split() [1]] = int( line.split() [0] )
 
@@ -106,14 +109,10 @@ if (EXPLORATORY_DATA_ANALYSIS):
 
     print(minimum)
 
-    #    video = video.transpose(3, 0, 1, 2) / 255.0
-
-
-
 ''' prepare video sampling '''
 
 n_videos = len(dataset) #len(videos)
-T = 16
+T = trim_video
 
 # for true video
 def trim(video):
@@ -139,7 +138,7 @@ def trim_noise(noise):
 ''' set models '''
 
 img_size = 96
-nc = 3
+nc = 3 # number of chanel
 ndf = 64 # from dcgan
 ngf = 64
 d_E = 10
@@ -149,12 +148,10 @@ d_M = d_E
 nz  = d_C + d_M
 criterion = nn.BCELoss()
 
-dis_i = Discriminator_I(nc, ndf, ngpu=ngpu)
-dis_v = Discriminator_V(nc, ndf, T=T, ngpu=ngpu)
-gen_i = Generator_I(nc, ngf, nz, ngpu=ngpu)
+dis = VideoDiscriminator(nc, ndf, T=T, ngpu=ngpu)
+gen = VideoGenerator(nc, ngf, nz, ngpu=ngpu)
 gru = GRU(d_E, hidden_size, gpu=cuda)
 gru.initWeight()
-
 
 ''' prepare for train '''
 
@@ -185,66 +182,44 @@ def save_video(fake_video, epoch):
 
 ''' adjust to cuda '''
 
-if cuda == True:
-    dis_i.cuda()
-    dis_v.cuda()
-    gen_i.cuda()
+if cuda:
+    dis.cuda()
+    gen.cuda()
     gru.cuda()
     criterion.cuda()
-    #label = label.cuda()
-
 
 # setup optimizer
 lr = 0.0002
 betas=(0.5, 0.999)
-optim_Di  = optim.Adam(dis_i.parameters(), lr=lr, betas=betas)
-optim_Dv  = optim.Adam(dis_v.parameters(), lr=lr, betas=betas)
-optim_Gi  = optim.Adam(gen_i.parameters(), lr=lr, betas=betas)
+optim_D  = optim.Adam(dis.parameters(), lr=lr, betas=betas)
+optim_G  = optim.Adam(gen.parameters(), lr=lr, betas=betas)
 optim_GRU = optim.Adam(gru.parameters(),   lr=lr, betas=betas)
-
 
 ''' use pre-trained models '''
 
 if pre_train == True:
-    if torch.cuda.is_available():
-        dis_i.load_state_dict(torch.load(trained_path + '/pre_trained_models/Discriminator_I_epoch-120000.model'), strict=False)
-        dis_v.load_state_dict(torch.load(trained_path + '/pre_trained_models/Discriminator_V_epoch-120000.model'), strict=False)
-        gen_i.load_state_dict(torch.load(trained_path + '/pre_trained_models/Generator_I_epoch-120000.model'), strict=False)
+    if cuda:
+        dis.load_state_dict(torch.load(trained_path + '/pre_trained_models/VideoDiscriminator_epoch-120000.model'), strict=False)
+        gen.load_state_dict(torch.load(trained_path + '/pre_trained_models/VideoGenerator_epoch-120000.model'), strict=False)
         gru.load_state_dict(torch.load(trained_path + '/pre_trained_models/GRU_epoch-120000.model'), strict=False)
-        optim_Di.load_state_dict(torch.load(trained_path + '/pre_trained_models/Discriminator_I_epoch-120000.state'), strict=False)
-        optim_Dv.load_state_dict(torch.load(trained_path + '/pre_trained_models/Discriminator_V_epoch-120000.state'), strict=False)
-        optim_Gi.load_state_dict(torch.load(trained_path + '/pre_trained_models/Generator_I_epoch-120000.state'), strict=False)
+        optim_D.load_state_dict(torch.load(trained_path + '/pre_trained_models/VideoDiscriminator_epoch-120000.state'), strict=False)
+        optim_G.load_state_dict(torch.load(trained_path + '/pre_trained_models/VideoGenerator_epoch-120000.state'), strict=False)
         optim_GRU.load_state_dict(torch.load(trained_path + '/pre_trained_models/GRU_epoch-120000.state'), strict=False)
     else:
-        dis_i.load_state_dict(torch.load(trained_path + '/pre_trained_models/Discriminator_I_epoch-120000.model', map_location=torch.device('cpu')), strict=False)
-        dis_v.load_state_dict(torch.load(trained_path + '/pre_trained_models/Discriminator_V_epoch-120000.model', map_location=torch.device('cpu')), strict=False)
-        gen_i.load_state_dict(torch.load(trained_path + '/pre_trained_models/Generator_I_epoch-120000.model', map_location=torch.device('cpu')), strict=False)
+        dis.load_state_dict(torch.load(trained_path + '/pre_trained_models/VideoDiscriminator_epoch-120000.model', map_location=torch.device('cpu')), strict=False)
+        gen.load_state_dict(torch.load(trained_path + '/pre_trained_models/VideoGenerator_epoch-120000.model', map_location=torch.device('cpu')), strict=False)
         gru.load_state_dict(torch.load(trained_path + '/pre_trained_models/GRU_epoch-120000.model', map_location=torch.device('cpu')), strict=False)
-        optim_Di.load_state_dict(torch.load(trained_path + '/pre_trained_models/Discriminator_I_epoch-120000.state', map_location=torch.device('cpu')), strict=False)
-        optim_Dv.load_state_dict(torch.load(trained_path + '/pre_trained_models/Discriminator_V_epoch-120000.state', map_location=torch.device('cpu')), strict=False)
-        optim_Gi.load_state_dict(torch.load(trained_path + '/pre_trained_models/Generator_I_epoch-120000.state', map_location=torch.device('cpu')), strict=False)
+        optim_D.load_state_dict(torch.load(trained_path + '/pre_trained_models/VideoDiscriminator_epoch-120000.state', map_location=torch.device('cpu')), strict=False)
+        optim_G.load_state_dict(torch.load(trained_path + '/pre_trained_models/VideoGenerator_epoch-120000.state', map_location=torch.device('cpu')), strict=False)
         optim_GRU.load_state_dict(torch.load(trained_path + '/pre_trained_models/GRU_epoch-120000.state', map_location=torch.device('cpu')), strict=False)
 
 
 ''' calc grad of models '''
 
-def bp_i(inputs, y, retain=False):
-    if cuda == True:
-        label = (torch.FloatTensor()).cuda()
-    else:
-        label = torch.FloatTensor()
-    label.resize_(inputs.size(0)).fill_(y)
-    labelv = Variable(label)
-    outputs, _ = dis_i(inputs)
-    err = criterion(outputs, labelv)
-    err.backward(retain_graph=retain)
-    toReturnErr = err.data[0] if err.size() == torch.Tensor().size() else err.item()
-    return toReturnErr, outputs.data.mean()
-
-def bp_v(inputs, y, retain=False):
+def bp(inputs, y, retain=False):
     #print("----BackPropagate_V-----")
     #print(inputs.size())
-    if cuda == True:
+    if cuda:
         label = (torch.FloatTensor()).cuda()
     else:
         label = torch.FloatTensor()
@@ -254,13 +229,13 @@ def bp_v(inputs, y, retain=False):
     except RuntimeError as _:
         # Dimension of y does not allow to use fill_
         assert(inputs.size(0) == y.size(0))
-        if cuda == True:
+        if cuda:
             label = (torch.FloatTensor(y)).cuda()
         else:
             label = torch.FloatTensor(y)
 
     labelv = Variable(label)
-    outputs, _ = dis_v(inputs)
+    outputs, _ = dis(inputs)
    
     err = criterion(outputs, labelv)
     err.backward(retain_graph=retain)
@@ -282,7 +257,7 @@ def gen_z(n_frames, batch_size = batch_size):
     #  repeat z_C to (batch_size, n_frames, d_C)
     z_C = z_C.unsqueeze(1).repeat(1, n_frames, 1)
     eps = Variable(torch.randn(batch_size, d_E))
-    if cuda == True:
+    if cuda:
         z_C, eps = z_C.cuda(), eps.cuda()
 
     gru.initHidden(batch_size)
@@ -297,9 +272,9 @@ def gen_z(n_frames, batch_size = batch_size):
 
 start_time = time.time()
 
-print(f"Starting training: CUDA is { 'On' if cuda == True else 'Off'}")
+print(f"Starting training: CUDA is { 'On' if cuda else 'Off'}")
 
-for epoch in range(1, n_iter+1):
+for epoch in range(1, n_epochs+1):
     ''' prepare real images '''
     # real_videos.size() => (batch_size, nc, T, img_size, img_size)
 
@@ -315,25 +290,11 @@ for epoch in range(1, n_iter+1):
         try:
             (real_videos, labels) = next(data_iter) #random_choice()
 
-            ''' Process 1 video for each class while testing. '''
-            #if (labels in processedClass):
-            #    continue
-
-            #else:
-            #    processedClass.append(labels)
-            ''' Process only 1 video class'''
-            #if processedClass is None:
-            #    processedClass = labels.item()
-            #else:
-            #    if processedClass != labels.item():
-            #        continue
-
             for (key, val) in dictClassesIdx.items():
                 if ( val in labels.tolist() ):
                     pass
-                    #print(key)
 
-            if cuda == True:
+            if cuda:
                 real_videos = real_videos.cuda()
 
             real_videos = Variable(real_videos)
@@ -348,16 +309,14 @@ for epoch in range(1, n_iter+1):
             # generate videos
             Z = Z.contiguous().view(batch_size*T, nz, 1, 1)
             
-            fake_videos = gen_i(Z, labels)
+            fake_videos = gen(Z, labels)
             fake_videos = fake_videos.view(batch_size, T, nc, img_size, img_size)
             # transpose => (batch_size, nc, T, img_size, img_size)
             fake_videos = fake_videos.transpose(2, 1)
-            # img sampling
-            fake_img = fake_videos[:, :, np.random.randint(0, T), :, :]
 
             ''' train discriminators '''
             # video
-            dis_v.zero_grad()
+            dis.zero_grad()
             randomStartFrameIdx = np.random.randint(0, real_videos.size()[2] - T - 1)
             #print("-----INFOS-----")
             #print(f"RandomStartFrame:{randomStartFrameIdx}")
@@ -366,26 +325,17 @@ for epoch in range(1, n_iter+1):
             croppedRealVideos = real_videos[:,:,randomStartFrameIdx: randomStartFrameIdx + T, :, :]
             #err_Dv_real, Dv_real_mean = bp_v(croppedRealVideos, 0.9)
 
-            err_Dv_real, Dv_real_mean = bp_v(croppedRealVideos, labels.type(torch.FloatTensor) / len(dictClassesIdx))
-            err_Dv_fake, Dv_fake_mean = bp_v(fake_videos.detach(), 0)
-            err_Dv = err_Dv_real + err_Dv_fake
-            optim_Dv.step()
-            # image
-            dis_i.zero_grad()
-            err_Di_real, Di_real_mean = bp_i(real_img, 0.9)
-            err_Di_fake, Di_fake_mean = bp_i(fake_img.detach(), 0)
-            err_Di = err_Di_real + err_Di_fake
-            optim_Di.step()
-
+            err_D_real, D_real_mean = bp(croppedRealVideos, labels.type(torch.FloatTensor) / len(dictClassesIdx))
+            err_D_fake, D_fake_mean = bp(fake_videos.detach(), 0)
+            err_D = err_D_real + err_D_fake
+            optim_D.step()
 
             ''' train generators '''
-            gen_i.zero_grad()
+            gen.zero_grad()
             gru.zero_grad()
             # video. notice retain=True for back prop twice
-            err_Gv, _ = bp_v(fake_videos, 0.9, retain=True)
-            # images
-            err_Gi, _ = bp_i(fake_img, 0.9)
-            optim_Gi.step()
+            err_G, _ = bp(fake_videos, 0.9, retain=True)
+            optim_G.step()
             optim_GRU.step()
 
             '''Increment index for Batch'''
@@ -395,21 +345,19 @@ for epoch in range(1, n_iter+1):
 
         except KeyboardInterrupt:
             save_video(fake_videos[0].data.cpu().numpy().transpose(1, 2, 3, 0), epoch)
-            checkpoint(dis_i, optim_Di, epoch)
-            checkpoint(dis_v, optim_Dv, epoch)
-            checkpoint(gen_i, optim_Gi, epoch)
+            checkpoint(dis, optim_D, epoch)
+            checkpoint(gen, optim_G, epoch)
             checkpoint(gru,   optim_GRU, epoch)
 
 
     if epoch % n_epochs_display == 0:
-        print('[%d/%d] (%s) Loss_Di: %.4f Loss_Dv: %.4f Loss_Gi: %.4f Loss_Gv: %.4f Di_real_mean %.4f Di_fake_mean %.4f Dv_real_mean %.4f Dv_fake_mean %.4f'
-              % (epoch, n_iter, timeSince(start_time), err_Di, err_Dv, err_Gi, err_Gv, Di_real_mean, Di_fake_mean, Dv_real_mean, Dv_fake_mean))
+        print('[%d/%d] (%s) Loss_D: %.4f Loss_G: %.4f  D_real_mean %.4f D_fake_mean %.4f'
+              % (epoch, n_epochs, timeSince(start_time), err_D, err_G, D_real_mean, D_fake_mean))
 
     if epoch % n_epochs_saveV == 0:
         save_video(fake_videos[0].data.cpu().numpy().transpose(1, 2, 3, 0), epoch)
 
     if epoch % n_epochs_check == 0:
-        checkpoint(dis_i, optim_Di, epoch)
-        checkpoint(dis_v, optim_Dv, epoch)
-        checkpoint(gen_i, optim_Gi, epoch)
-        checkpoint(gru,   optim_GRU, epoch)
+        checkpoint(dis, optim_D, epoch)
+        checkpoint(gen, optim_G, epoch)
+        checkpoint(gru, optim_GRU, epoch)

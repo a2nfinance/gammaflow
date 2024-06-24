@@ -12,7 +12,7 @@ import shutil
 
 current_path = os.path.dirname(__file__)
 resized_path = os.path.join(current_path, 'resized_data')
-dirs = glob.glob(os.path.join(current_path, 'raw_data/UCF-101/*/*'))
+dirs = glob.glob(os.path.join(current_path, 'raw_data/*/*'))
 #files = [ glob.glob(dir + '/*') for dir in dirs ]
 files = [ glob.glob(dir) for dir in dirs ]
 files = sum(files, []) # flatten
@@ -35,7 +35,6 @@ files = sum(files, []) # flatten
 
 ''' script for reducing size '''
 # # resize to 96x96
-
 for file in files:
 
     ## Additions to resize UCF-101 and maintain directory structure
@@ -73,7 +72,4 @@ for file in files:
         except subprocess.CalledProcessError as e:
             print(f"An error occurred while executing the FFmpeg command: {e}")
     
-# files = glob.glob(resized_path+'/*')
-# for i, file in enumerate(files):
-#     os.system("ffmpeg -y -i %s -pix_fmt yuv420p -vf pad=96:96:0:5 %s" %
-#              (file, file))
+

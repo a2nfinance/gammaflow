@@ -37,45 +37,9 @@ class Noise(nn.Module):
             return arg
 
 
-# see: _netD in https://github.com/pytorch/examples/blob/master/dcgan/main.py
-class Discriminator_I(nn.Module):
-    def __init__(self, nc=3, ndf=64, ngpu=1):
-        super(Discriminator_I, self).__init__()
-        self.ngpu = ngpu
-        self.main = nn.Sequential(
-            # input is (nc) x 96 x 96
-            nn.Conv2d(nc, ndf, 4, 2, 1, bias=False),
-            nn.LeakyReLU(0.2, inplace=True),
-            # state size. (ndf) x 48 x 48
-            nn.Conv2d(ndf, ndf * 2, 4, 2, 1, bias=False),
-            nn.BatchNorm2d(ndf * 2),
-            nn.LeakyReLU(0.2, inplace=True),
-            # state size. (ndf*2) x 24 x 24
-            nn.Conv2d(ndf * 2, ndf * 4, 4, 2, 1, bias=False),
-            nn.BatchNorm2d(ndf * 4),
-            nn.LeakyReLU(0.2, inplace=True),
-            # state size. (ndf*4) x 12 x 12
-            nn.Conv2d(ndf * 4, ndf * 8, 4, 2, 1, bias=False),
-            nn.BatchNorm2d(ndf * 8),
-            nn.LeakyReLU(0.2, inplace=True),
-            # state size. (ndf*8) x 6 x 6
-            nn.Conv2d(ndf * 8, 1, 6, 1, 0, bias=False),
-            # Do not use it, since using BCEWithLogitsLoss nn.Sigmoid()
-            nn.Sigmoid()
-        )
-
-    def forward(self, input):
-        if isinstance(input.data, torch.cuda.FloatTensor) and self.ngpu > 1:
-            output = nn.parallel.data_parallel(self.main, input, range(self.ngpu))
-        else:
-            output = self.main(input)
-
-        return output.view(-1, 1).squeeze(1), None
-
-
-class Discriminator_V(nn.Module):
-    def __init__(self, nc=3, ndf=64, T=16, ngpu=1, nClasses= 102):
-        super(Discriminator_V, self).__init__()
+class VideoDiscriminator(nn.Module):
+    def __init__(self, nc=3, ndf=64, T=16, ngpu=1, nClasses= 11):
+        super(VideoDiscriminator, self).__init__()
         self.ngpu       = ngpu
         self.nClasses   = nClasses
         
@@ -117,7 +81,7 @@ class Discriminator_V(nn.Module):
 
 
 # see: _netG in https://github.com/pytorch/examples/blob/master/dcgan/main.py
-class Generator_I(nn.Module):
+class VideoGenerator(nn.Module):
     '''
         Constructor
         -----------
@@ -131,6 +95,9 @@ class Generator_I(nn.Module):
         
         nz:         integer, default= 60
             Number of samples for the noise.
+        
+        cuda:       bolean, default= False
+            Using cuda or not.
             
         ngpu:       integer, default= 1
             Number of GPU on which the model will run.
@@ -144,15 +111,17 @@ class Generator_I(nn.Module):
     
     '''
     
-    def __init__(self, nc=3, ngf=64, nz=60, ngpu=1, nClasses= 102, batch_size= 16):
-        super(Generator_I, self).__init__()
+    def __init__(self, nc=3, ngf=64, nz=60, cuda = False, ngpu=1, nClasses= 11, batch_size= 16):
+        super(VideoGenerator, self).__init__()
         self.ngpu = ngpu
+        self.nz = nz
+        self.gpu = cuda
+    
         # Addition for Conditioning the Model
-        # nClasses = #UCF-101 Action Class + 1 (Fake Class) 
+        # nClasses = #Action Class + 1 (Fake Class) 
         self.label_sequence = nn.Sequential(
-            # labels size [ NumClasses / 16 ]
-            nn.Embedding(nClasses, nClasses//16),
-            nn.Linear(nClasses//16, nz),
+            nn.Embedding(nClasses, nClasses//batch_size),
+            nn.Linear(nClasses//batch_size, nz),
             nn.ReLU(True)
         )
         
@@ -162,7 +131,7 @@ class Generator_I(nn.Module):
         
         self.main = nn.Sequential(
             # input is Z, going into a convolution
-            nn.ConvTranspose2d(     nz, ngf * 8, 6, 1, 0, bias=False),
+            nn.ConvTranspose2d(nz, ngf * 8, 6, 1, 0, bias=False),
             nn.BatchNorm2d(ngf * 8),
             nn.ReLU(True),
             # state size. (ngf*8) x 6 x 6
@@ -208,68 +177,64 @@ class Generator_I(nn.Module):
             output = self.main(input)
             
         return output
-    
+
     def sample_z_categ(self, num_samples, video_len, category = None):
         video_len = video_len if video_len is not None else 16
-        dim_z_category = 60
 
         if category:
             classes_to_generate = np.array(category)
 
         else:
-            classes_to_generate = np.random.randint(dim_z_category, size=num_samples)
+            classes_to_generate = np.random.randint(self.nz, size=num_samples)
 
-        one_hot = np.zeros((num_samples, dim_z_category), dtype=np.float32)
+        one_hot = np.zeros((num_samples, self.nz), dtype=np.float32)
+        print(one_hot)
         one_hot[np.arange(num_samples), classes_to_generate] = 1
+        print(one_hot)
         one_hot_video = np.repeat(one_hot, video_len, axis=0)
-
+        print(one_hot_video)
         one_hot_video = torch.from_numpy(one_hot_video)
 
-        if torch.cuda.is_available():
+        if self.gpu:
             one_hot_video = one_hot_video.cuda()
-
         return Variable(one_hot_video), classes_to_generate
 
     def sample_videos(self, num_samples, video_len=None, category = None):
         n_channels = 3
-        dim_z = 60
         video_len = video_len if video_len is not None else 16
-        # Sample initial and final latent vectors for each video
-        start_z = torch.randn(num_samples, dim_z)
-        end_z = torch.randn(num_samples, dim_z)
-
-        if torch.cuda.is_available():
-            start_z = start_z.cuda()
-            end_z = end_z.cuda()
-
-        # Interpolate between start_z and end_z to create a smooth transition
+         # Sample a single latent vector for each video
+         # Sample a single latent vector for each video and create variations
+        base_z = torch.randn(num_samples, self.nz)
+        if self.gpu:
+            base_z = base_z.cuda()
+        
+        # Create variations around the base_z to generate movement
         z = []
         for i in range(num_samples):
-            interpolated_z = self.interpolate_z(start_z[i], end_z[i], video_len)
-            z.append(interpolated_z)
+            variations = self.create_variations(base_z[i], video_len)
+            z.append(variations)
+
         # Convert list to tensor
-        z = torch.stack([torch.stack(z_i) for z_i in z]).view(-1, dim_z)
+        z = torch.stack([torch.stack(z_i) for z_i in z]).view(-1, self.nz)
 
         _, z_category_labels = self.sample_z_categ(num_samples, video_len, category)
-
-        # Create temporal variations in z
-        #z = torch.randn(num_samples * video_len, dim_z).to(z.device)
-
         h = self.main(z.view(z.size(0), z.size(1), 1, 1))
 
         h = h.view( int( h.size(0) / video_len), video_len, n_channels, h.size(3), h.size(3))
 
         z_category_labels = torch.from_numpy(z_category_labels)
 
-        if torch.cuda.is_available():
+        if self.gpu:
             z_category_labels = z_category_labels.cuda()
 
         h = h.permute(0, 2, 1, 3, 4)
         return h, z_category_labels
-    
-    def interpolate_z(self, start_z, end_z, num_steps):
-        # Interpolates between start_z and end_z over num_steps steps
-        return [start_z + (end_z - start_z) * i / (num_steps - 1) for i in range(num_steps)]
+
+    def create_variations(self, base_z, num_steps, variation_scale=0.2):
+        # Create slight variations around the base_z
+        return [base_z + variation_scale * torch.randn_like(base_z) for _ in range(num_steps)]
+
+
 class GRU(nn.Module):
     def __init__(self, input_size = 10, hidden_size = 10, gpu=True):
         super(GRU, self).__init__()

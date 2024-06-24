@@ -349,4 +349,4 @@ def save_video(fake_video, category, epoch, stdDev = 0, mean = 0, path = None):
         outputdata = fake_video*255
         outputdata = outputdata.astype(np.uint8)
         file_path = os.path.join(path, 'fake_%s_epoch-%d.mp4' % (category, epoch))
-        skvideo.io.vwrite(file_path, outputdata)
+        skvideo.io.vwrite(file_path, outputdata, inputdict={'-r': str(5)})
