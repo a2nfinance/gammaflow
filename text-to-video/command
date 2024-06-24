@@ -1,0 +1,28 @@
+
+wget http://www.rarlab.com/rar/unrarsrc-7.0.9.tar.gz
+tar -xzvf unrarsrc-7.0.9.tar.gz
+cd unrar
+make
+sudo make install
+
+unrar x -y UCF101.rar 
+-----------------------
+python resize.py
+
+python train.py \
+--cuda -1 \
+--ngpu 1 \
+--batch-size 16 \
+--niter 10 \
+--pre-train -1 \
+--i_epochs_checkpoint 1 \
+--i_epochs_saveV 1 \
+--i_epochs_display 1 
+
+
+python train.py  --ngpu 1 --batch_size 16 --n_epochs 1 --pre_train -1 --i_epochs_saveV 100 --i_epochs_checkpoint 100 --i_epochs_display 1
+#--cuda True 
+
+# Train text to class
+python train.py --epochs 2 --save_interval 1 --path data/processed_dataset.txt 
+python train.py --epochs 12000 --save_interval 1000 --path data/processed_dataset.txt 

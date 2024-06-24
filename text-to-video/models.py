@@ -96,7 +96,7 @@ class VideoGenerator(nn.Module):
         nz:         integer, default= 60
             Number of samples for the noise.
         
-        cuda:       bolean, default= False
+        cuda:       boolean, default= False
             Using cuda or not.
             
         ngpu:       integer, default= 1

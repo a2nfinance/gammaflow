@@ -61,6 +61,7 @@ max_frame           = 25
 seed = 0
 torch.manual_seed(seed)
 np.random.seed(seed)
+
 if cuda:
     torch.cuda.set_device(0)
 
