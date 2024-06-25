@@ -1,0 +1,404 @@
+bend	Lower the torso by flexing the knees.
+bend	Flex the waist to bring the upper body forward.
+bend	Bow the head and upper body towards the ground.
+bend	Crouch by bending at the knees and hips.
+bend	Lean the upper body downward while keeping legs straight.
+bend	Perform a forward fold by bending at the waist.
+bend	Contract the abdominal muscles and bring the chest closer to the knees.
+bend	Flex at the hips and reach towards the toes.
+bend	Drop into a squat position with knees bent.
+bend	Hinge at the hips while maintaining a straight back.
+bend	Lower the body to pick something up from the ground.
+bend	Perform a hamstring stretch by bending forward at the waist.
+bend	Tilt the upper body down while keeping the back flat.
+bend	Curl the spine forward, bringing the chest towards the thighs.
+bend	Flex the lower back and hips to bring the torso down.
+bend	Bend the knees slightly and lean the upper body forward.
+bend	Drop the upper body towards the floor with knees slightly bent.
+bend	Perform a deep knee bend to lower the torso.
+bend	Contract the core and bend the upper body forward.
+bend	Perform a forward bend, reaching towards the floor.
+bend	Flex the hips and lower the upper body while keeping legs straight.
+bend	Bend at the knees and hips to lower the body.
+bend	Hinge forward at the waist with knees slightly bent.
+bend	Lean forward, flexing the waist and knees.
+bend	Lower the torso by bending the knees.
+bend	Flex the hips and bring the upper body down.
+bend	Perform a standing forward bend by flexing at the waist.
+bend	Bow the head and bend the upper body forward.
+bend	Crouch down by bending at the hips and knees.
+bend	Lean forward while keeping the legs extended.
+bend	Perform a seated forward bend, reaching towards the feet.
+bend	Drop the chest towards the knees by bending at the waist.
+bend	Flex the waist and lower the head towards the floor.
+bend	Perform a side bend, leaning the upper body to one side.
+bend	Flex the spine forward and reach towards the ground.
+bend	Lower the head and upper body by bending at the waist.
+bend	Perform a deep squat by bending the knees and hips.
+bend	Flex the torso forward while keeping the back straight.
+bend	Lean the upper body down by bending at the waist and knees.
+jack	Perform a jumping jack by moving the legs apart and raising the arms overhead.
+jack	Jump with legs spreading outward and arms clapping above the head.
+jack	Execute a star jump by extending arms and legs outwards.
+jack	Jump with arms and legs moving outward simultaneously.
+jack	Perform a side-straddle hop with arms and legs extending sideways.
+jack	Leap into the air while spreading the arms and legs wide.
+jack	Execute a full-body jump with limbs extending outward.
+jack	Jump up, spreading the legs and bringing the arms together overhead.
+jack	Perform a plyometric star jump with limbs extending.
+jack	Jump, extending both arms and legs to the sides.
+jack	Perform a dynamic jumping jack with arms and legs moving out.
+jack	Jump and extend the arms and legs in a star-like shape.
+jack	Execute a high-energy jumping jack, moving limbs outward.
+jack	Leap up, extending the arms and legs in opposite directions.
+jack	Perform an aerobic jumping jack with coordinated limb movement.
+jack	Jump, spreading the legs apart and raising the arms above the head.
+jack	Execute a jumping jack, moving arms and legs outward in sync.
+jack	Jump with arms and legs extending wide and upward.
+jack	Perform a classic jumping jack with limbs moving outward.
+jack	Jump, extending both arms and legs to create an X-shape in the air.
+jack	Perform a high-intensity jumping jack with synchronized limb movement.
+jack	Jump, spreading arms and legs apart while airborne.
+jack	Execute a vigorous jumping jack, extending the limbs outward.
+jack	Jump up, moving the arms and legs outward from the body.
+jack	Perform a plyometric jumping jack, spreading limbs wide.
+jack	Jump, bringing arms and legs out to the sides and then back in.
+jack	Execute a star jump, extending all limbs outward.
+jack	Jump with arms and legs moving outward to form a star shape.
+jack	Perform a coordinated jumping jack with limbs extending wide.
+jack	Jump, spreading legs apart and clapping the hands overhead.
+jack	Execute a dynamic jumping jack, moving arms and legs out from the body.
+jack	Jump, extending both arms and legs to the sides and then returning.
+jack	Perform a jumping jack, synchronizing the movement of arms and legs.
+jack	Jump, spreading the legs wide and bringing the arms together overhead.
+jack	Execute a full-body jumping jack with limbs extending outwards.
+jack	Jump up, moving the arms and legs out in a synchronized motion.
+jack	Perform a star jump, extending both arms and legs outward.
+jack	Jump, spreading arms and legs apart and then returning to the start.
+jack	Execute an aerobic jumping jack, moving limbs out and in rhythmically.
+jack	Jump with limbs moving outward, creating a star-like shape in the air.
+jump	Propel oneself off the ground using the legs.
+jump	Leap into the air by pushing off with both feet.
+jump	Spring upwards from a crouched position.
+jump	Push off the ground to become airborne.
+jump	Launch oneself vertically into the air.
+jump	Perform a vertical leap by pushing off the ground.
+jump	Jump straight up, extending the legs and feet.
+jump	Push off the ground forcefully to achieve lift.
+jump	Leap vertically by extending the legs powerfully.
+jump	Propel the body upwards from a standing position.
+jump	Perform a standing jump by pushing off with both feet.
+jump	Launch oneself upward by bending and extending the knees.
+jump	Spring off the ground, reaching for height.
+jump	Execute a vertical jump with maximum height.
+jump	Propel oneself upward, extending the legs fully.
+jump	Jump up, using the power of the legs for lift.
+jump	Push off the ground to achieve height in the air.
+jump	Perform a high jump by forcefully extending the legs.
+jump	Launch upward from a stationary position.
+jump	Propel oneself off the ground to gain height.
+jump	Jump vertically, extending the body fully in the air.
+jump	Perform a jump by bending the knees and pushing off.
+jump	Launch oneself upwards using leg power.
+jump	Propel the body vertically into the air from a crouch.
+jump	Execute a vertical leap with legs extended.
+jump	Jump straight up, using the force of the legs.
+jump	Push off the ground with both feet to jump.
+jump	Leap upwards, extending the legs for height.
+jump	Propel oneself into the air from a standing position.
+jump	Perform a high jump, reaching maximum height.
+jump	Launch upward, using the power of the legs and feet.
+jump	Spring off the ground, extending the body vertically.
+jump	Jump up, pushing off with both feet simultaneously.
+jump	Propel oneself upwards to gain vertical height.
+jump	Execute a standing jump with legs extended.
+jump	Jump vertically, using the legs for propulsion.  
+jump	Push off the ground forcefully to jump upward.
+jump	Leap into the air from a stationary position.
+jump	Propel the body vertically, extending the legs fully.
+pjump	Execute a pike jump, lifting both legs straight out in front while airborne.
+pjump	Jump, bringing the legs together in a pike position.
+pjump	Perform a pike jump, extending legs forward while airborne.
+pjump	Leap into the air, lifting both legs in a pike position.
+pjump	Jump, extending the legs straight out in front in a pike.
+pjump	Execute a high pike jump, lifting legs parallel to the ground.
+pjump	Perform a pike jump, lifting both legs towards the chest.
+pjump	Jump into a pike position, extending legs forward.
+pjump	Leap, bringing legs up in a pike formation.
+pjump	Execute a pike jump, with legs fully extended forward.
+pjump	Jump, lifting both legs in a straight pike position.
+pjump	Perform a pike jump, extending the legs straight in front.
+pjump	Leap into the air, forming a pike with the legs.
+pjump	Jump, lifting legs in a pike position with toes pointed.
+pjump	Execute a powerful pike jump, extending legs forward.
+pjump	Perform a pike jump, lifting both legs in front simultaneously.
+pjump	Jump, extending legs out in a pike position mid-air.
+pjump	Leap into a pike jump, bringing legs parallel to the floor.
+pjump	Execute a dynamic pike jump, extending legs forward.
+pjump	Perform a pike jump, lifting legs straight in front.
+pjump	Jump, achieving a pike position with extended legs.
+pjump	Leap, bringing legs together in a pike during the jump.
+pjump	Execute a controlled pike jump, with legs fully extended.
+pjump	Perform a pike jump, lifting both legs parallel to the ground.
+pjump	Jump, forming a pike position with straight legs.
+pjump	Leap into a pike jump, with legs extended in front.
+pjump	Execute a precise pike jump, extending legs forward.
+pjump	Perform a pike jump, lifting legs straight and together.
+pjump	Jump, achieving a full pike position in mid-air.
+pjump	Leap, bringing legs up in a straight pike position.
+pjump	Execute a clean pike jump, with legs extended forward.
+pjump	Perform a pike jump, lifting legs parallel to the floor.
+pjump	Jump, forming a pike position with legs extended.
+pjump	Leap into a pike jump, lifting both legs straight in front.
+pjump	Execute a strong pike jump, extending legs forward.
+pjump	Perform a pike jump, bringing legs straight and together.
+pjump	Jump, achieving a full pike position with extended legs.
+pjump	Leap, lifting legs in a pike position during the jump.
+pjump	Execute a crisp pike jump, extending legs in front.
+pjump	Perform a pike jump, lifting legs parallel to the ground.
+pjump	Jump, forming a pike position with legs together.
+pjump	Leap into a pike jump, extending both legs forward.
+pjump	Execute a precise pike jump, lifting legs straight out.
+pjump	Perform a pike jump, lifting legs together and forward.
+pjump	Jump, achieving a clean pike position mid-air.
+pjump	Leap, bringing legs up in a pike during the jump.
+pjump	Execute a well-formed pike jump, extending legs forward.
+pjump	Perform a pike jump, lifting legs parallel and straight.
+pjump	Jump, forming a pike position with extended legs.
+pjump	Leap into a pike jump, lifting both legs straight forward.
+pjump	Execute a controlled pike jump, with legs fully extended.
+pjump	Perform a pike jump, lifting both legs parallel to the ground.
+run	Move rapidly on foot with both feet off the ground during each stride.
+run	Sprint forward with quick, powerful strides.
+run	Dash forward at a high speed.
+run	Jog at a steady pace, moving the legs quickly.
+run	Sprint at maximum speed, propelling the body forward.
+run	Move quickly on foot, alternating legs rapidly.
+run	Race forward with fast, powerful steps.
+run	Jog lightly, maintaining a consistent pace.
+run	Sprint, using explosive power to move forward quickly.
+run	Move swiftly, with both feet off the ground during each stride.
+run	Dash quickly, covering ground rapidly.
+run	Jog at a moderate pace, with rhythmic strides.
+run	Sprint forward, driving the knees high.
+run	Move at a fast pace, with rapid leg movement.
+run	Race ahead with quick, alternating steps.
+run	Jog steadily, maintaining an even tempo.
+run	Sprint rapidly, using powerful leg movements.
+run	Move quickly, keeping both feet off the ground during strides.
+run	Dash at full speed, covering distance swiftly.
+run	Jog at a comfortable pace, with consistent strides.
+run	Sprint forward, propelling the body with powerful leg drive.
+run	Move rapidly on foot, alternating legs quickly.
+run	Race ahead, with quick and powerful strides.
+run	Jog at a steady tempo, maintaining a regular pace.
+run	Sprint fast, with explosive leg power.
+run	Move quickly, lifting both feet off the ground during each stride.
+run	Dash rapidly, covering ground efficiently.
+run	Jog lightly, with a consistent and steady pace.
+run	Sprint forward, driving the legs powerfully.
+run	Move swiftly, with rapid and alternating leg movements.
+run	Race forward, with quick and forceful steps.
+run	Jog steadily, maintaining a moderate tempo.
+run	Sprint at high speed, using powerful leg drive.
+run	Move quickly on foot, with both feet off the ground during each stride.
+run	Dash quickly, covering distance rapidly.
+run	Jog at a comfortable tempo, with rhythmic strides.
+run	Sprint forward, propelling the body with strong leg movements.
+run	Move rapidly, alternating legs quickly and efficiently.
+run	Race ahead, with quick and powerful steps.
+side	Step or move laterally to the side.
+side	Perform a lateral step, shifting weight to one side.
+side	Move sideways, keeping the body facing forward.
+side	Step to the side, maintaining balance.
+side	Execute a side step, shifting the body laterally.
+side	Move laterally, keeping feet parallel.
+side	Step sideways, maintaining an even pace.
+side	Shift to the side, keeping the body upright.
+side	Perform a lateral shuffle, moving side to side.
+side	Step to the side, moving the feet in unison.
+side	Move laterally, maintaining a straight posture.
+side	Step sideways, keeping the legs parallel.
+side	Shift laterally, moving one foot at a time.
+side	Step to the side, keeping the body aligned.
+side	Move sideways, with a smooth lateral motion.
+side	Step laterally, shifting weight evenly.
+side	Execute a side shuffle, moving side to side.
+side	Move to the side, maintaining a balanced stance.
+side	Step laterally, keeping the feet in line.
+side	Shift sideways, maintaining body alignment.
+side	Perform a lateral movement, keeping feet parallel.
+side	Step to the side, with a controlled motion.
+side	Move sideways, maintaining an even rhythm.
+side	Step laterally, with a smooth and steady motion.
+side	Shift to the side, maintaining a straight posture.
+side	Move to the side, keeping the feet parallel.
+side	Step laterally, with a controlled pace.
+side	Move sideways, maintaining balance and alignment.
+side	Shift laterally, with smooth and even steps.
+side	Step to the side, keeping the body facing forward.
+side	Move sideways, with a smooth and steady pace.
+side	Step laterally, maintaining a balanced posture.
+side	Shift to the side, with a controlled and smooth motion.
+side	Move laterally, keeping the feet in line.
+side	Step to the side, maintaining an even rhythm.
+side	Move sideways, with a controlled and smooth pace.
+side	Shift laterally, maintaining body alignment.
+side	Step to the side, with smooth and steady steps.
+skip	Progress forward by hopping alternately on each foot.
+skip	Move with a light, bouncing step, alternating feet.
+skip	Hop forward, lifting one foot and then the other.
+skip	Advance with a playful, rhythmic hop.
+skip	Move forward with alternating hops and skips.
+skip	Hop lightly, shifting weight from one foot to the other.
+skip	Progress by alternating hops with each step.
+skip	Move forward with a skipping motion, lifting feet alternately.
+skip	Advance with a light, rhythmic skipping step.
+skip	Hop and skip forward, alternating feet.
+skip	Move playfully forward, with a light skip.
+skip	Progress with a skipping motion, lifting feet alternately.
+skip	Hop lightly, alternating weight from foot to foot.
+skip	Move forward with a playful skip, alternating feet.
+skip	Advance with a light, rhythmic hopping motion.
+skip	Move forward, alternating hops and skips.
+skip	Hop and skip lightly, progressing forward.
+skip	Move with a playful, rhythmic hop, alternating feet.
+skip	Progress forward, with a light and bouncy skip.
+skip	Hop forward, alternating weight from one foot to the other.
+skip	Move with a light, rhythmic skip, progressing forward.
+skip	Advance by skipping lightly, alternating feet.
+skip	Move forward with a playful hop, alternating steps.
+skip	Progress with a skipping motion, lifting each foot alternately.
+skip	Hop lightly, with a playful and rhythmic motion.
+skip	Move forward, alternating hops and skips playfully.
+skip	Advance with a light, rhythmic skip, moving forward.
+skip	Hop forward, alternating weight from foot to foot.
+skip	Move with a playful skip, alternating feet.
+skip	Progress with a light, bouncy skipping motion.
+skip	Move forward, alternating hops and skips.
+skip	Hop and skip lightly, with a rhythmic motion.
+skip	Move forward with a playful, rhythmic skip.
+skip	Progress forward, alternating feet with each skip.
+skip	Hop forward, lifting one foot and then the other.
+skip	Move with a light, rhythmic skipping step.
+skip	Advance playfully, with alternating hops and skips.
+skip	Move forward with a light and bouncy skip.
+skip	Progress by hopping alternately on each foot.
+walk	Move at a regular pace by lifting and setting down each foot in turn.
+walk	Advance forward by taking regular, even steps.
+walk	Move steadily on foot, one step at a time.
+walk	Progress at a moderate pace, lifting and placing each foot.
+walk	Move forward with a steady, rhythmic gait.
+walk	Advance by taking successive steps in a regular pattern.
+walk	Move at a steady pace, lifting one foot after the other.
+walk	Progress forward, placing one foot in front of the other.
+walk	Move steadily, with regular and even steps.
+walk	Advance at a moderate speed, lifting and placing each foot.
+walk	Move forward with a regular, steady gait.
+walk	Progress by taking regular, even steps.
+walk	Move at a steady, moderate pace, lifting each foot in turn.
+walk	Advance forward, placing one foot in front of the other.
+walk	Move steadily, with a rhythmic and even gait.
+walk	Progress at a regular pace, lifting and setting down each foot.
+walk	Move forward steadily, taking regular steps.
+walk	Advance by lifting and placing each foot in a regular pattern.
+walk	Move at a moderate pace, with a steady gait.
+walk	Progress forward, taking successive steps.
+walk	Move steadily, with a regular and even pace.
+walk	Advance at a moderate speed, lifting and setting down each foot.
+walk	Move forward with a rhythmic and steady gait.
+walk	Progress by taking regular, even steps forward.
+walk	Move at a steady pace, lifting one foot after the other.
+walk	Advance forward, placing one foot in front of the other.
+walk	Move steadily, with a regular and even gait.
+walk	Progress at a moderate pace, lifting each foot in turn.
+walk	Move forward, taking successive steps at a steady pace.
+walk	Advance steadily, lifting and setting down each foot in turn.
+walk	Move at a moderate speed, with a rhythmic gait.
+walk	Progress forward by taking regular steps.
+walk	Move steadily, lifting and placing each foot in turn.
+walk	Advance at a steady pace, with regular and even steps.
+walk	Move forward with a regular, rhythmic gait.
+walk	Progress by lifting and setting down each foot in a regular pattern.
+walk	Move at a steady pace, with a rhythmic and even gait.
+walk	Advance forward, taking regular steps at a moderate speed.
+walk	Move steadily, with a regular and rhythmic gait.
+wave1	Raise the arm and move the hand side-to-side.
+wave1	Lift the hand and wave it back and forth.
+wave1	Raise the hand and move it side-to-side in a waving motion.
+wave1	Lift the arm and wave the hand horizontally.
+wave1	Raise the hand and wave it side-to-side in a friendly gesture.
+wave1	Lift the hand and move it back and forth in a wave.
+wave1	Raise the arm and wave the hand in a side-to-side motion.
+wave1	Lift the hand and wave it horizontally back and forth.
+wave1	Raise the hand and wave it side-to-side as a greeting.
+wave1	Lift the arm and wave the hand back and forth in a wave.
+wave1	Raise the hand and wave it in a side-to-side motion.
+wave1	Lift the hand and wave it horizontally in a friendly gesture.
+wave1	Raise the arm and wave the hand side-to-side in a greeting.
+wave1	Lift the hand and move it back and forth in a waving motion.
+wave1	Raise the hand and wave it horizontally as a greeting.
+wave1	Lift the arm and wave the hand side-to-side in a wave.
+wave1	Raise the hand and move it horizontally back and forth.
+wave1	Lift the hand and wave it side-to-side in a friendly wave.
+wave1	Raise the arm and move the hand back and forth in a waving motion.
+wave1	Lift the hand and wave it horizontally side-to-side.
+wave1	Raise the hand and wave it back and forth in a friendly motion.
+wave1	Lift the arm and move the hand side-to-side in a wave.
+wave1	Raise the hand and wave it horizontally in a greeting motion.
+wave1	Lift the hand and wave it back and forth as a friendly gesture.
+wave1	Raise the arm and wave the hand in a side-to-side motion.
+wave1	Lift the hand and wave it horizontally back and forth in greeting.
+wave1	Raise the hand and wave it back and forth in a side-to-side motion.
+wave1	Lift the arm and wave the hand side-to-side as a greeting.
+wave1	Raise the hand and move it back and forth in a friendly wave.
+wave1	Lift the hand and wave it side-to-side in a horizontal motion.
+wave1	Raise the arm and wave the hand back and forth in greeting.
+wave1	Lift the hand and wave it horizontally side-to-side.
+wave1	Raise the hand and wave it side-to-side in a friendly motion.
+wave1	Lift the arm and move the hand back and forth in a waving motion.
+wave1	Raise the hand and wave it horizontally in a friendly gesture.
+wave1	Lift the hand and wave it side-to-side as a friendly wave.
+wave1	Raise the arm and wave the hand back and forth in a wave.
+wave1	Lift the hand and wave it horizontally back and forth.
+wave1	Raise the hand and wave it side-to-side in a friendly gesture.
+wave2	Perform a more elaborate or specific waving motion with the arm and hand.
+wave2	Execute a sweeping wave, moving the hand in a wide arc.
+wave2	Perform a circular wave, moving the hand in a circular motion.
+wave2	Execute a vertical wave, moving the hand up and down.
+wave2	Perform a double wave, using both hands simultaneously.
+wave2	Execute an enthusiastic wave, with larger and faster motions.
+wave2	Perform a graceful wave, moving the hand in a smooth arc.
+wave2	Execute a fast wave, with rapid hand movements.
+wave2	Perform a slow wave, moving the hand gently and smoothly.
+wave2	Execute a wave with the fingers, moving only the fingers.
+wave2	Perform a wide wave, extending the arm fully.
+wave2	Execute a quick wave, with short and fast hand motions.
+wave2	Perform a big wave, moving the hand in a large arc.
+wave2	Execute a cheerful wave, with an enthusiastic motion.
+wave2	Perform a subtle wave, with small and gentle movements.
+wave2	Execute a waving gesture with a flick of the wrist.
+wave2	Perform an exaggerated wave, with large and sweeping motions.
+wave2	Execute a rhythmic wave, with a regular and even motion.
+wave2	Perform a playful wave, with light and bouncy hand movements.
+wave2	Execute a short wave, with brief and quick motions.
+wave2	Perform a gentle wave, with soft and smooth hand movements.
+wave2	Execute an energetic wave, with fast and vigorous motions.
+wave2	Perform a precise wave, with controlled and exact movements.
+wave2	Execute a casual wave, with relaxed and informal hand motions.
+wave2	Perform an elegant wave, with smooth and graceful movements.
+wave2	Execute a steady wave, with consistent and even hand motions.
+wave2	Perform a firm wave, with strong and deliberate movements.
+wave2	Execute a lively wave, with quick and animated hand motions.
+wave2	Perform a controlled wave, with measured and exact movements.
+wave2	Execute a relaxed wave, with casual and informal motions.
+wave2	Perform a coordinated wave, with synchronized hand movements.
+wave2	Execute a spontaneous wave, with impromptu and casual motions.
+wave2	Perform a continuous wave, with ongoing hand movements.
+wave2	Execute a fluid wave, with smooth and seamless motions.
+wave2	Perform a stylish wave, with elegant and refined movements.
+wave2	Execute a brisk wave, with quick and energetic hand motions.
+wave2	Perform a cheerful wave, with bright and lively movements.
+wave2	Execute a graceful wave, with flowing and elegant motions.
+wave2	Perform a welcoming wave, with warm and inviting hand movements.
+wave2	Execute a friendly wave, with light and informal motions.

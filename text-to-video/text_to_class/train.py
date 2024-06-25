@@ -41,16 +41,16 @@ def addCLArguments(parser):
     parser.add_argument('--cuda', default = False, action= 'store_true', 
                             help= 'Set to use the GPU.')
                             
-    parser.add_argument('--epochs', default = 120, type = int,
+    parser.add_argument('--n_epochs', default = 120, type = int,
                             help= 'Set the number of epochs to train.')
 
-    parser.add_argument('--numClasses', default = 101, type = int,
+    parser.add_argument('--numClasses', default = 10, type = int,
                             help= 'Set the number of classes that the model must predict.')
 
     parser.add_argument('--batch_size', default = 64, type = int,
                             help= 'Set the number that will be used as batch size.')
 
-    parser.add_argument('--path', default = 'data/processed_dataset.txt', type = str,
+    parser.add_argument('--path', default = 'data/action_classes.txt', type = str,
                             help= 'Set the relative path to find the file that contains the dataset.')
 
     parser.add_argument('--embed_size', default = 256, type = int,
@@ -68,7 +68,7 @@ def addCLArguments(parser):
     parser.add_argument('--load_epoch', default = 0, type = int,
                             help= 'Set the state epoch to load from disk.')
 
-    parser.add_argument('--save_interval', default = 20, type = int,
+    parser.add_argument('--save_interval', default = 100, type = int,
                             help= 'Set save interval for the model state.')
 
     parser.add_argument('--sequence_length', default = 30, type = int,
@@ -83,7 +83,7 @@ def getCLArguments(parser):
 
     return {
         'cuda'          : args.cuda,
-        'epochs'        : args.epochs,
+        'epochs'        : args.n_epochs,
         'numClasses'    : args.numClasses,
         'path'          : args.path,
         'batch_size'    : args.batch_size,
@@ -138,9 +138,7 @@ if __name__ == "__main__":
 
         output              = network(tensor)
         probability, action = output.max(1)
-        
         print(f'Predicted class is {dataset.getClassNameFromIndex(action)} with probability {probability}')
-
 
     
 

@@ -30,7 +30,7 @@ import torch
 
 class LSTM(nn.Module):
 
-    def __init__(self, rnn_type, rnn_size, embed_size, voca_size, numClasses = 101,
+    def __init__(self, rnn_type, rnn_size, embed_size, voca_size, numClasses = 10,
                     checkpoint = "LSTM-checkpoint.pth"):
 
         super(LSTM, self).__init__()
