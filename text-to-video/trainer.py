@@ -325,28 +325,25 @@ class Trainer(nn.Module):
 
 
 
-def loadState(epoch, model, optimizer = None, path = ''):
+def loadState(model, optimizer = None, path = ''):
         
-    if epoch != 0:
+    try:
 
-        loadEpoch = epoch
-        addString = f"_epoch-{loadEpoch}" if loadEpoch is not None else ""
-        modelName = f"{model.__class__.__name__}"
         if torch.cuda.is_available():
-            model.load_state_dict(torch.load(path + f'/{modelName}{addString}.model'), strict=False)
+            model.load_state_dict(torch.load(path + '.model'), strict=False)
         else:
-            model.load_state_dict(torch.load(path + f'/{modelName}{addString}.model', map_location=torch.device('cpu')), strict=False)
+            model.load_state_dict(torch.load(path + '.model', map_location=torch.device('cpu')), strict=False)
 
         if optimizer:
             if torch.cuda.is_available():
-                optimizer.load_state_dict(torch.load(path + f'/{modelName}{addString}.state'), strict=False)
+                optimizer.load_state_dict(torch.load(path + '.state'), strict=False)
             else:
-                optimizer.load_state_dict(torch.load(path + f'/{modelName}{addString}.state', map_location=torch.device('cpu')), strict=False)
+                optimizer.load_state_dict(torch.load(path + '.state', map_location=torch.device('cpu')), strict=False)
+    except:
+        print("Can not find your pre_trained model")
 
-
-def save_video(fake_video, category, epoch, stdDev = 0, mean = 0, path = None):
-        #outputdata = ((fake_video * stdDev) + mean) * 255
+def save_video(fake_video, category, path = None):
         outputdata = fake_video*255
         outputdata = outputdata.astype(np.uint8)
-        file_path = os.path.join(path, 'fake_%s_epoch-%d.mp4' % (category, epoch))
+        file_path = os.path.join(path, 'fake-%s.mp4' % category)
         skvideo.io.vwrite(file_path, outputdata, inputdict={'-r': str(5)})

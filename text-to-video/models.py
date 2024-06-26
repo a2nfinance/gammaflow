@@ -178,61 +178,62 @@ class VideoGenerator(nn.Module):
             
         return output
 
-    def sample_z_categ(self, num_samples, video_len, category = None):
-        video_len = video_len if video_len is not None else 16
+    def sample_videos(self, num_samples, video_len=None, category = None):
 
         if category:
-            classes_to_generate = np.array(category)
+            z_category_labels = np.array(category)
 
         else:
-            classes_to_generate = np.random.randint(self.nz, size=num_samples)
+            z_category_labels = np.random.randint(self.nz, size=num_samples)
 
-        one_hot = np.zeros((num_samples, self.nz), dtype=np.float32)
-        print(one_hot)
-        one_hot[np.arange(num_samples), classes_to_generate] = 1
-        print(one_hot)
-        one_hot_video = np.repeat(one_hot, video_len, axis=0)
-        print(one_hot_video)
-        one_hot_video = torch.from_numpy(one_hot_video)
+        z_category_labels = torch.from_numpy(z_category_labels)
+        labels = z_category_labels.clone().detach().repeat_interleave(video_len)
+        
+        if self.gpu:
+            labels = labels.cuda()
 
         if self.gpu:
-            one_hot_video = one_hot_video.cuda()
-        return Variable(one_hot_video), classes_to_generate
+            z_category_labels = z_category_labels.cuda()
 
-    def sample_videos(self, num_samples, video_len=None, category = None):
         n_channels = 3
         video_len = video_len if video_len is not None else 16
-         # Sample a single latent vector for each video
-         # Sample a single latent vector for each video and create variations
+
+        # Sample a single latent vector for each video and create variations
         base_z = torch.randn(num_samples, self.nz)
         if self.gpu:
             base_z = base_z.cuda()
         
         # Create variations around the base_z to generate movement
         z = []
+
         for i in range(num_samples):
             variations = self.create_variations(base_z[i], video_len)
             z.append(variations)
-
+ 
         # Convert list to tensor
         z = torch.stack([torch.stack(z_i) for z_i in z]).view(-1, self.nz)
-
-        _, z_category_labels = self.sample_z_categ(num_samples, video_len, category)
-        h = self.main(z.view(z.size(0), z.size(1), 1, 1))
-
+        # Integrate class information into z
+        #for i in range(num_samples):
+            #z[i * video_len:(i + 1) * video_len, z_category_labels] = 1
+        #print("size z", z.size())
+        #h = self.main(z.view(z.size(0), z.size(1), 1, 1))
+        input = z.view(z.size(0), z.size(1), 1, 1)
+        input = input.repeat_interleave(video_len, dim=0)
+        h = self.forward(input, labels)
+        #print("z_reshape", z.view(z.size(0), z.size(1), 1, 1).shape)
+        #print("first h", h.size())
         h = h.view( int( h.size(0) / video_len), video_len, n_channels, h.size(3), h.size(3))
-
-        z_category_labels = torch.from_numpy(z_category_labels)
-
-        if self.gpu:
-            z_category_labels = z_category_labels.cuda()
+        #print("next_h", h.size())
+        
 
         h = h.permute(0, 2, 1, 3, 4)
+        #print("last_h", h.size())
         return h, z_category_labels
 
-    def create_variations(self, base_z, num_steps, variation_scale=0.2):
+    def create_variations(self, base_z, num_steps, variation_scale=0.1):
         # Create slight variations around the base_z
-        return [base_z + variation_scale * torch.randn_like(base_z) for _ in range(num_steps)]
+        steps = torch.linspace(0, 1, num_steps)
+        return [base_z + variation_scale * torch.randn_like(base_z)*step for step in range(num_steps)]
 
 
 class GRU(nn.Module):

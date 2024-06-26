@@ -20,7 +20,7 @@ from models import VideoDiscriminator, VideoGenerator, GRU
 
 parser = argparse.ArgumentParser(description='Start trainning GammaFlow.....')
 parser.add_argument('--cuda', type=bool, default=False,
-                     help='set True when you use gpu')
+                     help='Set to use the GPU.')
 parser.add_argument('--ngpu', type=int, default=1,
                      help='set the number of gpu you use')
 parser.add_argument('--batch_size', type=int, default=16,
@@ -87,9 +87,7 @@ with open(os.path.join(current_path, "classes", filenameDictClassesIdx)) as file
 
 dataset = DatasetFolder(resized_path, skvideo.io.vread, ["mp4"], transform= transformation)
 dataset.class_to_idx = dictClassesIdx
-
 dataloader = DataLoader(dataset, batch_size= batch_size, shuffle= True, num_workers= 0, pin_memory= True, drop_last= True)
-
 
 if (EXPLORATORY_DATA_ANALYSIS):
 
@@ -299,9 +297,8 @@ for epoch in range(1, n_epochs+1):
                 real_videos = real_videos.cuda()
 
             real_videos = Variable(real_videos)
-            real_img = real_videos[:, :, np.random.randint(0, T), :, :]
 
-            ''' prepare fake images '''
+            ''' prepare fake videos'''
             # note that n_frames is sampled from video length distribution
             n_frames = T + 2 + np.random.randint(0, real_videos.size()[2]) #video_lengths[np.random.randint(0, n_videos)]
             Z = gen_z(n_frames, batch_size)  # Z.size() => (batch_size, n_frames, nz, 1, 1)

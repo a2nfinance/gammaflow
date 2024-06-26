@@ -19,10 +19,12 @@ python train.py \
 --i_epochs_saveV 1 \
 --i_epochs_display 1 
 
-
-python train.py  --ngpu 1 --batch_size 16 --n_epochs 1 --pre_train -1 --i_epochs_saveV 100 --i_epochs_checkpoint 100 --i_epochs_display 1
+# Train class to video
+python train.py  --ngpu 1 --batch_size 16 --n_epochs 10000 --pre_train -1 --i_epochs_saveV 100 --i_epochs_checkpoint 10 --i_epochs_display 1
 #--cuda True 
+python train.py  --ngpu 1 --batch_size 16 --n_epochs 1 --pre_train -1 --i_epochs_saveV 1 --i_epochs_checkpoint 10 --i_epochs_display 1
 
 # Train text to class
-python train.py --epochs 2 --save_interval 1 --path data/processed_dataset.txt 
-python train.py --epochs 12000 --save_interval 1000 --path data/processed_dataset.txt 
+python train.py --n_epochs 10000 --batch_size 64 --embed_size 512 --lr 0.0001 --save_interval 100 --numClasses 10 --path data/action_classes.txt 
+
+python train.py --n_epochs 12000 --save_interval 1000 --path data/processed_dataset.txt 
