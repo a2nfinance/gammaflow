@@ -192,5 +192,5 @@ def make_dataset(dir, class_to_idx, extensions=None, classes = []):
 
 def trim(video):
     start = 0 
-    end = video.shape[1] - 2
+    end = video.shape[1] - 1
     return video[:, start:end, :, :]

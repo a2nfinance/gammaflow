@@ -77,8 +77,7 @@ except KeyError as err:
 if torch.cuda.is_available():
     gen      = gen.cuda()
 
-# Video len = 16 for pre_trained model
-video_len = 16
+video_len = 25*2
 save_path =  current_path
 fakeVideo = gen.sample_videos(video_len, [actionIDx.item() + 1])
 fakeVideo    = fakeVideo[0].detach().cpu().numpy().transpose(1, 2, 3, 0)

@@ -172,6 +172,7 @@ class VideoGenerator(nn.Module):
     
     def sample_videos(self, video_len=None, category = None):
 
+        n_channels = 3
         if category:
             z_category_labels = np.array(category)
         else:
@@ -187,22 +188,24 @@ class VideoGenerator(nn.Module):
         
         labels = labels.view(self.batch_size, self.nz, 1, 1)  # Reshape into (batch_size, nz, 1, 1)
        
-        #labels = z_category_labels.clone().detach()
-        #labels = labels.repeat(self.batch_size)
+        # labels = z_category_labels.clone().detach()
+        # labels = labels.repeat(self.batch_size)
 
         if self.gpu:
             labels = labels.cuda()
 
         video_len = video_len if video_len is not None else 16
 
-        '''
+
         # Create noise in the pre_trained model
-        z = gen_z(video_len, self.batch_size)
+        z = gen_z(video_len, 2)
+
+        input = z.contiguous().view(2, video_len, self.nz, 1, 1)
+        input = input[0:1, :, :, :, :]
         # Reshape to size: (bach_size*video_len, nz, 1, 1)
-        input = z.contiguous().view(self.batch_size*video_len, self.nz, 1, 1)
-        #print("input_z", input.shape)
-        h = self.forward(input, labels)
-        #print("first h", h.size())
+        input = input.view(video_len, self.nz, 1, 1)
+        # print("input", input.size())
+
         '''
         # Create a unique basic noise vector
         base_z = torch.randn(1, self.nz)
@@ -214,18 +217,19 @@ class VideoGenerator(nn.Module):
         
         # Guaranteed size: (video_len, nz, 1, 1)
         input = z.view(video_len, self.nz, 1, 1)
+        '''
+        
         combinedInput = torch.cat((input, labels), 0)
 
         h = self.main(combinedInput)
         #h = h.view( int( h.size(0) / video_len), video_len, n_channels, h.size(3), h.size(3))
-        #h = h.view( int( h.size(0) / video_len), video_len, n_channels, h.size(3), h.size(3))
         h = h.unsqueeze(0)
-        h = trim(h)
+        #h = trim(h)
         h = h.permute(0, 2, 1, 3, 4)
 
         return h
     
-    def create_smooth_variations(self, base_z, num_steps, variation_scale=0.2):
+    def create_smooth_variations(self, base_z, num_steps, variation_scale=0.3):
     
         # Create smooth variations around the underlying noise vector
    
