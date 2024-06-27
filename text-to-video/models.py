@@ -117,8 +117,8 @@ class VideoGenerator(nn.Module):
         # Addition for Conditioning the Model
         # nClasses = #Action Class + 1 (Fake Class) 
         self.label_sequence = nn.Sequential(
-            nn.Embedding(nClasses, nClasses//batch_size),
-            nn.Linear(nClasses//batch_size, nz),
+            nn.Embedding(nClasses, nClasses//16),
+            nn.Linear(nClasses//16, nz),
             nn.ReLU(True)
         )
         
@@ -225,7 +225,7 @@ class VideoGenerator(nn.Module):
 
         return h
     
-    def create_smooth_variations(self, base_z, num_steps, variation_scale=0.1):
+    def create_smooth_variations(self, base_z, num_steps, variation_scale=0.2):
     
         # Create smooth variations around the underlying noise vector
    
