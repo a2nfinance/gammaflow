@@ -301,12 +301,12 @@ for epoch in range(1, n_epochs+1):
             ''' prepare fake videos'''
             # note that n_frames is sampled from video length distribution
             n_frames = T + 2 + np.random.randint(0, real_videos.size()[2]) #video_lengths[np.random.randint(0, n_videos)]
+            # print("n_videos", real_videos.size()[2])
             Z = gen_z(n_frames, batch_size)  # Z.size() => (batch_size, n_frames, nz, 1, 1)
             # trim => (batch_size, T, nz, 1, 1)
             Z = trim_noise(Z)
             # generate videos
             Z = Z.contiguous().view(batch_size*T, nz, 1, 1)
-            
             fake_videos = gen(Z, labels)
             fake_videos = fake_videos.view(batch_size, T, nc, img_size, img_size)
             # transpose => (batch_size, nc, T, img_size, img_size)

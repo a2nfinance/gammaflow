@@ -1,15 +1,11 @@
 # coding: utf-8
 
-import os
-import math
-import imageio
 import numpy as np
-from glob import glob
-from torch.utils.data import Dataset
 import torch
 import torch.nn as nn
 from torch.autograd import Variable
 import torch.nn.init as init
+from utils import gen_z, trim
 
 class Debug(nn.Module):
     def forward(self, input):
@@ -116,7 +112,8 @@ class VideoGenerator(nn.Module):
         self.ngpu = ngpu
         self.nz = nz
         self.gpu = cuda
-    
+        self.batch_size = batch_size
+        self.nClasses = nClasses
         # Addition for Conditioning the Model
         # nClasses = #Action Class + 1 (Fake Class) 
         self.label_sequence = nn.Sequential(
@@ -158,7 +155,6 @@ class VideoGenerator(nn.Module):
             labels = nn.parallel.data_parallel(self.label_sequence, labels, range(self.ngpu))
             labels = labels.unsqueeze(0).unsqueeze(0)
             labels = labels.transpose(0,2).transpose(1,3)
-            
             combinedInput = torch.cat((input, labels), 0).transpose(0,3)
             
             input = nn.parallel.data_parallel(self.combine_sequence, combinedInput, range(self.ngpu)).transpose(3,0)
@@ -169,72 +165,73 @@ class VideoGenerator(nn.Module):
             labels = self.label_sequence(labels)
             labels = labels.unsqueeze(0).unsqueeze(0)
             labels = labels.transpose(0,2).transpose(1,3)
-            
             combinedInput = torch.cat((input, labels), 0).transpose(0,3)
-            
             input = self.combine_sequence(combinedInput).transpose(3,0)
-            
             output = self.main(input)
-            
         return output
-
-    def sample_videos(self, num_samples, video_len=None, category = None):
+    
+    def sample_videos(self, video_len=None, category = None):
 
         if category:
             z_category_labels = np.array(category)
-
         else:
-            z_category_labels = np.random.randint(self.nz, size=num_samples)
+            z_category_labels = np.random.randint(self.nClasses, size=self.batch_size)
 
-        z_category_labels = torch.from_numpy(z_category_labels)
-        labels = z_category_labels.clone().detach().repeat_interleave(video_len)
-        
-        if self.gpu:
-            labels = labels.cuda()
+        z_category_labels = torch.from_numpy(z_category_labels).long()
 
+        # Use nn.Embedding to embed the label radiation component vector
         if self.gpu:
             z_category_labels = z_category_labels.cuda()
 
-        n_channels = 3
+        labels = self.label_sequence(z_category_labels)  # Map labels to embedding vectors
+        
+        labels = labels.view(self.batch_size, self.nz, 1, 1)  # Reshape into (batch_size, nz, 1, 1)
+       
+        #labels = z_category_labels.clone().detach()
+        #labels = labels.repeat(self.batch_size)
+
+        if self.gpu:
+            labels = labels.cuda()
+
         video_len = video_len if video_len is not None else 16
 
-        # Sample a single latent vector for each video and create variations
-        base_z = torch.randn(num_samples, self.nz)
+        '''
+        # Create noise in the pre_trained model
+        z = gen_z(video_len, self.batch_size)
+        # Reshape to size: (bach_size*video_len, nz, 1, 1)
+        input = z.contiguous().view(self.batch_size*video_len, self.nz, 1, 1)
+        #print("input_z", input.shape)
+        h = self.forward(input, labels)
+        #print("first h", h.size())
+        '''
+        # Create a unique basic noise vector
+        base_z = torch.randn(1, self.nz)
         if self.gpu:
             base_z = base_z.cuda()
-        
-        # Create variations around the base_z to generate movement
-        z = []
 
-        for i in range(num_samples):
-            variations = self.create_variations(base_z[i], video_len)
-            z.append(variations)
- 
-        # Convert list to tensor
-        z = torch.stack([torch.stack(z_i) for z_i in z]).view(-1, self.nz)
-        # Integrate class information into z
-        #for i in range(num_samples):
-            #z[i * video_len:(i + 1) * video_len, z_category_labels] = 1
-        #print("size z", z.size())
-        #h = self.main(z.view(z.size(0), z.size(1), 1, 1))
-        input = z.view(z.size(0), z.size(1), 1, 1)
-        input = input.repeat_interleave(video_len, dim=0)
-        h = self.forward(input, labels)
-        #print("z_reshape", z.view(z.size(0), z.size(1), 1, 1).shape)
-        #print("first h", h.size())
-        h = h.view( int( h.size(0) / video_len), video_len, n_channels, h.size(3), h.size(3))
-        #print("next_h", h.size())
+        # Create smooth variations around the underlying noise vector for each frame
+        z = self.create_smooth_variations(base_z, video_len)
         
+        # Guaranteed size: (video_len, nz, 1, 1)
+        input = z.view(video_len, self.nz, 1, 1)
+        combinedInput = torch.cat((input, labels), 0)
 
+        h = self.main(combinedInput)
+        #h = h.view( int( h.size(0) / video_len), video_len, n_channels, h.size(3), h.size(3))
+        #h = h.view( int( h.size(0) / video_len), video_len, n_channels, h.size(3), h.size(3))
+        h = h.unsqueeze(0)
+        h = trim(h)
         h = h.permute(0, 2, 1, 3, 4)
-        #print("last_h", h.size())
-        return h, z_category_labels
 
-    def create_variations(self, base_z, num_steps, variation_scale=0.1):
-        # Create slight variations around the base_z
+        return h
+    
+    def create_smooth_variations(self, base_z, num_steps, variation_scale=0.1):
+    
+        # Create smooth variations around the underlying noise vector
+   
         steps = torch.linspace(0, 1, num_steps)
-        return [base_z + variation_scale * torch.randn_like(base_z)*step for step in range(num_steps)]
-
+        z = [base_z + variation_scale * torch.randn_like(base_z) * step for step in steps]
+        return torch.cat(z, dim=0)
 
 class GRU(nn.Module):
     def __init__(self, input_size = 10, hidden_size = 10, gpu=True):
@@ -284,100 +281,8 @@ class GRU(nn.Module):
         if self._gpu == True:
             self.hidden = self.hidden.cuda()
 
-
-''' utils '''
-
 class Flatten(nn.Module):
     def forward(self, input):
         return input.view(input.size(0), -1)
    
 
-def getNumFrames(reader):
-    
-    try:
-        return math.ceil(reader.get_meta_data()['fps'] * reader.get_meta_data()['duration'])
-    
-    except AttributeError as _:
-        filename = reader
-        return getNumFrames(imageio.get_reader(filename,  'ffmpeg'))
-
-def readVideoImageio(filename, n_channels= 3):
-    
-    frames = []
-    with imageio.get_reader(filename,  'ffmpeg') as reader:
-    
-        shape = reader.get_meta_data()['size']
-        
-        for img in reader:
-            try:
-                frames.append(img)
-                
-            except Error as err:
-                print(err)
-         
-    # Paranoid double check
-    if not reader.closed:
-        reader.close()
-        
-    videodata = np.array(frames, dtype= np.uint8)
-            
-    return videodata
-
-def has_file_allowed_extension(filename, extensions):
-    """Checks if a file is an allowed extension.
-
-    Args:
-        filename (string): path to a file
-        extensions (tuple of strings): extensions to consider (lowercase)
-
-    Returns:
-        bool: True if the filename ends with one of given extensions
-    """
-    extensions = list(extensions)
-    
-    returnValue = False
-    for extension in extensions:
-        returnValue = returnValue or filename.lower().endswith(extension)
-    
-    return returnValue
-
-
-def make_dataset(dir, class_to_idx, extensions=None, classes = []):
-    videos = []
-
-    if os.path.isdir(dir):
-
-        dir = os.path.expanduser(dir)
-        
-        if extensions is not None:
-            def is_valid_file(x):
-                return has_file_allowed_extension(x, extensions)
-            
-        for target in sorted(class_to_idx.keys()):
-            
-            d = os.path.join(dir, target)
-            if not os.path.isdir(d):
-                continue
-            for root, _, fnames in sorted(os.walk(d)):
-                if len(classes) > 0:
-                    if not any([element.lower() in root.lower() for element in classes]):
-                        continue
-
-                for fname in sorted(fnames):
-                    path = os.path.join(root, fname)
-                    if is_valid_file(path):
-                        item = (path, class_to_idx[target])
-                        videos.append(item)
-
-    else: # It is a file containing preprocessed informations.
-        with open(dir, 'r') as file:
-            for line in file:
-                if line == '':
-                    continue
-                line      = line.rstrip('\n\r')
-                target    = os.path.split( os.path.split(line)[0] ) [1]
-                path      = os.path.join( os.path.split(dir)[0], line)
-                item      = (path, class_to_idx[target])
-                videos.append(item)
-                    
-    return videos

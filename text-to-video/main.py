@@ -19,10 +19,6 @@ parser.add_argument('--video_path', type=str, default='trained_models/VideoGener
 parser.add_argument('--text_path', type=str, default='text_to_class/LSTM-checkpoint-3700',
                      help='set path (prefix name) to load state for text to class')
 
-
-parser.add_argument('--trim_video', type=int, default=16,
-                     help='set number of frames, default: 16')
-
 args       = parser.parse_args()
 cuda       = args.cuda
 ngpu       = args.ngpu
@@ -30,7 +26,9 @@ video_path = args.video_path
 text_path  = args.text_path
 
 
-gen = VideoGenerator(nc=3, ngf=64, nz = 60, ngpu=1, nClasses= 11, batch_size= 16)
+num_samples = 1
+nClasses = 11
+gen = VideoGenerator(nc=3, ngf=64, nz = 60, ngpu=1, nClasses= nClasses, batch_size= num_samples)
 
 # Definde a state path
 current_path = os.getcwd()
@@ -79,11 +77,10 @@ except KeyError as err:
 if torch.cuda.is_available():
     gen      = gen.cuda()
 
-num_samples = 1
+# Video len = 16 for pre_trained model
 video_len = 16
-
 save_path =  current_path
-fakeVideo, _ = gen.sample_videos(num_samples, video_len, [actionIDx.item() + 1])
+fakeVideo = gen.sample_videos(video_len, [actionIDx.item() + 1])
 fakeVideo    = fakeVideo[0].detach().cpu().numpy().transpose(1, 2, 3, 0)
 save_video(fakeVideo, actionClassName, save_path)
 
