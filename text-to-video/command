@@ -5,6 +5,10 @@ cd unrar
 make
 sudo make install
 
+# https://github.com/ckkelvinchan/BasicVSR_PlusPlus
+git clone https://github.com/ckkelvinchan/BasicVSR_PlusPlus.git
+pip install -v -e .
+
 unrar x -y UCF101.rar 
 -----------------------
 python resize.py
@@ -28,3 +32,9 @@ python train.py  --ngpu 1 --batch_size 16 --n_epochs 1 --pre_train -1 --i_epochs
 python train.py --n_epochs 10000 --batch_size 64 --embed_size 512 --lr 0.0001 --save_interval 100 --numClasses 10 --path data/action_classes.txt 
 
 python train.py --n_epochs 12000 --save_interval 1000 --path data/processed_dataset.txt 
+
+ffmpeg -i fake-jack.mp4 -vf "unsharp=5:5:1.0:5:5:0.0" fake-jack_sharpened_video.mp4
+
+ffmpeg -i fake-jack_sharpened_video.mp4 -vf "scale=1920:1080" fake-jack_sharpened_1920.mp4
+
+ffmpeg -i fake-jack_sharpened_video.mp4 -vf "scale=360:240, hqdn3d=1.5:1.5:6:6, unsharp=5:5:1.0:5:5:0.0" output.mp4

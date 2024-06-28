@@ -5,7 +5,7 @@ import torch
 import torch.nn as nn
 from torch.autograd import Variable
 import torch.nn.init as init
-from utils import gen_z, trim
+from utils import gen_z, convert_class
 
 class Debug(nn.Module):
     def forward(self, input):
@@ -57,7 +57,7 @@ class VideoDiscriminator(nn.Module):
             nn.LeakyReLU(0.2, inplace=True),
             # state size. (ndf*8) x T/16  x 6 x 6
             Flatten(),
-            nn.Linear(int((ndf*8)*(T/16)*6*6), 1 + nClasses),
+            nn.Linear(int((ndf*8)*(T/16)*6*6), nClasses),
             nn.Sigmoid()
         )
 
@@ -68,7 +68,7 @@ class VideoDiscriminator(nn.Module):
             
         else:
             output = self.main(input)
-            
+
         labels = output[:, 1 : output.size(1)]
         output = output[:, 0]
         result = output.view(-1, 1).squeeze(1)
@@ -98,7 +98,7 @@ class VideoGenerator(nn.Module):
         ngpu:       integer, default= 1
             Number of GPU on which the model will run.
             
-        nClasses:   integer, default= 102
+        nClasses:   integer, default= 11
             Number of classes on which the Embedding module will work.
             
         batch_size: integer, default = 16
@@ -115,7 +115,7 @@ class VideoGenerator(nn.Module):
         self.batch_size = batch_size
         self.nClasses = nClasses
         # Addition for Conditioning the Model
-        # nClasses = #Action Class + 1 (Fake Class) 
+        # nClasses = Action Class + 1 (fake class)
         self.label_sequence = nn.Sequential(
             nn.Embedding(nClasses, nClasses//16),
             nn.Linear(nClasses//16, nz),
@@ -172,9 +172,9 @@ class VideoGenerator(nn.Module):
     
     def sample_videos(self, video_len=None, category = None):
 
-        n_channels = 3
+        # n_channels = 3
         if category:
-            z_category_labels = np.array(category)
+            z_category_labels = np.array([category for i in range(self.batch_size)])
         else:
             z_category_labels = np.random.randint(self.nClasses, size=self.batch_size)
 
@@ -198,12 +198,13 @@ class VideoGenerator(nn.Module):
 
 
         # Create noise in the pre_trained model
-        z = gen_z(video_len, 2)
+        z = gen_z(video_len, 16)
 
-        input = z.contiguous().view(2, video_len, self.nz, 1, 1)
-        input = input[0:1, :, :, :, :]
+        input = z.contiguous().view(16, video_len, self.nz, 1, 1)
+        id = convert_class(category)
+        input = input[id-1:id, :, :, :, :]
         # Reshape to size: (bach_size*video_len, nz, 1, 1)
-        input = input.view(video_len, self.nz, 1, 1)
+        input = input.view(self.batch_size*video_len, self.nz, 1, 1)
         # print("input", input.size())
 
         '''

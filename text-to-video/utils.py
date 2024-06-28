@@ -8,6 +8,8 @@ import math
 import imageio
 import numpy as np
 
+np.random.seed(777)
+torch.manual_seed(777)
 
 cuda = False
 img_size = 96
@@ -86,6 +88,9 @@ def gen_z(n_frames, batch_size = 16):
     #print(f"D_C: {d_C}")
     #print(f"D_E: {d_E}")
     #print(f"nz: {nz}")
+    np.random.seed(777)
+    torch.manual_seed(777)
+
     z_C = Variable(torch.randn(batch_size, d_C))
     #  repeat z_C to (batch_size, n_frames, d_C)
     z_C = z_C.unsqueeze(1).repeat(1, n_frames, 1)
@@ -194,3 +199,18 @@ def trim(video):
     start = 0 
     end = video.shape[1] - 1
     return video[:, start:end, :, :]
+
+def convert_class(cl):
+    switcher={
+                1:2,
+                2:5,
+                3:4,
+                4:2,
+                5:1,
+                6:10,
+                7:3,
+                8:6,
+                9:8,
+                10:7
+             }
+    return switcher.get(cl, "Invalid class")

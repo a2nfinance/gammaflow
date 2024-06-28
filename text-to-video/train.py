@@ -32,7 +32,6 @@ parser.add_argument('--pre_train', type=int, default=-1,
 parser.add_argument('--trim_video', type=int, default=16,
                      help='set number of frames, default: 16')
 
-## Additions for training on UCF-101
 EXPLORATORY_DATA_ANALYSIS = False
 
 parser.add_argument('--i_epochs_checkpoint', type=int, default=1,
@@ -332,7 +331,7 @@ for epoch in range(1, n_epochs+1):
             gen.zero_grad()
             gru.zero_grad()
             # video. notice retain=True for back prop twice
-            err_G, _ = bp(fake_videos, 0.9, retain=True)
+            err_G, _ = bp(fake_videos, labels.type(torch.FloatTensor) / len(dictClassesIdx), retain=True)
             optim_G.step()
             optim_GRU.step()
 
