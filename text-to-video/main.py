@@ -69,8 +69,8 @@ try:
     results              = network(torch.tensor(toForwardDescription).unsqueeze_(0))
     _, actionIDx         = results.max(1)
     actionClassName      = dataset.getClassNameFromIndex(actionIDx.item() + 1)
-    print(f'Predicted class is {actionClassName}')    
-    print(actionIDx)
+    #print(f'Predicted class is {actionClassName}')    
+    #print(actionIDx)
 except KeyError as err:
     print('Sorry, that word is not in the vocabulary. Please try again.')
 
@@ -80,7 +80,6 @@ if torch.cuda.is_available():
 video_len = 25*5
 save_path =  current_path
 fakeVideo = gen.sample_videos(video_len, actionIDx.item() + 1)
-#actionIDx.item() + 1
 fakeVideo    = fakeVideo[0].detach().cpu().numpy().transpose(1, 2, 3, 0)
 save_video(fakeVideo, actionClassName, save_path)
 

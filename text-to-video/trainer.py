@@ -6,6 +6,8 @@ import skvideo.io
 import torch
 import math
 import os
+import shutil
+import subprocess
 
 class Trainer(nn.Module):
 
@@ -347,3 +349,26 @@ def save_video(fake_video, category, path = None):
         outputdata = outputdata.astype(np.uint8)
         file_path = os.path.join(path, 'fake-%s.mp4' % category)
         skvideo.io.vwrite(file_path, outputdata, inputdict={'-r': str(30)})
+
+        output_path = os.path.join(path, 'fake-%s.improve.mp4' % category)
+        # Construct the ffmpeg command
+        command = [
+            "ffmpeg",
+            "-y",
+            "-i", file_path ,
+            "-vf", "scale=192:192, hqdn3d=3:3:6:6, unsharp=5:5:1.0:5:5:0.0",
+            output_path
+        ]
+
+        # Improve the  video quality
+        # Check if ffmpeg is available
+        ffmpeg_path = shutil.which("ffmpeg")
+        if ffmpeg_path is None:
+            print("FFmpeg is not installed or not found in the system PATH.")
+        else:
+            # Execute the command
+            try:
+                subprocess.run(command, check=True)
+                print("FFmpeg command executed successfully.")
+            except subprocess.CalledProcessError as e:
+                print(f"An error occurred while executing the FFmpeg command: {e}")

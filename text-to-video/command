@@ -37,4 +37,4 @@ ffmpeg -i fake-jack.mp4 -vf "unsharp=5:5:1.0:5:5:0.0" fake-jack_sharpened_video.
 
 ffmpeg -i fake-jack_sharpened_video.mp4 -vf "scale=1920:1080" fake-jack_sharpened_1920.mp4
 
-ffmpeg -i fake-jack_sharpened_video.mp4 -vf "scale=360:240, hqdn3d=1.5:1.5:6:6, unsharp=5:5:1.0:5:5:0.0" output.mp4
+ffmpeg -i fake-jack.mp4 -vf "scale=360:240, hqdn3d=3:3:6:6, unsharp=5:5:1.0:5:5:0.0" output.mp4

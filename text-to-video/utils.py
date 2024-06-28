@@ -8,9 +8,6 @@ import math
 import imageio
 import numpy as np
 
-np.random.seed(777)
-torch.manual_seed(777)
-
 cuda = False
 img_size = 96
 nc = 3 # number of chanel
@@ -82,14 +79,8 @@ else:
 #gru.initWeight()
 
 def gen_z(n_frames, batch_size = 16):
-    #print("----Generating Z-----")
-    #print(f"N_FRAMES: {n_frames}")
-    #print(f"BATCH_SIZE: {batch_size}")
-    #print(f"D_C: {d_C}")
-    #print(f"D_E: {d_E}")
-    #print(f"nz: {nz}")
-    np.random.seed(777)
-    torch.manual_seed(777)
+
+    torch.manual_seed(27)
 
     z_C = Variable(torch.randn(batch_size, d_C))
     #  repeat z_C to (batch_size, n_frames, d_C)
@@ -202,15 +193,15 @@ def trim(video):
 
 def convert_class(cl):
     switcher={
-                1:2,
-                2:5,
-                3:4,
-                4:2,
-                5:1,
-                6:10,
+                1:14,
+                2:7,
+                3:5,
+                4:14,
+                5:8,
+                6:11,
                 7:3,
-                8:6,
-                9:8,
-                10:7
+                8:4,
+                9:13,
+                10:16
              }
     return switcher.get(cl, "Invalid class")

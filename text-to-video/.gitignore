@@ -4,10 +4,9 @@
 /__pycache__/
 /raw_data/*
 /resized_data/*
-/trained_models/
 /generated_videos/*
 /test.ipynb
 !.gitkeep
 /sandbox
-!/trained_models/*
-
+!/trained_models/pre_trained_models/*
+pre_trained_models/
