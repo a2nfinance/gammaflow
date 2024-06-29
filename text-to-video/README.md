@@ -37,7 +37,7 @@ python train.py  --cuda 1 \
 --i_epochs_display 10
 ```
 ### Train text to class
-In the folder text_to_video, run:
+In the folder text_to_class, run:
 ```
 python train.py --cuda 1 --ngpu 7 \
 --n_epochs 10000 \
