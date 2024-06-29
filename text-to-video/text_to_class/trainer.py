@@ -36,7 +36,7 @@ class Trainer:
                     device = torch.device('cpu'), testLoader = None, validLoader = None,
                     lossCriterion = CrossEntropyLoss, 
                     optimizer = Adam, lr = 0.001, weight_decay = 1e-4,
-                    loadEpoch = None ):
+                    loadEpoch = None, ngpu=1):
 
         self.device         = device
         self.network        = network
@@ -48,6 +48,7 @@ class Trainer:
         self.lossCriterion  = lossCriterion()
         self.optimizer      = optimizer(self.network.parameters(), lr = lr, weight_decay = weight_decay)
         self.loadEpoch      = loadEpoch
+        self.ngpu           = ngpu
 
         self.moveToDevice()
         self.load()
@@ -58,13 +59,13 @@ class Trainer:
             self.network.loadState(self.loadEpoch)
 
     def moveToDevice(self):
+        if self.ngpu > 1 and torch.cuda.is_available():
+            self.network = torch.nn.DataParallel(self.network, range(self.ngpu))
+
         
-        toMigrate = [self.lossCriterion, self.network]
+        self.lossCriterion.to(self.device)
+        self.network.to(self.device)
 
-        for moveItem in toMigrate:
-            moveItem.to(self.device)
-
-    
     def _cycle(self, mode, loader):
         
         isTraining = mode == 'train'

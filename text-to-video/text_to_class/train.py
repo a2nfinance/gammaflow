@@ -40,6 +40,9 @@ def addCLArguments(parser):
 
     parser.add_argument('--cuda', default = False, action= 'store_true', 
                             help= 'Set to use the GPU.')
+    
+    parser.add_argument('--ngpu', type=int, default=1,
+                     help='set the number of gpu you use')
                             
     parser.add_argument('--n_epochs', default = 120, type = int,
                             help= 'Set the number of epochs to train.')
@@ -83,6 +86,7 @@ def getCLArguments(parser):
 
     return {
         'cuda'          : args.cuda,
+        'ngpu'          : args.ngpu,
         'epochs'        : args.n_epochs,
         'numClasses'    : args.numClasses,
         'path'          : args.path,
@@ -114,11 +118,11 @@ if __name__ == "__main__":
     factory         = DataLoaderFactory(dataset, clParameters['batch_size'])
     train_dataLoader, validation_dataLoader, test_dataLoader = factory.dataloaders
 
-    network = LSTM(nn.LSTM, clParameters['rnn_size'], clParameters['embed_size'], len(dataset.vocabulary))
+    network = LSTM(nn.LSTM, clParameters['rnn_size'], clParameters['embed_size'], len(dataset.vocabulary), ngpu=clParameters['ngpu'])
     trainer = Trainer(network, train_dataLoader, clParameters['epochs'], device = device,
                         testLoader= test_dataLoader, validLoader= validation_dataLoader,
                         lr= clParameters['lr'], weight_decay= clParameters['weight_decay'], 
-                        loadEpoch= clParameters['loadEpoch'], save_interval= clParameters['save_interval'] )
+                        loadEpoch= clParameters['loadEpoch'], save_interval= clParameters['save_interval'], ngpu=clParameters['ngpu'] )
     try:
         trainer.start()
 

@@ -31,7 +31,7 @@ import torch
 class LSTM(nn.Module):
 
     def __init__(self, rnn_type, rnn_size, embed_size, voca_size, numClasses = 10,
-                    checkpoint = "LSTM-checkpoint.pth"):
+                    checkpoint = "LSTM-checkpoint.pth", ngpu=1):
 
         super(LSTM, self).__init__()
         'We use the embedding layer because the input dataset will be a vocabulary of many words.'
@@ -39,17 +39,24 @@ class LSTM(nn.Module):
         self.rnn = rnn_type(embed_size, rnn_size, batch_first=True)
         self.output = nn.Linear(rnn_size, numClasses)
         self.checkpoint = checkpoint
-
+        self.ngpu = ngpu
         
     def forward(self, x):
-        # Embed data
-        x = self.embedding(x)
-        # Process through RNN
-        x,_ = self.rnn(x)
-        # Get final state
-        x = x[:,-1,:]
-        # Classify
-        x = self.output(x)
+        if isinstance(x, torch.Tensor) and self.ngpu > 1 and torch.cuda.device_count() >= self.ngpu:
+            x = nn.parallel.data_parallel(self.embedding, x, range(self.ngpu))
+            x = nn.parallel.data_parallel(self.rnn, x, range(self.ngpu))[0]
+            x = x[:, -1, :]
+            x = nn.parallel.data_parallel(self.output, x, range(self.ngpu))
+        else:
+            # Embed data
+            x = self.embedding(x)
+            # Process through RNN
+            x,_ = self.rnn(x)
+            # Get final state
+            x = x[:,-1,:]
+            # Classify
+            x = self.output(x)
+
         return x
 
     def loadState(self, path):

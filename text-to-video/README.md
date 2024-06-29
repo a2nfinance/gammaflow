@@ -1,6 +1,7 @@
 ## Introduction
 Text to video AI models.
 ## Implementation
+### Installation
 Install ffmpeg: 
 ```
 sudo apt update
@@ -16,16 +17,35 @@ Install dependencies:
 pip install -r requirement.txt
 ```
 ### Data preparation
-Download UCF101 - Action Recognition Data Set [here](https://www.crcv.ucf.edu/data/UCF101.php), and put it into raw_data.
+Download Actions as Space-Time Shapes Data Set [here](https://www.wisdom.weizmann.ac.il/%7Evision/SpaceTimeActions.html), and put it into a folder named: raw_data.
 ### Resize videos
 
 ```
 python resize.py
 ```
-### Train models
-If using GPUs then don't need to set --cuda, --niter = number of epoches:
+### Train video generator
+If using GPUs then don't need to set --cuda:
 ```
-python train.py --cuda -1 --ngpu 1 --niter 1 --pre-train -1 
+python train.py  --cuda 1 \
+--ngpu 7 \
+--batch_size 16 \
+--n_epochs 10000 \
+--lr 0.0002 \
+--pre_train -1 \
+--i_epochs_saveV 500 \
+--i_epochs_checkpoint 100 \
+--i_epochs_display 10
+```
+### Train text to class
+```
+python train.py --cuda 1 --ngpu 7 \
+--n_epochs 10000 \
+--batch_size 64 \
+--embed_size 512 \
+--lr 0.0001 \
+--save_interval 100 \
+--numClasses 10 \
+--path data/action_classes.txt
 ```
 ## Text to video
 ```

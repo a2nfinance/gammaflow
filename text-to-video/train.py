@@ -29,6 +29,8 @@ parser.add_argument('--n_epochs', type=int, default=120000,
                      help='set num of iterations, default: 120000')
 parser.add_argument('--pre_train', type=int, default=-1,
                      help='set 1 when you use pre-trained models')
+parser.add_argument('--lr', type=float, default=0.0002,
+                     help='set learning rate, default: 0.0002')
 parser.add_argument('--trim_video', type=int, default=16,
                      help='set number of frames, default: 16')
 
@@ -40,7 +42,6 @@ parser.add_argument('--i_epochs_saveV', type=int, default=1,
                      help='set num of epochs between save fake video, default: 1')
 parser.add_argument('--i_epochs_display', type=int, default=1,
                      help='set num of epochs between print information, default: 1')
-#### End of additions for UCF-101
 
 args       = parser.parse_args()
 cuda       = args.cuda
@@ -49,8 +50,9 @@ batch_size = args.batch_size
 n_epochs     = args.n_epochs
 pre_train  = args.pre_train
 trim_video  = args.trim_video
+lr = args.lr
 
-## Addition for training on UCF-101
+## Addition for training 
 n_epochs_saveV      = args.i_epochs_saveV
 n_epochs_display    = args.i_epochs_display
 n_epochs_check      = args.i_epochs_checkpoint

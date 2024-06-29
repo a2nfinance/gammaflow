@@ -83,3 +83,4 @@ fakeVideo = gen.sample_videos(video_len, actionIDx.item() + 1)
 fakeVideo    = fakeVideo[0].detach().cpu().numpy().transpose(1, 2, 3, 0)
 save_video(fakeVideo, actionClassName, save_path)
 
+
