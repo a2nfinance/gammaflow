@@ -53,7 +53,7 @@ dataset_path = dataset_path[0]
 dataset = TextLoader(dataset_path, item_length = itemLength)
 vocal_size = len(dataset.vocabulary) 
 
-network = LSTM(rnnType, rnnSize, embedSize, vocal_size)
+network = LSTM(rnnType, rnnSize, embedSize, vocal_size, ngpu=ngpu)
 network.loadState(os.path.join(current_path, text_path))
 
 '''

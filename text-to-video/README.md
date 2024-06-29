@@ -37,6 +37,7 @@ python train.py  --cuda 1 \
 --i_epochs_display 10
 ```
 ### Train text to class
+In the folder text_to_video, run:
 ```
 python train.py --cuda 1 --ngpu 7 \
 --n_epochs 10000 \
@@ -47,7 +48,12 @@ python train.py --cuda 1 --ngpu 7 \
 --numClasses 10 \
 --path data/action_classes.txt
 ```
-## Text to video
+### Text to video
+To implement text to video, we combine two models: text to class and video generator.
 ```
-python main.py
+python main.py \
+--cuda 1 \
+--ngpu 7 \
+--video_path trained_models/VideoGenerator_epoch-120000 \
+--text_path text_to_class/LSTM-checkpoint-3700
 ```
