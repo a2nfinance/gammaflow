@@ -1,6 +1,6 @@
-from models import VideoGenerator
+from generate_videos.models import VideoGenerator
 import os
-from trainer import loadState, save_video
+from generate_videos.trainer import loadState, save_video
 import torch.nn as nn
 import os
 from glob import glob
@@ -14,10 +14,16 @@ parser.add_argument('--cuda', type=bool, default=False,
                      help='Set to use the GPU.')
 parser.add_argument('--ngpu', type=int, default=1,
                      help='set the number of gpu you use')
-parser.add_argument('--video_path', type=str, default='trained_models/VideoGenerator_epoch-120000',
+parser.add_argument('--video_path', type=str, default='generate_videos/trained_models/VideoGenerator_epoch-120000',
                      help='set path (prefix name) to load state for generating video')
 parser.add_argument('--text_path', type=str, default='text_to_class/LSTM-checkpoint-3700',
                      help='set path (prefix name) to load state for text to class')
+parser.add_argument('--num_samples', type=int, default=1,
+                     help='Number of samples correspond to a batch size')
+parser.add_argument('--nClasses', type=int, default=11,
+                     help='Number of classes on which the Embedding module will work.')
+parser.add_argument('--ngf', type=int, default=64,
+                     help='Parameter of the ConvTranspose2d Layers.')
 
 args       = parser.parse_args()
 cuda       = args.cuda
@@ -25,10 +31,11 @@ ngpu       = args.ngpu
 video_path = args.video_path
 text_path  = args.text_path
 
+num_samples = args.num_samples
+nClasses = args.nClasses
+ngf = args.ngf
 
-num_samples = 1
-nClasses = 11
-gen = VideoGenerator(nc=3, ngf=64, nz = 60, ngpu=1, nClasses= nClasses, batch_size= num_samples)
+gen = VideoGenerator(nc=3, ngf=ngf, nz = 60, ngpu=ngpu, nClasses= nClasses, batch_size= num_samples)
 
 # Definde a state path
 current_path = os.getcwd()
@@ -78,7 +85,7 @@ if torch.cuda.is_available():
     gen      = gen.cuda()
 
 video_len = 25*5
-save_path =  current_path
+save_path =  current_path + "/video_output/"
 fakeVideo = gen.sample_videos(video_len, actionIDx.item() + 1)
 fakeVideo    = fakeVideo[0].detach().cpu().numpy().transpose(1, 2, 3, 0)
 save_video(fakeVideo, actionClassName, save_path)
