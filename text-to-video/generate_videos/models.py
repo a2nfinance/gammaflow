@@ -5,7 +5,7 @@ import torch
 import torch.nn as nn
 from torch.autograd import Variable
 import torch.nn.init as init
-from generate_videos.utils import gen_z, convert_class
+from utils import gen_z, convert_class
 
 class Debug(nn.Module):
     def forward(self, input):
