@@ -1,10 +1,14 @@
+import sys
+import os
+# Add the parent directory to sys.path
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
 import argparse
 from text_to_class.dataloading import TextLoader
 import torch
 import torch.nn as nn
-import os
 from glob import glob
-from ..text_to_class.models import LSTM
+from text_to_class.models import LSTM
 
 parser = argparse.ArgumentParser(description='Testing text to class.....')
 parser.add_argument('--path', default = 'data/action_classes.txt', type = str,
@@ -17,7 +21,7 @@ parser.add_argument('--text_path', type=str, default='text_to_class/LSTM-checkpo
 
 args = parser.parse_args()
 path = args.path
-sequence_len = args.sequence_len
+sequence_len = args.sequence_length
 text_path = args.text_path
 
 # Load LSTM model to get the category predicted from natural language
@@ -29,12 +33,10 @@ loadEpoch   = 3700
 
 current_path = os.getcwd()
 dataset_path = os.path.join(current_path, 'text_to_class', 'data', 'action_classes.txt')
-dataset_path = glob(dataset_path)
 
 if not dataset_path:
     raise FileNotFoundError(f"No dataset found at {dataset_path}")
 
-dataset_path = dataset_path[0] 
 dataset = TextLoader(dataset_path, item_length = itemLength)
 vocal_size = len(dataset.vocabulary) 
 
@@ -48,25 +50,25 @@ network.loadState(os.path.join(current_path, text_path))
 
 humanDescription     = input('Put your input here: > ')
 
+
 try:
     toForwardDescription = dataset.prepareTxtForTensor(humanDescription)
     results              = network(torch.tensor(toForwardDescription).unsqueeze_(0))
     _, actionIDx         = results.max(1)
     actionClassName      = dataset.getClassNameFromIndex(actionIDx.item() + 1)
-    #print(f'Predicted class is {actionClassName}')    
-    #print(actionIDx)
+    print(f'Predicted class is {actionClassName}')    
+    print(actionIDx)
 except KeyError as err:
     print('Sorry, that word is not in the vocabulary. Please try again.')
 
 
-dataset         = TextLoader(path, item_length= sequence_len)
-
-text                = input('Input a string to test how does the model performs >')
 if torch.cuda.is_available():
-    tensor              = torch.tensor(dataset.prepareTxtForTensor(text)).cuda().unsqueeze_(0)
+    tensor              = torch.tensor(dataset.prepareTxtForTensor(humanDescription )).cuda().unsqueeze_(0)
 else: 
-    tensor              = torch.tensor(dataset.prepareTxtForTensor(text)).unsqueeze_(0)
+    tensor              = torch.tensor(dataset.prepareTxtForTensor(humanDescription )).unsqueeze_(0)
 
 output              = network(tensor)
-probability, action = output.max(1)
-print(f'Predicted class is {dataset.getClassNameFromIndex(action)} with probability {probability}')
+probability, _= output.max(1)
+print(f'Probability {probability}')
+# {dataset.getClassNameFromIndex(action + 1)} 
+
