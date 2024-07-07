@@ -4,6 +4,7 @@ import {
 } from "@reduxjs/toolkit";
 
 export const actionNames = {
+    createExperimentAction: "createExperimentAction",
     startTrainingAction: "startTrainingAction",
 }
 
@@ -14,6 +15,7 @@ type Processes = {
 
 const initialState: Processes = {
     startTrainingAction: false,
+    createExperimentAction: false
 }
 
 export const processesSlice = createSlice({
