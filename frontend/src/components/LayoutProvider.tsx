@@ -9,6 +9,11 @@ import { useRouter } from 'next/router';
 import React, { useState } from "react";
 import { FaSuperscript } from "react-icons/fa";
 import { SlOrganization } from "react-icons/sl";
+import { AiOutlineExperiment, AiTwotoneExperiment } from "react-icons/ai";
+import { LuBrainCircuit } from "react-icons/lu";
+import { CiPlay1 } from "react-icons/ci";
+import { GrDeploy } from "react-icons/gr";
+import { ConnectWallet } from './common/ConnectWallet';
 // import { ConnectWallet } from './common/ConnectWallet';
 const { Header, Sider, Content, Footer } = Layout;
 
@@ -40,33 +45,52 @@ export const LayoutProvider = (props: Props) => {
                     items={[
                         {
                             key: '2',
-                            icon: <AppstoreOutlined />,
+                            icon: <AiTwotoneExperiment />,
                             label: "My experiments",
-                            onClick: () => router.push("/")
+                            onClick: () => router.push("/experiments/list")
                         },
                         {
                             key: '3',
-                            icon: <SlOrganization />,
+                            icon: <AiOutlineExperiment />,
                             label: "New experiment",
                             onClick: () => router.push("/experiments/create")
                         },
                         { type: "divider" },
                         {
-                            key: "4",
+                            key: '4',
+                            icon: <LuBrainCircuit />,
+                            label: "My models",
+                            onClick: () => router.push("/models/list")
+                        },
+                        {
+                            key: '6',
+                            icon: <GrDeploy />,
+                            label: "My Deployments",
+                            onClick: () => router.push("/deployments")
+                        },
+                        {
+                            key: '5',
+                            icon: <CiPlay1 />,
+                            label: "Playground",
+                            onClick: () => router.push("/playground")
+                        },
+                        { type: "divider" },
+                        {
+                            key: "7",
                             type: "group",
-                            label: !collapsed ? 'Detrain Console v1.0.0' : "",
+                            label: !collapsed ? 'GammaFlow v1.0.0' : "",
                             children: [
                                 {
-                                    key: '4.1',
+                                    key: '7.1',
                                     icon: <FaSuperscript />,
                                     label: 'Twitter',
-                                    onClick: () => window.open("https://twitter.com/DeTrainA2N", "_blank")
+                                    onClick: () => window.open("https://twitter.com/GammaFlowA2N", "_blank")
                                 },
                                 {
-                                    key: '4.2',
+                                    key: '7.2',
                                     icon: <GithubOutlined />,
                                     label: 'Github',
-                                    onClick: () => window.open("https://github.com/a2nfinance/detrain", "_blank")
+                                    onClick: () => window.open("https://github.com/a2nfinance/gammaflow", "_blank")
                                 },
                             ]
                         },
@@ -92,7 +116,7 @@ export const LayoutProvider = (props: Props) => {
                         <Form layout="inline">
                             <Form.Item>
 
-                                {/* <ConnectWallet /> */}
+                                <ConnectWallet />
                             </Form.Item>
                         </Form>
                     </Space>

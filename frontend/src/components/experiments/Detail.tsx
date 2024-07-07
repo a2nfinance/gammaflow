@@ -1,11 +1,17 @@
 import { useExperiments } from "@/hooks/useExperiments"
+import { useRouter } from "next/router";
 import { useEffect } from "react"
 
 export const Detail = () => {
     const {getExperimentById} = useExperiments();
+    const router = useRouter();
+
     useEffect(() => {
-        getExperimentById("677616616261565730")
-    }, [])
+        if (router.query?.id) {
+            console.log(router.query?.id);
+        }
+    }, []);
+  
     return (
         <>Detail</>
     )
