@@ -8,6 +8,8 @@ import Router from "next/router";
 import NProgress from "nprogress";
 import { useEffect, useState } from 'react';
 import { Provider } from "react-redux";
+import { init, Web3OnboardProvider } from "@web3-onboard/react";
+import { onboardConfig } from "@/utils/connectWallet";
 
 Router.events.on("routeChangeStart", (url) => {
     NProgress.start()
@@ -20,6 +22,13 @@ Router.events.on("routeChangeComplete", (url) => {
 Router.events.on("routeChangeError", (url) => {
     NProgress.done()
 })
+
+const wen3Onboard = init({
+	connect: {
+		autoConnectAllPreviousWallet: true,
+	},
+	...onboardConfig,
+});
 export default function MyApp({ Component, pageProps }: AppProps) {
 
     const [mounted, setMounted] = useState(false);
@@ -32,19 +41,19 @@ export default function MyApp({ Component, pageProps }: AppProps) {
     }
 
     return (
-
-        <Provider store={store}>
-            <style
-                id="holderStyle"
-                dangerouslySetInnerHTML={{
-                    __html: `
+        <Web3OnboardProvider web3Onboard={wen3Onboard}>
+            <Provider store={store}>
+                <style
+                    id="holderStyle"
+                    dangerouslySetInnerHTML={{
+                        __html: `
                     *, *::before, *::after {
                         transition: none!important;
                     }
                     `,
-                }}
-            />
-           
+                    }}
+                />
+
                 <div style={{ visibility: !mounted ? 'hidden' : 'visible' }}>
                     {
 
@@ -57,7 +66,8 @@ export default function MyApp({ Component, pageProps }: AppProps) {
 
                 </div>
 
-        </Provider >
+            </Provider >
+        </Web3OnboardProvider>
 
     )
 }
