@@ -2,13 +2,15 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 export type ExperimentState = {
     experiments: any[],
-    currentExperiment: any
+    currentExperiment: any,
+    runs: any[],
 }
 
 
 const initialExperimentState: ExperimentState = {
     experiments: [],
-    currentExperiment: null
+    currentExperiment: null,
+    runs: []
 }
 
 export const experimentSlice = createSlice({
@@ -17,8 +19,11 @@ export const experimentSlice = createSlice({
     reducers: {
         setList: (state: ExperimentState, action: PayloadAction<any[]>) => {
             state.experiments = action.payload
-        }
+        },
+        setRuns:  (state: ExperimentState, action: PayloadAction<any[]>) => {
+            state.runs = action.payload
+        },
     }
 })
-export const { setList } = experimentSlice.actions;
+export const { setList, setRuns } = experimentSlice.actions;
 export default experimentSlice.reducer;
