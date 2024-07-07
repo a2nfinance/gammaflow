@@ -1,4 +1,4 @@
-import { CREATE_EXPERIMENT_ENDPOINT, GET_EXPERIMENT_ENDPOINT } from "@/configs";
+import { CREATE_EXPERIMENT_ENDPOINT, GET_EXPERIMENT_ENDPOINT, SEARCH_RUNS } from "@/configs";
 
 export const useExperiments = () => {
     const createExperiment = async () => {
@@ -40,5 +40,11 @@ export const useExperiments = () => {
             console.log(e);
         }
     };
-    return { createExperiment, getExperimentById };
+
+    const searchRunByExperimentId =  async(id: string) => {
+        let req = await fetch(`${SEARCH_RUNS}?experiment_idS=[${id}]`, {
+            method: "GET"
+        })
+    }
+    return { createExperiment, getExperimentById, searchRunByExperimentId };
 };
