@@ -63,6 +63,10 @@ python main.py \
 ```
 python .\unit_test\text_to_class.test.py
 ```
+### Generate videos
+```
+python .\unit_test\generate_videos.test.py
+```
 
 ## Evaluate Models
 ### Text to class
