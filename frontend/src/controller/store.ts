@@ -1,15 +1,13 @@
 import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit'
 
 import processReducer from './process/processSlice';
-// import setupFormsReducer from './setup/setupFormsSlice';
-// import pipelineReducer from './pipeline/pipelineSlice';
+import experimentReducer from './experiment/experimentSlice';
 
 export function makeStore() {
     return configureStore({
         reducer: {
             process: processReducer,
-            // setupForms: setupFormsReducer,
-            // pipeline: pipelineReducer
+            experiment: experimentReducer,
         },
         middleware: (getDefaultMiddleware) =>
             getDefaultMiddleware({
