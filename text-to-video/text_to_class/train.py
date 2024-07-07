@@ -80,7 +80,7 @@ def addCLArguments(parser):
 
     return parser
 
-
+# Function to get hyperparameters
 def getCLArguments(parser):
     args = parser.parse_args()
 
@@ -132,17 +132,7 @@ if __name__ == "__main__":
     network             = trainer.network
 
 
-    while(True):
 
-        text                = input('Input a string to test how does the model performs >')
-        if torch.cuda.is_available():
-            tensor              = torch.tensor(dataset.prepareTxtForTensor(text)).cuda().unsqueeze_(0)
-        else: 
-            tensor              = torch.tensor(dataset.prepareTxtForTensor(text)).unsqueeze_(0)
-
-        output              = network(tensor)
-        probability, action = output.max(1)
-        print(f'Predicted class is {dataset.getClassNameFromIndex(action)} with probability {probability}')
 
     
 

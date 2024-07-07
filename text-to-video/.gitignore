@@ -10,3 +10,4 @@ test.ipynb
 sandbox
 trained_models/
 pre_trained_models/
+video_output/*

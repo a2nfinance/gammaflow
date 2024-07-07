@@ -17,45 +17,56 @@ from torchvision.transforms import Lambda, Compose
 
 from models import VideoDiscriminator, VideoGenerator, GRU
 
+def addArguments(parser):
 
-parser = argparse.ArgumentParser(description='Start trainning GammaFlow.....')
-parser.add_argument('--cuda', type=bool, default=False,
-                     help='Set to use the GPU.')
-parser.add_argument('--ngpu', type=int, default=1,
-                     help='set the number of gpu you use')
-parser.add_argument('--batch_size', type=int, default=16,
-                     help='set batch_size, default: 16')
-parser.add_argument('--n_epochs', type=int, default=120000,
-                     help='set num of iterations, default: 120000')
-parser.add_argument('--pre_train', type=int, default=-1,
-                     help='set 1 when you use pre-trained models')
-parser.add_argument('--lr', type=float, default=0.0002,
-                     help='set learning rate, default: 0.0002')
-parser.add_argument('--trim_video', type=int, default=16,
-                     help='set number of frames, default: 16')
+    #parser = argparse.ArgumentParser(description='Start trainning GammaFlow.....')
+    parser.add_argument('--cuda', type=bool, default=False,
+                        help='Set to use the GPU.')
+    parser.add_argument('--ngpu', type=int, default=1,
+                        help='set the number of gpu you use')
+    parser.add_argument('--batch_size', type=int, default=16,
+                        help='set batch_size, default: 16')
+    parser.add_argument('--n_epochs', type=int, default=120000,
+                        help='set num of iterations, default: 120000')
+    parser.add_argument('--pre_train', type=int, default=-1,
+                        help='set 1 when you use pre-trained models')
+    parser.add_argument('--lr', type=float, default=0.0002,
+                        help='set learning rate, default: 0.0002')
+    parser.add_argument('--trim_video', type=int, default=16,
+                        help='set number of frames, default: 16')
 
-EXPLORATORY_DATA_ANALYSIS = False
+    EXPLORATORY_DATA_ANALYSIS = False
 
-parser.add_argument('--i_epochs_checkpoint', type=int, default=1,
-                     help='set num of epochs between checkpoints, default: 1')
-parser.add_argument('--i_epochs_saveV', type=int, default=1,
-                     help='set num of epochs between save fake video, default: 1')
-parser.add_argument('--i_epochs_display', type=int, default=1,
-                     help='set num of epochs between print information, default: 1')
+    parser.add_argument('--i_epochs_checkpoint', type=int, default=1,
+                        help='set num of epochs between checkpoints, default: 1')
+    parser.add_argument('--i_epochs_saveV', type=int, default=1,
+                        help='set num of epochs between save fake video, default: 1')
+    parser.add_argument('--i_epochs_display', type=int, default=1,
+                        help='set num of epochs between print information, default: 1')
+    
+    return parser
 
-args       = parser.parse_args()
-cuda       = args.cuda
-ngpu       = args.ngpu
-batch_size = args.batch_size
-n_epochs     = args.n_epochs
-pre_train  = args.pre_train
-trim_video  = args.trim_video
-lr = args.lr
+# Function to get hyperparameters
+def getArguments(parser):
+    args = parser.parse_args()
 
-## Addition for training 
-n_epochs_saveV      = args.i_epochs_saveV
-n_epochs_display    = args.i_epochs_display
-n_epochs_check      = args.i_epochs_checkpoint
+    return {
+        'cuda'       : args.cuda,
+        'ngpu'       : args.ngpu,
+        'batch_size' : args.batch_size,
+        'n_epochs'   : args.n_epochs,
+        'pre_train'  : args.pre_train,
+        'trim_video' : args.trim_video,
+        'lr' : args.lr,
+
+        ## Addition for training 
+        'n_epochs_saveV'      : args.i_epochs_saveV,
+        'n_epochs_display'    : args.i_epochs_display,
+        'n_epochs_check'      : args.i_epochs_checkpoint,
+    }
+
+getArguments    = getArguments( addArguments(argparse.ArgumentParser()) )
+
 max_frame           = 25
 #### End of additions
 
@@ -63,7 +74,7 @@ seed = 0
 torch.manual_seed(seed)
 np.random.seed(seed)
 
-if cuda:
+if getArguments['cuda']:
     torch.cuda.set_device(0)
 
 
@@ -88,31 +99,12 @@ with open(os.path.join(current_path, "classes", filenameDictClassesIdx)) as file
 
 dataset = DatasetFolder(resized_path, skvideo.io.vread, ["mp4"], transform= transformation)
 dataset.class_to_idx = dictClassesIdx
-dataloader = DataLoader(dataset, batch_size= batch_size, shuffle= True, num_workers= 0, pin_memory= True, drop_last= True)
-
-if (EXPLORATORY_DATA_ANALYSIS):
-
-    minimum = 12000
-    #for line in files:
-        #print (f"Started loading one of {len(files)} videos into memory... It will be fast.")
-    video = skvideo.io.vread(files[0])
-    print(str(video.shape))
-    video = video.transpose(3, 0, 1 ,2) / 255.0
-    video = torch.FloatTensor(video)
-    print(str(video.shape))
-    #print (f"Ended transforming into tensor: size is { (video.nelement() * video.element_size()) / (1024 * 1024)} MB")
-    #print (f"Final memory would be about {(video.nelement() * video.element_size()) / (1024 * 1024 * 1024) * len(files)} GB")
-    # transpose each video to (nc, n_frames, img_size, img_size), and devide by 255
-    if (video.shape[0] < minimum ):
-        minimum = video.shape[0] #Minimum is 180
-
-
-    print(minimum)
+dataloader = DataLoader(dataset, batch_size= getArguments['batch_size'], shuffle= True, num_workers= 0, pin_memory= True, drop_last= True)
 
 ''' prepare video sampling '''
 
 n_videos = len(dataset) #len(videos)
-T = trim_video
+T = getArguments['trim_video']
 
 # for true video
 def trim(video):
@@ -148,9 +140,9 @@ d_M = d_E
 nz  = d_C + d_M
 criterion = nn.BCELoss()
 
-dis = VideoDiscriminator(nc, ndf, T=T, ngpu=ngpu)
-gen = VideoGenerator(nc, ngf, nz, ngpu=ngpu)
-gru = GRU(d_E, hidden_size, gpu=cuda)
+dis = VideoDiscriminator(nc, ndf, T=T, ngpu=getArguments['ngpu'])
+gen = VideoGenerator(nc, ngf, nz, ngpu=getArguments['ngpu'])
+gru = GRU(d_E, hidden_size, gpu=getArguments['cuda'])
 gru.initWeight()
 
 ''' prepare for train '''
@@ -182,23 +174,22 @@ def save_video(fake_video, epoch):
 
 ''' adjust to cuda '''
 
-if cuda:
+if getArguments['cuda']:
     dis.cuda()
     gen.cuda()
     gru.cuda()
     criterion.cuda()
 
 # setup optimizer
-lr = 0.0002
 betas=(0.5, 0.999)
-optim_D  = optim.Adam(dis.parameters(), lr=lr, betas=betas)
-optim_G  = optim.Adam(gen.parameters(), lr=lr, betas=betas)
-optim_GRU = optim.Adam(gru.parameters(),   lr=lr, betas=betas)
+optim_D  = optim.Adam(dis.parameters(), lr=getArguments['lr'], betas=betas)
+optim_G  = optim.Adam(gen.parameters(), lr=getArguments['lr'], betas=betas)
+optim_GRU = optim.Adam(gru.parameters(),   lr=getArguments['lr'], betas=betas)
 
 ''' use pre-trained models '''
 
-if pre_train == True:
-    if cuda:
+if getArguments['pre_train'] == True:
+    if getArguments['cuda']:
         dis.load_state_dict(torch.load(trained_path + '/pre_trained_models/VideoDiscriminator_epoch-120000.model'), strict=False)
         gen.load_state_dict(torch.load(trained_path + '/pre_trained_models/VideoGenerator_epoch-120000.model'), strict=False)
         gru.load_state_dict(torch.load(trained_path + '/pre_trained_models/GRU_epoch-120000.model'), strict=False)
@@ -219,7 +210,7 @@ if pre_train == True:
 def bp(inputs, y, retain=False):
     #print("----BackPropagate_V-----")
     #print(inputs.size())
-    if cuda:
+    if getArguments['cuda']:
         label = (torch.FloatTensor()).cuda()
     else:
         label = torch.FloatTensor()
@@ -229,7 +220,7 @@ def bp(inputs, y, retain=False):
     except RuntimeError as _:
         # Dimension of y does not allow to use fill_
         assert(inputs.size(0) == y.size(0))
-        if cuda:
+        if getArguments['cuda']:
             label = (torch.FloatTensor(y)).cuda()
         else:
             label = torch.FloatTensor(y)
@@ -246,25 +237,20 @@ def bp(inputs, y, retain=False):
 
 ''' gen input noise for fake video '''
 
-def gen_z(n_frames, batch_size = batch_size):
-    #print("----Generating Z-----")
-    #print(f"N_FRAMES: {n_frames}")
-    #print(f"BATCH_SIZE: {batch_size}")
-    #print(f"D_C: {d_C}")
-    #print(f"D_E: {d_E}")
-    #print(f"nz: {nz}")
+def gen_z(n_frames, batch_size = getArguments['batch_size']):
+
     z_C = Variable(torch.randn(batch_size, d_C))
     #  repeat z_C to (batch_size, n_frames, d_C)
     z_C = z_C.unsqueeze(1).repeat(1, n_frames, 1)
     eps = Variable(torch.randn(batch_size, d_E))
-    if cuda:
+    if getArguments['cuda']:
         z_C, eps = z_C.cuda(), eps.cuda()
 
     gru.initHidden(batch_size)
     # notice that 1st dim of gru outputs is seq_len, 2nd is batch_size
     z_M = gru(eps, n_frames).transpose(1, 0)
     z = torch.cat((z_M, z_C), 2)  # z.size() => (batch_size, n_frames, nz)
-    #print("----End Generating Z-----")
+
     return z.view(batch_size, n_frames, nz, 1, 1)
 
 
@@ -272,9 +258,9 @@ def gen_z(n_frames, batch_size = batch_size):
 
 start_time = time.time()
 
-print(f"Starting training: CUDA is { 'On' if cuda else 'Off'}")
+print(f"Starting training: CUDA is { 'On' if getArguments['cuda'] else 'Off'}")
 
-for epoch in range(1, n_epochs+1):
+for epoch in range(1, getArguments['n_epochs']+1):
     ''' prepare real images '''
     # real_videos.size() => (batch_size, nc, T, img_size, img_size)
 
@@ -294,7 +280,7 @@ for epoch in range(1, n_epochs+1):
                 if ( val in labels.tolist() ):
                     pass
 
-            if cuda:
+            if getArguments['cuda']:
                 real_videos = real_videos.cuda()
 
             real_videos = Variable(real_videos)
@@ -303,13 +289,13 @@ for epoch in range(1, n_epochs+1):
             # note that n_frames is sampled from video length distribution
             n_frames = T + 2 + np.random.randint(0, real_videos.size()[2]) #video_lengths[np.random.randint(0, n_videos)]
             # print("n_videos", real_videos.size()[2])
-            Z = gen_z(n_frames, batch_size)  # Z.size() => (batch_size, n_frames, nz, 1, 1)
+            Z = gen_z(n_frames, getArguments['batch_size'])  # Z.size() => (batch_size, n_frames, nz, 1, 1)
             # trim => (batch_size, T, nz, 1, 1)
             Z = trim_noise(Z)
             # generate videos
-            Z = Z.contiguous().view(batch_size*T, nz, 1, 1)
+            Z = Z.contiguous().view(getArguments['batch_size']*T, nz, 1, 1)
             fake_videos = gen(Z, labels)
-            fake_videos = fake_videos.view(batch_size, T, nc, img_size, img_size)
+            fake_videos = fake_videos.view(getArguments['batch_size'], T, nc, img_size, img_size)
             # transpose => (batch_size, nc, T, img_size, img_size)
             fake_videos = fake_videos.transpose(2, 1)
 
@@ -349,14 +335,14 @@ for epoch in range(1, n_epochs+1):
             checkpoint(gru,   optim_GRU, epoch)
 
 
-    if epoch % n_epochs_display == 0:
+    if epoch % getArguments['n_epochs_display'] == 0:
         print('[%d/%d] (%s) Loss_D: %.4f Loss_G: %.4f  D_real_mean %.4f D_fake_mean %.4f'
-              % (epoch, n_epochs, timeSince(start_time), err_D, err_G, D_real_mean, D_fake_mean))
+              % (epoch, getArguments['n_epochs'], timeSince(start_time), err_D, err_G, D_real_mean, D_fake_mean))
 
-    if epoch % n_epochs_saveV == 0:
+    if epoch % getArguments['n_epochs_saveV'] == 0:
         save_video(fake_videos[0].data.cpu().numpy().transpose(1, 2, 3, 0), epoch)
 
-    if epoch % n_epochs_check == 0:
+    if epoch % getArguments['n_epochs_check'] == 0:
         checkpoint(dis, optim_D, epoch)
         checkpoint(gen, optim_G, epoch)
         checkpoint(gru, optim_GRU, epoch)
