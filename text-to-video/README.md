@@ -57,3 +57,15 @@ python main.py \
 --video_path trained_models/VideoGenerator_epoch-120000 \
 --text_path text_to_class/LSTM-checkpoint-3700
 ```
+## Run unit tests
+### Text to class
+
+```
+python .\unit_test\text_to_class.test.py
+```
+
+## Evaluate Models
+### Text to class
+```
+python .\evaluate_models\eval_text_to_class.py
+```

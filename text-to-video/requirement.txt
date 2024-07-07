@@ -5,6 +5,7 @@ sk-video
 torch 
 torchvision
 matplotlib
+scikit-learn
 
 
     

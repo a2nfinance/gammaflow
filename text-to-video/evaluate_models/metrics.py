@@ -3,22 +3,51 @@ import pandas as pd
 from math import sqrt
 from scipy.special import ndtri
 from sklearn.metrics import confusion_matrix, roc_auc_score
+
+def round_tuple_elements(input_tuple, decimals=2):
+    return tuple(round(x, decimals) for x in input_tuple)
+
+def compute_multiclass_metrics(y_true, y_pred):
+
+    # Compute the confusion matrix
+    cm = confusion_matrix(y_true, y_pred)
+
+    # Initialize lists to hold metrics for each class
+    tn_list, fp_list, fn_list, tp_list = [], [], [], []
+
+    # Number of classes
+    num_classes = cm.shape[0]
+
+    for i in range(num_classes):
+        tp = cm[i, i]
+        fp = cm[:, i].sum() - tp
+        fn = cm[i, :].sum() - tp
+        tn = cm.sum() - (tp + fp + fn)
+        
+        tn_list.append(tn)
+        fp_list.append(fp)
+        fn_list.append(fn)
+        tp_list.append(tp)
+
+    return tn_list, fp_list, fn_list, tp_list
+
+'''
+def roc_auc_multi_class():
+    # Compute ROC AUC score
+    roc_auc = roc_auc_score(y_test.reshape(-1, 1), pred.reshape(-1, 1), average='macro', multi_class='ovr')
+    print(f"ROC AUC Score: {roc_auc}")
+'''
                            
-def eval (model, X_test, y_test):
+def eval (y_test, pred, class_index = 0):
 
-    # Load and fit model
-    pred = model.predict(X_test)
-
-    # Find AUC score
-    roc_auc = roc_auc_score (y_test, pred)
-    
-    TN, FP, FN, TP = confusion_matrix(y_test, pred).ravel()
+    tn_list, fp_list, fn_list, tp_list = compute_multiclass_metrics(y_test, pred)
+    TN, FP, FN, TP =  tn_list[class_index], fp_list[class_index], fn_list[class_index], tp_list[class_index]
     print('TN', TN, 'FP', FP, 'FN', FN, 'TP', TP)
-    print("Roc_AUC: ", roc_auc)
+    
     ss, sp, acc, mcc, ss_ci, sp_ci, mcc_ci, acc_ci = measure (TN, FP, FN, TP, 0.95)
 
     return pd.DataFrame({'Sensitivity': [ss, ss_ci], 'Specificity': [sp, sp_ci], \
-                        'Accuracy': [acc, acc_ci], 'MCC': [mcc, mcc_ci], 'AUC': roc_auc})
+                        'Accuracy': [acc, acc_ci], 'MCC': [mcc, mcc_ci]})
 
 def proportion_confidence_interval(r, n, z):
     """Compute confidence interval for a proportion.
@@ -93,8 +122,9 @@ def sensitivity_and_specificity_with_confidence_intervals(TP, FP, FN, TN, alpha=
     acc = (TP +TN)/(TP+FP+TN+FN)
     acc_confidence_interval = proportion_confidence_interval(TP +TN, TP+FP+TN+FN, z)
 
-    return sensitivity_point_estimate, specificity_point_estimate, sensitivity_confidence_interval, specificity_confidence_interval, \
-    acc, acc_confidence_interval, mcc, mcc_confidence_interval
+    return round(sensitivity_point_estimate, 2), round(specificity_point_estimate, 2), \
+        round_tuple_elements(sensitivity_confidence_interval), round_tuple_elements(specificity_confidence_interval), \
+        round(acc,2), round_tuple_elements(acc_confidence_interval), round(mcc, 2), round_tuple_elements(mcc_confidence_interval)
 
 # Get sensitivity, specificity, accuracy, and Matthews's correlation coefficient.
 def measure (TP, FP, FN, TN, a):

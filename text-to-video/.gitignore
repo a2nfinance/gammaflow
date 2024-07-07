@@ -2,12 +2,13 @@
 samples
 /.ipynb_checkpoints/
 /__pycache__/
-raw_data/*
-resized_data/*
+/raw_data/*
+/resized_data/*
 generated_videos/*
 test.ipynb
 !.gitkeep
 sandbox
-trained_models/
+/trained_models/
 pre_trained_models/
-video_output/*
+/video_output/*
+/video_output/*

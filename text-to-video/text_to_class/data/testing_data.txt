@@ -1,26 +1,7 @@
 bend	Lower the torso by flexing the knees.
-bend	Flex the waist to bring the upper body forward.
-bend	Bow the head and upper body towards the ground.
-bend	Crouch by bending at the knees and hips.
-bend	Lean the upper body downward while keeping legs straight.
-bend	Perform a forward fold by bending at the waist.
-bend	Contract the abdominal muscles and bring the chest closer to the knees.
-bend	Flex at the hips and reach towards the toes.
-bend	Drop into a squat position with knees bent.
-bend	Hinge at the hips while maintaining a straight back.
-bend	Lower the body to pick something up from the ground.
-bend	Perform a hamstring stretch by bending forward at the waist.
-bend	Tilt the upper body down while keeping the back flat.
-bend	Curl the spine forward, bringing the chest towards the thighs.
 bend	Flex the lower back and hips to bring the torso down.
 bend	Bend the knees slightly and lean the upper body forward.
 bend	Drop the upper body towards the floor with knees slightly bent.
-bend	Perform a deep knee bend to lower the torso.
-bend	Contract the core and bend the upper body forward.
-bend	Perform a forward bend, reaching towards the floor.
-bend	Flex the hips and lower the upper body while keeping legs straight.
-bend	Bend at the knees and hips to lower the body.
-bend	Hinge forward at the waist with knees slightly bent.
 bend	Lean forward, flexing the waist and knees.
 bend	Lower the torso by bending the knees.
 bend	Flex the hips and bring the upper body down.
@@ -44,20 +25,6 @@ jack	Jump with arms and legs moving outward simultaneously.
 jack	Perform a side-straddle hop with arms and legs extending sideways.
 jack	Leap into the air while spreading the arms and legs wide.
 jack	Execute a full-body jump with limbs extending outward.
-jack	Jump up, spreading the legs and bringing the arms together overhead.
-jack	Perform a plyometric star jump with limbs extending.
-jack	Jump, extending both arms and legs to the sides.
-jack	Perform a dynamic jumping jack with arms and legs moving out.
-jack	Jump and extend the arms and legs in a star-like shape.
-jack	Execute a high-energy jumping jack, moving limbs outward.
-jack	Leap up, extending the arms and legs in opposite directions.
-jack	Perform an aerobic jumping jack with coordinated limb movement.
-jack	Jump, spreading the legs apart and raising the arms above the head.
-jack	Execute a jumping jack, moving arms and legs outward in sync.
-jack	Jump with arms and legs extending wide and upward.
-jack	Perform a classic jumping jack with limbs moving outward.
-jack	Jump, extending both arms and legs to create an X-shape in the air.
-jack	Perform a high-intensity jumping jack with synchronized limb movement.
 jack	Jump, spreading arms and legs apart while airborne.
 jack	Execute a vigorous jumping jack, extending the limbs outward.
 jack	Jump up, moving the arms and legs outward from the body.
@@ -67,14 +34,6 @@ jack	Execute a star jump, extending all limbs outward.
 jack	Jump with arms and legs moving outward to form a star shape.
 jack	Perform a coordinated jumping jack with limbs extending wide.
 jack	Jump, spreading legs apart and clapping the hands overhead.
-jack	Execute a dynamic jumping jack, moving arms and legs out from the body.
-jack	Jump, extending both arms and legs to the sides and then returning.
-jack	Perform a jumping jack, synchronizing the movement of arms and legs.
-jack	Jump, spreading the legs wide and bringing the arms together overhead.
-jack	Execute a full-body jumping jack with limbs extending outwards.
-jack	Jump up, moving the arms and legs out in a synchronized motion.
-jack	Perform a star jump, extending both arms and legs outward.
-jack	Jump, spreading arms and legs apart and then returning to the start.
 jack	Execute an aerobic jumping jack, moving limbs out and in rhythmically.
 jack	Jump with limbs moving outward, creating a star-like shape in the air.
 jump	Propel oneself off the ground using the legs.
@@ -87,13 +46,6 @@ jump	Jump straight up, extending the legs and feet.
 jump	Push off the ground forcefully to achieve lift.
 jump	Leap vertically by extending the legs powerfully.
 jump	Propel the body upwards from a standing position.
-jump	Perform a standing jump by pushing off with both feet.
-jump	Launch oneself upward by bending and extending the knees.
-jump	Spring off the ground, reaching for height.
-jump	Execute a vertical jump with maximum height.
-jump	Propel oneself upward, extending the legs fully.
-jump	Jump up, using the power of the legs for lift.
-jump	Push off the ground to achieve height in the air.
 jump	Perform a high jump by forcefully extending the legs.
 jump	Launch upward from a stationary position.
 jump	Propel oneself off the ground to gain height.
@@ -120,20 +72,6 @@ pjump	Leap into the air, lifting both legs in a pike position.
 pjump	Jump, extending the legs straight out in front in a pike.
 pjump	Execute a high pike jump, lifting legs parallel to the ground.
 pjump	Perform a pike jump, lifting both legs towards the chest.
-pjump	Jump into a pike position, extending legs forward.
-pjump	Leap, bringing legs up in a pike formation.
-pjump	Execute a pike jump, with legs fully extended forward.
-pjump	Jump, lifting both legs in a straight pike position.
-pjump	Perform a pike jump, extending the legs straight in front.
-pjump	Leap into the air, forming a pike with the legs.
-pjump	Jump, lifting legs in a pike position with toes pointed.
-pjump	Execute a powerful pike jump, extending legs forward.
-pjump	Perform a pike jump, lifting both legs in front simultaneously.
-pjump	Jump, extending legs out in a pike position mid-air.
-pjump	Leap into a pike jump, bringing legs parallel to the floor.
-pjump	Execute a dynamic pike jump, extending legs forward.
-pjump	Perform a pike jump, lifting legs straight in front.
-pjump	Jump, achieving a pike position with extended legs.
 pjump	Leap, bringing legs together in a pike during the jump.
 pjump	Execute a controlled pike jump, with legs fully extended.
 pjump	Perform a pike jump, lifting both legs parallel to the ground.
@@ -145,3 +83,15 @@ pjump	Jump, achieving a full pike position in mid-air.
 pjump	Leap, bringing legs up in a straight pike position.
 pjump	Execute a clean pike jump, with legs extended forward.
 pjump	Perform a pike jump, lifting legs parallel to the floor.
+side	Move sideways, maintaining balance and alignment.
+side	Shift laterally, with smooth and even steps.
+side	Step to the side, keeping the body facing forward.
+side	Move sideways, with a smooth and steady pace.
+side	Step laterally, maintaining a balanced posture.
+side	Shift to the side, with a controlled and smooth motion.
+side	Move laterally, keeping the feet in line.
+side	Step to the side, maintaining an even rhythm.
+side	Move sideways, with a controlled and smooth pace.
+side	Shift laterally, maintaining body alignment.
+side	Step to the side, with smooth and steady steps.
+side	Perform a lateral shuffle, moving side to side.
