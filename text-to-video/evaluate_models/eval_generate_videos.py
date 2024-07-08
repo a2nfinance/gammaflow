@@ -117,7 +117,7 @@ values = list(dictClassesIdx.values())
 
 for v in values:
     err_G, _ = bp(fakeVideo, v/len(dictClassesIdx), dis, retain=True)
-    print("Generate class %s with error %.4f" %(find_key_by_value(dictClassesIdx, v), err_G))
+    print("Generate class %s with a generation loss: %.4f" %(find_key_by_value(dictClassesIdx, v), err_G))
 
 
 
