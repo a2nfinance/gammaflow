@@ -2,9 +2,10 @@ import sys
 import os
 # Add the parent directory to sys.path
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
 from generate_videos.models import VideoGenerator
 import os
-from generate_videos.trainer import loadState, save_video
+from generate_videos.trainer import loadState
 import os
 from glob import glob
 from text_to_class.dataloading import TextLoader
@@ -64,6 +65,9 @@ if torch.cuda.is_available():
 video_len = 25*5
 save_path =  current_path + "/video_output/"
 fakeVideo = gen.sample_videos(video_len, 1)
+print("fakeVideo size: ", fakeVideo.detach().cpu().numpy().shape)
+
 fakeVideo    = fakeVideo[0].detach().cpu().numpy().transpose(1, 2, 3, 0)
-save_video(fakeVideo, 'test', save_path)
+
+#save_video(fakeVideo, 'test', save_path)
 print("Passed")

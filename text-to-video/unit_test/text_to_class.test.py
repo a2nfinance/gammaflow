@@ -71,4 +71,4 @@ output              = network(tensor)
 probability, _= output.max(1)
 print(f'Probability {probability}')
 # {dataset.getClassNameFromIndex(action + 1)} 
-
+print("Passed")
