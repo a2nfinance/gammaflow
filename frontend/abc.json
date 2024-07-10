@@ -1,0 +1,32 @@
+[
+    {
+        "experiment_id": "751262681175580961",
+        "name": "TestAutomation ",
+        "artifact_location": "/mnt/d/WP/Blockchain/Projects/gammaflow/mlflow_cors/artifacts",
+        "lifecycle_stage": "active",
+        "last_update_time": 1720349783865,
+        "creation_time": 1720349783865,
+        "tags": [
+            {
+                "key": "github_repo",
+                "value": "https://github.com/a2nfinance/gammaflow"
+            },
+            {
+                "key": "is_private_repo",
+                "value": "1"
+            },
+            {
+                "key": "node_address",
+                "value": "https://testnode.com"
+            },
+            {
+                "key": "training_script_path",
+                "value": "train.py"
+            },
+            {
+                "key": "wallet_address",
+                "value": "0x7b2eb7cea81ea3e257deeaefbe6b0f6a1b411042"
+            }
+        ]
+    }
+]

@@ -1,6 +1,6 @@
 import { CREATE_EXPERIMENT_ENDPOINT, GET_EXPERIMENT_ENDPOINT, SEARCH_EXPERIMENT_ENDPOINT, SEARCH_RUNS } from "@/configs";
 import { createExperimentMessage } from "@/configs/messages";
-import { setList } from "@/controller/experiment/experimentSlice";
+import { setList, setRuns } from "@/controller/experiment/experimentSlice";
 import { useAppDispatch } from "@/controller/hooks";
 import { actionNames, updateActionStatus } from "@/controller/process/processSlice";
 import { MESSAGE_TYPE, openNotification } from "@/utils/noti";
@@ -21,7 +21,6 @@ export const useExperiments = () => {
                 },
                 body: JSON.stringify({
                     name: `${values["name"]}`,
-                    artifact_location: "artifacts",
                     tags: [
                         { key: "wallet_address", value: `${wallet.accounts[0].address}` },
                         { key: "node_address", value: `${values["node_address"]}` },
@@ -59,11 +58,11 @@ export const useExperiments = () => {
             })
             let res = await createReq.json();
             dispatch(setList(res.experiments));
-        } catch(e) {
+        } catch (e) {
             console.log(e);
         }
-        
-        
+
+
     }
     const getExperimentById = async (id: string) => {
         try {
@@ -79,9 +78,23 @@ export const useExperiments = () => {
     };
 
     const searchRunByExperimentId = async (id: string) => {
-        let req = await fetch(`${SEARCH_RUNS}?experiment_idS=[${id}]`, {
-            method: "GET"
-        })
+        try {
+            let req = await fetch(`${SEARCH_RUNS}`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    experiment_ids: [id],
+                })
+            })
+            let res = await req.json();
+            console.log(res)
+            dispatch(setRuns(res.runs));
+        } catch (e) {
+            console.log(e);
+        }
+
     }
     return { getExperimentsByCreator, createExperiment, getExperimentById, searchRunByExperimentId };
 };
