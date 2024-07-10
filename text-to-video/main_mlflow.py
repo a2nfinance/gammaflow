@@ -67,9 +67,9 @@ def generate_video(gen, network, dataset, humanDescription):
     save_path = os.path.join(os.getcwd(), "video_output")
     fakeVideo = gen.sample_videos(video_len, actionIDx.item() + 1)
     fakeVideo = fakeVideo[0].detach().cpu().numpy().transpose(1, 2, 3, 0)
-    video_file_path = save_video(fakeVideo, actionClassName, save_path)
+    save_video(fakeVideo, actionClassName, save_path)
     
-    return video_file_path, actionClassName
+    return save_path, actionClassName
 
 # Main function
 def main():
@@ -95,8 +95,8 @@ def main():
             print('Sorry, that word is not in the vocabulary. Please try again.')
 
         # Save the models
-        mlflow.pytorch.log_model(network, "network_model")
-        mlflow.pytorch.log_model(gen, "gen_model")
+        #mlflow.pytorch.log_model(network, "network_model")
+        #mlflow.pytorch.log_model(gen, "gen_model")
 
 if __name__ == "__main__":
     main()
