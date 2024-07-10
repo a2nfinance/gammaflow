@@ -7,7 +7,7 @@ export const Item = ({ index, experiment }: {index: number, experiment: any}) =>
   return (
     <Card key={`experiment-${index}`} title={experiment.name}  headStyle={headStyle} style={{ margin: 5 }} extra={
       <Space>
-            <Button type='primary' onClick={() => router.push(`/experiments/detail/${experiment.experiment_id}`)}>Detail</Button>
+            <Button type='primary' onClick={() => router.push(`/experiments/runs/${experiment.experiment_id}`)}>All runs</Button>
       </Space>
      
     }>

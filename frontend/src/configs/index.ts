@@ -4,4 +4,5 @@ export const GET_EXPERIMENT_ENDPOINT = `${MLFLOW_SERVER_API}/2.0/mlflow/experime
 export const SEARCH_EXPERIMENT_ENDPOINT = `${MLFLOW_SERVER_API}/2.0/mlflow/experiments/search`
 export const SEARCH_RUNS= `${MLFLOW_SERVER_API}/2.0/mlflow/runs/search`
 export const GET_RUN = `${MLFLOW_SERVER_API}/2.0/mlflow/runs/get`
+export const GET_ARTIFACTS_LIST= `${MLFLOW_SERVER_API}/2.0/mlflow/artifacts/list`
 export const NETWORK_EXPLORER = `https://explorer.thetatoken.org/`
