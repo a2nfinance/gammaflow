@@ -33,4 +33,8 @@ python train.py --cuda 1 --ngpu 7 --n_epochs 10000 --batch_size 64 --embed_size 
 
 python train.py --n_epochs 12000 --save_interval 1000 --path data/processed_dataset.txt 
 
+# build docker
+docker build -t gammaflow-pipeline .
+docker run -it --rm gammaflow-pipeline
+
 
