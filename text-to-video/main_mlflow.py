@@ -9,12 +9,13 @@ from generate_videos.models import VideoGenerator
 from generate_videos.trainer import loadState, save_video
 from text_to_class.models import LSTM
 from text_to_class.dataloading import TextLoader
+from mlflow.models import infer_signature
 
 # Function to initialize MLflow
 def initialize_mlflow():
     os.environ["MLFLOW_ENABLE_SYSTEM_METRICS_LOGGING"] = "true"
     mlflow.set_tracking_uri("http://34.125.25.91:8080")
-    mlflow.set_experiment(experiment_id="433043047588038494")
+    mlflow.set_experiment(experiment_id="560267043823286999")
 
 # Function to parse arguments
 def parse_arguments():
@@ -71,6 +72,29 @@ def generate_video(gen, network, dataset, humanDescription):
     
     return save_path, actionClassName
 
+# Custom PyTorch model that combines the LSTM and VideoGenerator
+class TextToVideoModel(nn.Module):
+    def __init__(self, lstm_model, video_generator, dataset, ngpu=1):
+        super(TextToVideoModel, self).__init__()
+        self.lstm_model = lstm_model
+        self.video_generator = video_generator
+        self.dataset = dataset
+        self.ngpu = ngpu
+
+    def forward(self, text_input):
+        toForwardDescription = self.dataset.prepareTxtForTensor(text_input)
+        results = self.lstm_model(torch.tensor(toForwardDescription).unsqueeze_(0))
+        _, actionIDx = results.max(1)
+
+        if torch.cuda.is_available() and self.ngpu > 0:
+            self.video_generator = self.video_generator.cuda()
+
+        video_len = 25 * 5
+        fakeVideo = self.video_generator.sample_videos(video_len, actionIDx.item() + 1)
+        fakeVideo = fakeVideo[0].detach().cpu().numpy().transpose(1, 2, 3, 0)
+        
+        return fakeVideo
+
 # Main function
 def main():
     initialize_mlflow()
@@ -86,6 +110,7 @@ def main():
         try:
             video_file_path, actionClassName = generate_video(gen, network, dataset, humanDescription)
             mlflow.log_param("action_class", actionClassName)
+
             if video_file_path:
                 mlflow.log_artifact(video_file_path)
                 print(f"Video saved to {video_file_path}")
@@ -94,12 +119,16 @@ def main():
         except KeyError as err:
             print('Sorry, that word is not in the vocabulary. Please try again.')
 
-        # Save the models
-        #mlflow.pytorch.log_model(network, "network_model")
-        #mlflow.pytorch.log_model(gen, "gen_model")
+        # Combine the models into a single pipeline model
+        combined_model = TextToVideoModel(network, gen, dataset, ngpu=args.ngpu)
+        
+        # Define input example and signature
+        text_input_example = "example text"
+        video_output_example = combined_model(text_input_example)
+        signature = infer_signature(text_input_example, video_output_example)
+
+        # Save the combined pipeline model with signatures
+        mlflow.pytorch.log_model(combined_model, "text_to_video_pipeline", signature=signature, input_example=text_input_example)
 
 if __name__ == "__main__":
     main()
-
-
-
