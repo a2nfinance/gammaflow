@@ -11,8 +11,7 @@ export const useRuns = () => {
             })
 
             let res = await req.json();
-            console.log("Run", res);
-            dispatch(setRun(res));
+            dispatch(setRun(res.run));
         } catch (e) {
             console.log(e);
         }
@@ -27,11 +26,6 @@ export const useRuns = () => {
 
             let res = await req.json();
             let parentFolder = res.files[0].path;
-            // let getChildsReq = await fetch(`${GET_ARTIFACTS_LIST}?run_id=${run_id}&path=${parentFolder}/metadata`, {
-            //     method: "GET"
-            // })
-            // let childElms = await getChildsReq.json();
-            // console.log(childElms);
             dispatch(setRootFolder(parentFolder));
         } catch (e) {
             console.log(e);

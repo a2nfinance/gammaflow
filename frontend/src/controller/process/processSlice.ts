@@ -6,6 +6,8 @@ import {
 export const actionNames = {
     createExperimentAction: "createExperimentAction",
     startTrainingAction: "startTrainingAction",
+    createRegisteredModelAction: "createRegisteredModelAction",
+    createModelVersionAction: "createModelVersionAction"
 }
 
 
@@ -15,7 +17,9 @@ type Processes = {
 
 const initialState: Processes = {
     startTrainingAction: false,
-    createExperimentAction: false
+    createExperimentAction: false,
+    createRegisteredModelAction: false,
+    createModelVersionAction: false
 }
 
 export const processesSlice = createSlice({

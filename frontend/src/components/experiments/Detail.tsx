@@ -1,15 +1,16 @@
 import { useAppSelector } from "@/controller/hooks";
 import { useExperiments } from "@/hooks/useExperiments"
 import { headStyle } from "@/theme/layout";
-import { Button, Card, Space, Table, Tag } from "antd";
+import { Button, Card, Modal, Space, Table, Tag } from "antd";
 import { useRouter } from "next/router";
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
+import { NewRunForm } from "../run/Form";
 
 export const Detail = () => {
     const { runs } = useAppSelector(state => state.experiment);
     const { searchRunByExperimentId } = useExperiments();
     const router = useRouter();
-
+    const [isModalOpen, setIsModalOpen] = useState(false);
     useEffect(() => {
         if (router.query?.id) {
             console.log(router?.query?.id)
@@ -65,18 +66,34 @@ export const Detail = () => {
         },
 
     ]
+
+
+
+    const showModal = () => {
+        setIsModalOpen(true);
+    };
+
+    const handleOk = () => {
+        setIsModalOpen(false);
+    };
+
+    const handleCancel = () => {
+        setIsModalOpen(false);
+    };
     return (
         <Card title="Runs" headStyle={headStyle} extra={
             <Space>
-                  <Button type='primary' size="large">New run</Button>
+                <Button type='primary' size="large" onClick={showModal}>New run</Button>
             </Space>
-           
-          }>
+
+        }>
             <Table
                 columns={columns}
                 dataSource={runs?.map(r => r.info)}
             />
-
+            <Modal style={{minWidth: 900}} title="New run" open={isModalOpen} footer={[]}   onOk={handleOk} onCancel={handleCancel}>
+                <NewRunForm />
+            </Modal>
         </Card>
 
     )
