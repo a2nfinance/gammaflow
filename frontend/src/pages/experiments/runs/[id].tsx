@@ -14,7 +14,7 @@ export default function ID() {
         }
     }, [router.query?.id]);
     return (
-        <div style={{ maxWidth: 1440, minWidth: 900, margin: "auto" }}>
+        <div style={{ maxWidth: 1440, minWidth: 1024, margin: "auto" }}>
             <Detail />
         </div>
     )
