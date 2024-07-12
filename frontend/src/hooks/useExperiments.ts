@@ -1,6 +1,6 @@
 import { CREATE_EXPERIMENT_ENDPOINT, GET_EXPERIMENT_ENDPOINT, SEARCH_EXPERIMENT_ENDPOINT, SEARCH_RUNS } from "@/configs";
 import { createExperimentMessage } from "@/configs/messages";
-import { setList, setRuns } from "@/controller/experiment/experimentSlice";
+import { setCurrentExperiment, setList, setRuns } from "@/controller/experiment/experimentSlice";
 import { useAppDispatch } from "@/controller/hooks";
 import { actionNames, updateActionStatus } from "@/controller/process/processSlice";
 import { MESSAGE_TYPE, openNotification } from "@/utils/noti";
@@ -71,7 +71,8 @@ export const useExperiments = () => {
                 method: "GET"
             })
             let res = await req.json();
-            console.log(res);
+            console.log("Current experiment:", res.experiment);
+            dispatch(setCurrentExperiment(res.experiment))
         } catch (e) {
             console.log(e);
         }

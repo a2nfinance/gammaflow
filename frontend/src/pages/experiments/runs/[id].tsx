@@ -4,12 +4,13 @@ import { useRouter } from "next/router";
 import { useEffect } from "react";
 
 export default function ID() {
-    const { searchRunByExperimentId } = useExperiments();
+    const { searchRunByExperimentId, getExperimentById } = useExperiments();
     const router = useRouter();
 
     useEffect(() => {
         if (router.query?.id) {
             searchRunByExperimentId(router.query?.id?.toString());
+            getExperimentById(router.query?.id?.toString())
         }
     }, [router.query?.id]);
     return (

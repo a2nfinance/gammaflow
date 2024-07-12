@@ -42,7 +42,7 @@ export const Detail = () => {
             dataIndex: "end_time",
             key: "end_time",
             render: (_, record) => (
-                new Date(parseInt(record.end_time) * 1000).toLocaleString()
+                record.end_time ? new Date(parseInt(record.end_time)).toLocaleString() : "N/A"
             )
         },
         {

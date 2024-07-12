@@ -9,6 +9,8 @@
     "start": "next start -p 9999"
   },
   "dependencies": {
+    "@ant-design/icons": "^5.2.6",
+    "@reduxjs/toolkit": "^2.0.1",
     "@web3-onboard/coinbase": "^2.2.7",
     "@web3-onboard/core": "^2.21.6",
     "@web3-onboard/gnosis": "^2.2.2",
@@ -18,8 +20,6 @@
     "@web3-onboard/trezor": "^2.4.4",
     "@web3-onboard/trust": "^2.0.4",
     "@web3-onboard/walletconnect": "^2.5.5",
-    "@ant-design/icons": "^5.2.6",
-    "@reduxjs/toolkit": "^2.0.1",
     "antd": "^5.19.0",
     "chain-registry": "^1.46.4",
     "dotenv": "^16.0.3",
@@ -31,7 +31,8 @@
     "react-countup": "^6.4.2",
     "react-dom": "18.2.0",
     "react-icons": "^4.10.1",
-    "react-redux": "^9.0.4"
+    "react-redux": "^9.0.4",
+    "websocket": "^1.0.35"
   },
   "devDependencies": {
     "@types/node": "^20",
