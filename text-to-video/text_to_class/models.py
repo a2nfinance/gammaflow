@@ -42,12 +42,14 @@ class LSTM(nn.Module):
         self.ngpu = ngpu
         
     def forward(self, x):
-        if isinstance(x, torch.Tensor) and self.ngpu > 1 and torch.cuda.device_count() >= self.ngpu:
-            x = nn.parallel.data_parallel(self.embedding, x, range(self.ngpu))
-            x = nn.parallel.data_parallel(self.rnn, x, range(self.ngpu))[0]
+        
+        if isinstance(x, torch.Tensor) and self.ngpu > 1:
+            x = nn.parallel.data_parallel(self.embedding, x, device_ids=range(self.ngpu))
+            x = nn.parallel.data_parallel(self.rnn, x, device_ids=range(self.ngpu))[0]
             x = x[:, -1, :]
-            x = nn.parallel.data_parallel(self.output, x, range(self.ngpu))
+            x = nn.parallel.data_parallel(self.output, x, device_ids=range(self.ngpu))
         else:
+        
             # Embed data
             x = self.embedding(x)
             # Process through RNN
