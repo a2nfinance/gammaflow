@@ -10,6 +10,8 @@ import torch.nn as nn
 from torch.autograd import Variable
 import torch.nn.init as init
 from utils import gen_z, convert_class
+import mlflow
+import mlflow.pytorch
 
 class Debug(nn.Module):
     def forward(self, input):
@@ -68,7 +70,7 @@ class VideoDiscriminator(nn.Module):
     def forward(self, input):
     
         if isinstance(input.data, torch.cuda.FloatTensor) and self.ngpu > 1:
-            output = nn.parallel.data_parallel(self.main, input, range(self.ngpu))
+            output = nn.parallel.data_parallel(self.main, input, device_ids=range(self.ngpu))
             
         else:
             output = self.main(input)
@@ -154,16 +156,17 @@ class VideoGenerator(nn.Module):
         )
 
     def forward(self, input, labels):
-        if isinstance(input.data, torch.cuda.FloatTensor) and self.ngpu > 1:
+        if isinstance(input, torch.Tensor) and self.ngpu > 1:
+        #if isinstance(input.data, torch.cuda.FloatTensor) and self.ngpu > 1:
             # Addition to prepare labels to be concatenated with input.
-            labels = nn.parallel.data_parallel(self.label_sequence, labels, range(self.ngpu))
+            labels = nn.parallel.data_parallel(self.label_sequence, labels, device_ids=range(self.ngpu))
             labels = labels.unsqueeze(0).unsqueeze(0)
             labels = labels.transpose(0,2).transpose(1,3)
             combinedInput = torch.cat((input, labels), 0).transpose(0,3)
             
-            input = nn.parallel.data_parallel(self.combine_sequence, combinedInput, range(self.ngpu)).transpose(3,0)
+            input = nn.parallel.data_parallel(self.combine_sequence, combinedInput, device_ids=range(self.ngpu)).transpose(3,0)
             
-            output = nn.parallel.data_parallel(self.main, input, range(self.ngpu))
+            output = nn.parallel.data_parallel(self.main, input, device_ids=range(self.ngpu))
             
         else:
             labels = self.label_sequence(labels)
@@ -234,6 +237,35 @@ class VideoGenerator(nn.Module):
 
         return h
     
+    def generate_noise(self, video_len=None, category = None):
+        if category:
+            z_category_labels = np.array([category for i in range(self.batch_size)])
+        else:
+            z_category_labels = np.random.randint(self.nClasses, size=self.batch_size)
+
+        z_category_labels = torch.from_numpy(z_category_labels).long()
+
+        # Use nn.Embedding to embed the label radiation component vector
+        if self.gpu:
+            z_category_labels = z_category_labels.cuda()
+
+
+        video_len = video_len if video_len is not None else 16
+
+
+        # Create noise in the pre_trained model
+        z = gen_z(video_len, 16)
+
+        input = z.contiguous().view(16, video_len, self.nz, 1, 1)
+        id = convert_class(category)
+        input = input[id-1:id, :, :, :, :]
+        # Reshape to size: (bach_size*video_len, nz, 1, 1)
+        input = input.view(self.batch_size*video_len, self.nz, 1, 1)
+        # print("input", input.size())
+
+        return input, z_category_labels
+
+    
     def create_smooth_variations(self, base_z, num_steps, variation_scale=0.3):
     
         # Create smooth variations around the underlying noise vector
@@ -293,5 +325,5 @@ class GRU(nn.Module):
 class Flatten(nn.Module):
     def forward(self, input):
         return input.view(input.size(0), -1)
+    
    
-

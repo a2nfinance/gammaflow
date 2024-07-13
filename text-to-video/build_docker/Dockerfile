@@ -14,4 +14,4 @@ RUN pip install --no-cache-dir -r requirements.txt
 ENV MLFLOW_ENABLE_SYSTEM_METRICS_LOGGING=true
 
 # Run main.py when the container launches
-CMD ["python", "main_mlflow.py"]
+CMD ["python", "main.py"]
