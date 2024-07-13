@@ -1,7 +1,9 @@
 from flask import Flask, send_file, request, jsonify
+from flask_cors import CORS
 from zip_utils import zip_folder
 
 app = Flask(__name__)
+CORS(app)
 
 @app.route('/download', methods=['POST'])
 def download_file():
@@ -24,4 +26,4 @@ def download_file():
         return jsonify({'error': str(e)}), 500
 
 if __name__ == '__main__':
-    app.run(host="0.0.0.0", port=6000, debug=False)
+    app.run(host="0.0.0.0", port=7777, debug=False)
