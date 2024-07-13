@@ -37,7 +37,7 @@ export const onboardConfig = {
   ],
   appMetadata: {
     name: "GammaFlow",
-    icon: "/logo.png",
-    description: "GammaFlow supports AI model training on the Theta EdgeCloud nodes.",
+    icon: "/icon.png",
+    description: "GammaFlow supports AI model training and deployment on Theta EdgeCloud nodes.",
   },
 };

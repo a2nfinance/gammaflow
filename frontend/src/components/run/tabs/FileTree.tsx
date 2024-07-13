@@ -2,68 +2,26 @@ import React from 'react';
 import { DownOutlined } from '@ant-design/icons';
 import { Tree } from 'antd';
 import type { TreeDataNode, TreeProps } from 'antd';
-import { useAppSelector } from '@/controller/hooks';
+import { useAppDispatch, useAppSelector } from '@/controller/hooks';
+import { setFileContent } from '@/controller/run/runSlice';
 
 
 
 export const FileTree: React.FC = () => {
-    const {rootFolder} = useAppSelector(state => state.run);
+    const dispatch = useAppDispatch();
+    const { tree, run } = useAppSelector(state => state.run);
     const treeData: TreeDataNode[] = [
-        {
-            title: `${rootFolder}`,
-            key: '0-0',
-            children: [
-                {
-                    title: 'metadata',
-                    key: '0-0-0',
-                    children: [
-                        {
-                            title: 'MLModel',
-                            key: '0-0-0-0',
-                        },
-                        {
-                            title: 'conda.yaml',
-                            key: '0-0-0-1',
-                        },
-                        {
-                            title: 'python_env.yaml',
-                            key: '0-0-0-2',
-                        },
-                        {
-                            title: 'requirements.txt',
-                            key: '0-0-0-3',
-                        },
-                    ],
-                },
-                {
-                    title: 'MLModel',
-                    key: '0-0-1',
-                },
-                {
-                    title: 'conda.yaml',
-                    key: '0-0-2',
-                },
-                {
-                    title: 'input_example.json',
-                    key: '0-0-4',
-                },
-                {
-                    title: 'model.pkl',
-                    key: '0-0-5',
-                },
-                {
-                    title: 'python_env.yaml',
-                    key: '0-0-6',
-                },
-                {
-                    title: 'requirements.txt',
-                    key: '0-0-7',
-                },
-            ],
-        },
+        tree
     ];
     const onSelect: TreeProps['onSelect'] = (selectedKeys, info) => {
-        console.log('selected', selectedKeys, info);
+        // @ts-ignore
+        if (!info.node.isDir) {
+            // @ts-ignore
+            fetch(`${process.env.NEXT_PUBLIC_MLFLOW_TRACKING_SERVER}/get-artifact?path=${info.node.path}&run_uuid=${run.info.run_uuid}`)
+                .then(r => r.text())
+                .then(t => dispatch(setFileContent(t)))
+        }
+
     };
 
     return (

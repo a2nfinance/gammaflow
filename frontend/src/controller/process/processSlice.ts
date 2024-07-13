@@ -7,7 +7,10 @@ export const actionNames = {
     createExperimentAction: "createExperimentAction",
     startTrainingAction: "startTrainingAction",
     createRegisteredModelAction: "createRegisteredModelAction",
-    createModelVersionAction: "createModelVersionAction"
+    createModelVersionAction: "createModelVersionAction",
+    generateDockerFilesAction: "generateDockerFilesAction",
+    downloadDockerFilesAction: "downloadDockerFilesAction",
+    buildAndPushDockerFileActions: "buildAndPushDockerFileActions"
 }
 
 
@@ -19,7 +22,10 @@ const initialState: Processes = {
     startTrainingAction: false,
     createExperimentAction: false,
     createRegisteredModelAction: false,
-    createModelVersionAction: false
+    createModelVersionAction: false,
+    generateDockerFilesAction: false,
+    downloadDockerFilesAction: false,
+    buildAndPushDockerFileActions: false
 }
 
 export const processesSlice = createSlice({

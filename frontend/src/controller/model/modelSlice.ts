@@ -4,13 +4,15 @@ export type ModelState = {
     model: any,
     modelList: any[],
     modelVersions: any[],
+    selectedVersion: string,
 }
 
 
 const initialModelState: ModelState = {
     model: {},
     modelVersions: [],
-    modelList: []
+    modelList: [],
+    selectedVersion: "1"
 }
 
 export const modelSlice = createSlice({
@@ -26,7 +28,10 @@ export const modelSlice = createSlice({
         setModelVersions: (state: ModelState, action: PayloadAction<any[]>) => {
             state.modelVersions = action.payload
         },
+        setSelectedVersion: (state: ModelState, action: PayloadAction<string>) => {
+            state.selectedVersion = action.payload
+        },
     }
 })
-export const { setModel, setModelList, setModelVersions } = modelSlice.actions;
+export const { setModel, setModelList, setModelVersions,setSelectedVersion } = modelSlice.actions;
 export default modelSlice.reducer;

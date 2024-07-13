@@ -2,13 +2,15 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 export type RunDetailState = {
     run: any,
-    rootFolder: string
+    tree: any,
+    fileContent: string,
 }
 
 
 const initialRunDetailState: RunDetailState = {
     run: {},
-    rootFolder: ""
+    tree: {},
+    fileContent: ""
 }
 
 export const runSlice = createSlice({
@@ -18,10 +20,13 @@ export const runSlice = createSlice({
         setRun:  (state: RunDetailState, action: PayloadAction<any>) => {
             state.run = action.payload
         },
-        setRootFolder: (state: RunDetailState, action: PayloadAction<any>) => {
-            state.rootFolder = action.payload
+        setTree: (state: RunDetailState, action: PayloadAction<any>) => {
+            state.tree = action.payload
+        },
+        setFileContent: (state: RunDetailState, action: PayloadAction<any>) => {
+            state.fileContent = action.payload
         },
     }
 })
-export const { setRun, setRootFolder } = runSlice.actions;
+export const { setRun, setTree, setFileContent } = runSlice.actions;
 export default runSlice.reducer;

@@ -1,3 +1,5 @@
+import { EXPORT_COMMAND, TRACKING_SERVER_MLFLOW_PATH } from "@/configs";
+
 export const  getToFolder = (gitRepo: string) => {
     let parts: string[] = gitRepo.split("/");
     let toFolder = parts[parts.length - 1].replace(".git", "");
@@ -65,4 +67,11 @@ export const installDependenciesCommand = (values: FormData) => {
         installCommand += `pip install -r ${toFolder}/requirements.txt;`;
     }
     return installCommand;
+}
+
+export const generatedZipCommand = (model: any, version: string) => {
+    let outputDirectory = model.name.replaceAll(" ", "_");
+    let generatedCommand = `${EXPORT_COMMAND};${TRACKING_SERVER_MLFLOW_PATH} models generate-dockerfile -m models:/"${model.name}"/${version} --output-directory ${outputDirectory}_v${version} --enable-mlserver`;
+    console.log(generatedCommand);
+    return generatedCommand;
 }

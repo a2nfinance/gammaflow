@@ -1,11 +1,13 @@
 import { useRuns } from "@/hooks/useRuns"
-import { Button, Col, Row } from "antd"
+import { Button, Col, Input, Row } from "antd"
 import { useRouter } from "next/router"
 import { useEffect } from "react"
 import { FileTree } from "./FileTree"
+import { useAppSelector } from "@/controller/hooks"
 export const Artifacts = () => {
+    const {fileContent} = useAppSelector(state => state.run)
     const router = useRouter()
-    const {getArtifactsList} = useRuns();
+    const {getArtifactsList, getFolderTree} = useRuns();
     useEffect(() => {
         if (router?.query?.id) {
             getArtifactsList(router?.query?.id.toString());
@@ -19,7 +21,7 @@ export const Artifacts = () => {
             
             </Col>
             <Col span={18}>
-                <Button size="large" type="primary">Deploy</Button>
+                <Input.TextArea style={{height: "100%"}} contentEditable={false} value={fileContent} />
             </Col>
         </Row>
     )

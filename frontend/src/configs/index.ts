@@ -15,3 +15,8 @@ export const GET_DOWNLOAD_URI_FOR_MODEL_VERSION_ARTIFACTS_ENDPOINT = `${MLFLOW_S
 export const GET_REGISTERED_MODEL_ENDPOINT = `${MLFLOW_SERVER_API}/2.0/mlflow/registered-models/get`;
 export const SEARCH_MODEL_VERSIONS_ENDPOINT = `${MLFLOW_SERVER_API}/2.0/mlflow/model-versions/search`;
 
+
+export const TRACKING_SERVER_MLFLOW_PATH = `/home/levi/.local/bin/mlflow`;
+export const EXPORT_COMMAND = `export MLFLOW_TRACKING_URI=http://34.125.25.91:8080`;
+
+export const DOWNLOADER_ENDPOINT = `${process.env.NEXT_PUBLIC_SERVER_DOWNLOADER}/download`
