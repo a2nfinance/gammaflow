@@ -36,6 +36,34 @@ export const useWebsocket = () => {
 
     }
 
+    const sendCommandToTrackingServer = async (command: string, outputElementId: string) => {
+        try {
+            const client = new W3CWebSocket(`${process.env.NEXT_PUBLIC_SERVER_COMMANDER}`);
+           
+            client.onopen = () => {
+                client.send(command);
+                console.log('WebSocket Client Connected');
+            };
 
-    return { sendCommand };
+            let element = document.getElementById(outputElementId);
+            client.onmessage = (message) => {
+                try {
+                    // check if value === "--end-process--" then stop loading status.
+                    // Dis patch here
+                    new Blob([message.data]).text().then( value => element?.append(value));
+                } catch (e: any) {
+                    console.log(e.message)
+                }
+            };
+           
+            return () => {
+                client.close();
+            };
+        } catch (e) {
+            console.log(e);
+        }
+    }
+
+
+    return { sendCommand, sendCommandToTrackingServer };
 }
