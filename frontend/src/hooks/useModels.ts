@@ -1,7 +1,7 @@
-import { CREATE_MODEL_VERSION_ENDPOINT, CREATE_REGISTERED_MODEL_ENDPOINT, DOWNLOADER_ENDPOINT, GET_DOWNLOAD_URI_FOR_MODEL_VERSION_ARTIFACTS_ENDPOINT, GET_REGISTERED_MODEL_ENDPOINT, SEARCH_MODEL_ENDPOINT, SEARCH_MODEL_VERSIONS_ENDPOINT } from "@/configs";
+import { CREATE_MODEL_VERSION_ENDPOINT, CREATE_REGISTERED_MODEL_ENDPOINT, DOWNLOADER_ENDPOINT, GET_DOWNLOAD_URI_FOR_MODEL_VERSION_ARTIFACTS_ENDPOINT, GET_REGISTERED_MODEL_ENDPOINT, SEARCH_MODEL_ENDPOINT, SEARCH_MODEL_VERSIONS_ENDPOINT, SET_MODEL_VERSION_TAG } from "@/configs";
 import { createRegisteredModelMessage, updateRegisteredModelMessage } from "@/configs/messages";
 import { useAppDispatch, useAppSelector } from "@/controller/hooks";
-import { setModel, setModelList, setModelVersions } from "@/controller/model/modelSlice";
+import { setDeployedVersions, setModel, setModelList, setModelVersions } from "@/controller/model/modelSlice";
 import { actionNames, updateActionStatus } from "@/controller/process/processSlice";
 import { MESSAGE_TYPE, openNotification } from "@/utils/noti";
 import { useConnectWallet } from "@web3-onboard/react";
@@ -17,7 +17,6 @@ export const useModels = () => {
             })
 
             let res = await req.json();
-            console.log(res);
             dispatch(setModelList(res.registered_models));
         } catch (e) {
             console.log(e);
@@ -91,6 +90,7 @@ export const useModels = () => {
     }
 
     const updateModelVersion = async (registeredModelName: string) => {
+        if (!wallet?.accounts?.length) return;
         let loggedModelString = run.data.tags.filter(tag => tag.key === "mlflow.log-model.history")[0].value;
         let loggedModelJson = JSON.parse(loggedModelString);
         let correctRun = loggedModelJson.filter(model => model.run_id === run.info.run_id)[0];
@@ -103,11 +103,9 @@ export const useModels = () => {
                 name: registeredModelName,
                 run_id: `${run.info.run_id}`,
                 source: `${run.info.artifact_uri}/${correctRun.artifact_path}`,
-                // run_link: ``,
-                // description: `${values["description"]}`,
-                // tags: [
-                //     { key: "wallet_address", value: `${wallet.accounts[0].address}` },
-                // ]
+                tags: [
+                    { key: "wallet_address", value: `${wallet.accounts[0].address}` },
+                ]
             })
         })
         await req.json();
@@ -129,7 +127,7 @@ export const useModels = () => {
 
     const downloadDockerFile = async (modelName: string, version: string) => {
         try {
-            dispatch(updateActionStatus({actionName: actionNames.downloadDockerFilesAction, value: true}));
+            dispatch(updateActionStatus({ actionName: actionNames.downloadDockerFilesAction, value: true }));
             let outputDirectory = modelName.replaceAll(" ", "_");
             let response = await fetch(`${DOWNLOADER_ENDPOINT}`, {
                 method: "POST",
@@ -157,11 +155,65 @@ export const useModels = () => {
         } catch (e) {
             console.log(e);
         }
-        dispatch(updateActionStatus({actionName: actionNames.downloadDockerFilesAction, value: false}));
+        dispatch(updateActionStatus({ actionName: actionNames.downloadDockerFilesAction, value: false }));
     }
 
 
+    const setModelVersionDeploymentInfo = async (values: FormData) => {
+        try {
+            dispatch(updateActionStatus({ actionName: actionNames.createDeploymentInfoAction, value: true }));
+            let req = await fetch(`${SET_MODEL_VERSION_TAG}`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    name: values["model_name"],
+                    version: values["version"],
+                    key: "deployment_info",
+                    value: JSON.stringify({
+                        docker_image: values["docker_image"],
+                        inference_endpoint: values["inference_endpoint"]
+                    })
+                })
+            })
+
+            await req.json();
+
+            openNotification("Deployment information", "Deployment information for the model version has been successfully updated!", MESSAGE_TYPE.SUCCESS);
+        } catch (e) {
+            console.log(e);
+            openNotification("Deployment information", e.message, MESSAGE_TYPE.ERROR);
+        }
+        dispatch(updateActionStatus({ actionName: actionNames.createDeploymentInfoAction, value: false }));
+    }
+
+
+
+    const getModelVersionsByAddress = async () => {
+        try {
+            if (!wallet?.accounts?.length) return;
+            let req = await fetch(`${SEARCH_MODEL_VERSIONS_ENDPOINT}?filter=tags.wallet_address LIKE '${wallet.accounts[0].address}' AND tags.deployment_info LIKE '%docker_image%'`, {
+                method: "GET"
+            })
+
+            let res = await req.json();
+            dispatch(setDeployedVersions(res.model_versions));
+        } catch (e) {
+            console.log(e);
+        }
+    }
+
     // Update registered model version here
 
-    return { searchRegisteredModels, getModelVersionsByName, getRegisteredModelsByName, createRegisteredModel, getDownloadURIForModelVersionArtifacts, downloadDockerFile }
+    return {
+        searchRegisteredModels,
+        getModelVersionsByName,
+        getRegisteredModelsByName,
+        createRegisteredModel,
+        getDownloadURIForModelVersionArtifacts,
+        downloadDockerFile,
+        setModelVersionDeploymentInfo,
+        getModelVersionsByAddress
+    }
 }

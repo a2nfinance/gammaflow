@@ -11,6 +11,7 @@ export const NETWORK_EXPLORER = `https://explorer.thetatoken.org/`
 export const SEARCH_MODEL_ENDPOINT = `${MLFLOW_SERVER_API}/2.0/mlflow/registered-models/search`
 export const CREATE_REGISTERED_MODEL_ENDPOINT = `${MLFLOW_SERVER_API}/2.0/mlflow/registered-models/create`
 export const CREATE_MODEL_VERSION_ENDPOINT = `${MLFLOW_SERVER_API}/2.0/mlflow/model-versions/create`
+export const SET_MODEL_VERSION_TAG = `${MLFLOW_SERVER_API}/2.0/mlflow/model-versions/set-tag`
 export const GET_DOWNLOAD_URI_FOR_MODEL_VERSION_ARTIFACTS_ENDPOINT = `${MLFLOW_SERVER_API}/2.0/mlflow/model-versions/get-download-uri`
 export const GET_REGISTERED_MODEL_ENDPOINT = `${MLFLOW_SERVER_API}/2.0/mlflow/registered-models/get`;
 export const SEARCH_MODEL_VERSIONS_ENDPOINT = `${MLFLOW_SERVER_API}/2.0/mlflow/model-versions/search`;
