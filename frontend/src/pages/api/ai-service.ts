@@ -23,8 +23,10 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
                     body: JSON.stringify(firstInput)
                 })
                 let res = await req.json();
+                console.log(res);
                 output = res.predictions;
             }
+           
             return res.status(200).send(output);
         } catch (error) {
             console.log(error)
