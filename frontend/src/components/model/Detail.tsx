@@ -56,7 +56,7 @@ export const Detail = () => {
             )
         },
         {
-            title: "Actions",
+            title: "Docker actions",
             dataIndex: "action",
             key: "action",
             render: (_, record, index) => (
@@ -64,11 +64,11 @@ export const Detail = () => {
                     <Button type="primary" onClick={() => {
                         dispatch(setSelectedVersion(record.version));
                         showModal();
-                    }}>Generate | Download docker files</Button>
+                    }}>Generate | Download</Button>
                     <Button type="primary" onClick={() => {
                         dispatch(setSelectedVersion(record.version));
                         showBuildModal();
-                    }}>Build Docker image</Button>
+                    }}>Build | Push</Button>
                 </Space>
             )
         },
@@ -176,7 +176,7 @@ export const Detail = () => {
                         </Row>
 
                         <Button block size="large" type="primary" htmlType="submit" loading={buildAndPushDockerFileActions} onClick={() => handleDownload()}>
-                            {buildAndPushDockerFileActions ? "Processing..." : "Build & Push"}
+                            {buildAndPushDockerFileActions ? "Processing..." : "Build and Push"}
                         </Button>
 
                     </Form>

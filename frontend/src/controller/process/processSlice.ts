@@ -10,7 +10,8 @@ export const actionNames = {
     createModelVersionAction: "createModelVersionAction",
     generateDockerFilesAction: "generateDockerFilesAction",
     downloadDockerFilesAction: "downloadDockerFilesAction",
-    buildAndPushDockerFileActions: "buildAndPushDockerFileActions"
+    buildAndPushDockerFileActions: "buildAndPushDockerFileActions",
+    callInferenceServicesAction: "callInferenceServicesAction"
 }
 
 
@@ -25,7 +26,8 @@ const initialState: Processes = {
     createModelVersionAction: false,
     generateDockerFilesAction: false,
     downloadDockerFilesAction: false,
-    buildAndPushDockerFileActions: false
+    buildAndPushDockerFileActions: false,
+    callInferenceServicesAction: false
 }
 
 export const processesSlice = createSlice({

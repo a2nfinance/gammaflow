@@ -12,7 +12,7 @@ export const AddressButton = ({ username, address }: { username: string, address
                     window.navigator.clipboard.writeText(address);
                     messageApi.success("Copied address");
                 }
-            }>{username} {getShortAddress(address)}</Button>
+            }>{getShortAddress(address)} | {username}</Button>
         </>
     )
 }

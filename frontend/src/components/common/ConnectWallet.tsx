@@ -9,7 +9,7 @@ export const ConnectWallet = () => {
 
     return (
         !wallet ? <Button icon={<WalletFilled />} type="primary" size="large" onClick={() => connect()}>Connect Wallet</Button> : <Space>
-            <AddressButton username={wallet.accounts[0].ens?.name ?? ""} address={wallet.accounts[0].address} />
+            <AddressButton username={wallet.accounts[0].balance?.["TFUEL"] + " TFUEL"} address={wallet.accounts[0].address} />
             <Button icon={<DisconnectOutlined />} title={"Disconnect"} size="large" onClick={() => disconnect(wallet)} />
         </Space>
     )
