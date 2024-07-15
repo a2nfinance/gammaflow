@@ -75,7 +75,7 @@ class TextToVideoModel(nn.Module):
         _, actionIDx = results.max(1)
         actionClassName = self.dataset.getClassNameFromIndex(actionIDx.item() + 1)
 
-        save_path = os.path.join(os.getcwd(), "video_output")
+        save_path = os.path.join(os.getcwd(), "output_videos")
         video_len = 25 * 5
         fakeVideo = self.video_generator.sample_videos(video_len, actionIDx.item() + 1)
         fakeVideo = fakeVideo[0].detach().cpu().numpy().transpose(1, 2, 3, 0)

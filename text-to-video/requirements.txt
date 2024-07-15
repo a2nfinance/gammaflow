@@ -6,6 +6,7 @@ torch
 torchvision
 matplotlib
 scikit-learn
-
+flask
+flask_cors 
 
     

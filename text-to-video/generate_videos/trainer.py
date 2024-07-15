@@ -347,16 +347,18 @@ def loadState(model, optimizer = None, path = ''):
 def save_video(fake_video, category, path = None):
         outputdata = fake_video*255
         outputdata = outputdata.astype(np.uint8)
-        file_path = os.path.join(path, 'fake-%s.mp4' % category)
+        file_path = os.path.join(path, 'generated-%s.mp4' % category)
         skvideo.io.vwrite(file_path, outputdata, inputdict={'-r': str(30)})
         
-        output_path = os.path.join(path, 'fake-%s.improve.mp4' % category)
+        output_path = os.path.join(path, 'generated-%s.improve.mp4' % category)
         # Construct the ffmpeg command
         command = [
             "ffmpeg",
             "-y",
-            "-i", file_path ,
-            "-vf", "scale=500:500, hqdn3d=3:3:6:6, unsharp=5:5:1.0:5:5:0.0",
+            "-i", 
+            file_path ,
+            "-vf", 
+            "scale=500:500, hqdn3d=3:3:6:6, unsharp=5:5:1.0:5:5:0.0",
             output_path
         ]
 
@@ -373,7 +375,7 @@ def save_video(fake_video, category, path = None):
             except subprocess.CalledProcessError as e:
                 print(f"An error occurred while executing the FFmpeg command: {e}")
 
-        return file_path
+        return output_path
 
         
         
