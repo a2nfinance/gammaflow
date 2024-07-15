@@ -85,7 +85,7 @@ if torch.cuda.is_available():
     gen      = gen.cuda()
 
 video_len = 25*5
-save_path =  current_path + "/video_output/"
+save_path =  current_path + "/output_videos/"
 fakeVideo = gen.sample_videos(video_len, actionIDx.item() + 1)
 fakeVideo    = fakeVideo[0].detach().cpu().numpy().transpose(1, 2, 3, 0)
 save_video(fakeVideo, actionClassName, save_path)
