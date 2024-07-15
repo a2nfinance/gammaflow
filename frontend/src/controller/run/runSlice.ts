@@ -8,7 +8,15 @@ export type RunDetailState = {
 
 
 const initialRunDetailState: RunDetailState = {
-    run: {},
+    run: {
+        info: {},
+        inputs: {},
+        data: {
+            params: [],
+            metrics: [],
+            tags: []
+        }
+    },
     tree: {},
     fileContent: ""
 }

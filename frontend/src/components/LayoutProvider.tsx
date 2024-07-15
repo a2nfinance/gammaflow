@@ -1,5 +1,4 @@
 import {
-    AppstoreOutlined,
     GithubOutlined,
     MenuFoldOutlined,
     MenuUnfoldOutlined
@@ -7,12 +6,11 @@ import {
 import { Button, Form, Image, Layout, Menu, Space, theme } from 'antd';
 import { useRouter } from 'next/router';
 import React, { useState } from "react";
-import { FaSuperscript } from "react-icons/fa";
-import { SlOrganization } from "react-icons/sl";
 import { AiOutlineExperiment, AiTwotoneExperiment } from "react-icons/ai";
-import { LuBrainCircuit } from "react-icons/lu";
 import { CiPlay1 } from "react-icons/ci";
+import { FaSuperscript } from "react-icons/fa";
 import { GrDeploy } from "react-icons/gr";
+import { LuBrainCircuit } from "react-icons/lu";
 import { ConnectWallet } from './common/ConnectWallet';
 // import { ConnectWallet } from './common/ConnectWallet';
 const { Header, Sider, Content, Footer } = Layout;
@@ -47,7 +45,7 @@ export const LayoutProvider = (props: Props) => {
                             key: '2',
                             icon: <AiTwotoneExperiment />,
                             label: "My experiments",
-                            onClick: () => router.push("/experiments/list")
+                            onClick: () => router.push("/")
                         },
                         {
                             key: '3',

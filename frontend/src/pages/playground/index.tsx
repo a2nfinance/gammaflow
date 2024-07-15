@@ -1,15 +1,23 @@
 import { useAppSelector } from "@/controller/hooks";
 import { useAIServices } from "@/hooks/useAIServices";
+import { useModels } from "@/hooks/useModels";
 import { headStyle } from "@/theme/layout";
 import { MinusCircleOutlined, PlusOutlined, UploadOutlined } from "@ant-design/icons";
-import { Button, Card, Col, Collapse, Divider, Form, Input, Radio, Row, Upload } from "antd";
-import { useState } from "react";
+import { useConnectWallet } from "@web3-onboard/react";
+import { AutoComplete, Button, Card, Col, Collapse, Divider, Form, Input, Radio, Row, Upload } from "antd";
+import { DefaultOptionType } from "antd/es/select";
+import { useEffect, useState } from "react";
 
 export default function Index() {
+    const [{ wallet }] = useConnectWallet();
     const { callInferenceServicesAction } = useAppSelector(state => state.process)
+    const { deployedVersions } = useAppSelector(state => state.model)
     const { callAIEnpoint } = useAIServices()
+    const { getModelVersionsByAddress } = useModels();
     const [inputType, setInputType] = useState("1");
     const [form] = Form.useForm();
+    const [options, setOptions] = useState<DefaultOptionType[]>([]);
+
     const onFinish = (values: FormData) => {
         const firstBodyStructure = values["sequence_services"][0].body;
         if (values["input_type"] === "2") {
@@ -51,6 +59,25 @@ export default function Index() {
             return e;
         }
         return e && e.fileList;
+    };
+
+    useEffect(() => {
+        if (wallet?.accounts?.length) {
+            getModelVersionsByAddress()
+        }
+
+    }, [wallet?.accounts?.length])
+
+    const handleSearch = (value: string) => {
+        let models = deployedVersions.filter(m => m.name.includes(value)).map((m) => {
+            let tagValue = m.tags.filter(t => t.key === "deployment_info")[0].value;
+            let endpoint = JSON.parse(tagValue).inference_endpoint;
+            return {
+                label: `${m.name} v${m.version}`,
+                value: `${endpoint}`,
+            }
+        });
+        setOptions(models);
     };
     return (
         <div style={{ maxWidth: 1440, minWidth: 1024, margin: "auto" }}>
@@ -113,7 +140,12 @@ export default function Index() {
                                                                             {...restField}
                                                                             name={[name, 'endpoint']}
                                                                             rules={[{ required: true, message: 'Missing endpoint' }]}>
-                                                                            <Input type={"text"} size='large' placeholder="Service endpoint" />
+                                                                            <AutoComplete
+                                                                                size="large"
+                                                                                onSearch={handleSearch}
+                                                                                placeholder="Enter model name to search endpoint"
+                                                                                options={options}
+                                                                            />
                                                                         </Form.Item>
 
                                                                     </Col>

@@ -16,7 +16,7 @@ export const Item = ({ index, experiment }: {index: number, experiment: any}) =>
                     {experiment.lifecycle_stage}
                 </Descriptions.Item>
                 <Descriptions.Item label="Github repo">
-                    <Button type='link' onClick={() => window.open(`${experiment.tags[0].value}`, "_blank")}>link</Button>
+                    <Button type='dashed' onClick={() => window.open(`${experiment.tags[2].value}`, "_blank")}>link</Button>
                 </Descriptions.Item>
                 <Descriptions.Item label="Created at">
                     {new Date(experiment.creation_time).toLocaleString()}
@@ -26,10 +26,10 @@ export const Item = ({ index, experiment }: {index: number, experiment: any}) =>
                 </Descriptions.Item>
               
                 <Descriptions.Item label="Node address">
-                <Button type='link' onClick={() => window.open(`${experiment.tags[2].value}`, "_blank")}>link</Button>
+                <Button type='dashed' onClick={() => window.open(`${experiment.tags[1].value}`, "_blank")}>link</Button>
                 </Descriptions.Item>
                 <Descriptions.Item label="Training script path">
-                    {experiment.tags[3].value}
+                    {experiment.tags[0].value}
                 </Descriptions.Item>
             </Descriptions>
     </Card>

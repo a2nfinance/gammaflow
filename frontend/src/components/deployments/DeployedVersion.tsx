@@ -1,9 +1,9 @@
 import { useAppSelector } from "@/controller/hooks";
 import { useModels } from "@/hooks/useModels";
-import { useConnectWallet } from "@web3-onboard/react"
-import { Button, Card, Space, Table } from "antd";
+import { useConnectWallet } from "@web3-onboard/react";
+import { Button, Card, Table } from "antd";
 import { useRouter } from "next/router";
-import { useEffect } from "react"
+import { useEffect } from "react";
 
 export const DeployedVersion = () => {
     const [{ wallet }] = useConnectWallet();

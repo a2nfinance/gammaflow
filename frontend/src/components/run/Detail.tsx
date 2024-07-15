@@ -15,22 +15,22 @@ export const Detail = () => {
         {
             key: '1',
             label: 'Overview',
-            children: <Overview />,
+            children: <Overview run={run} />,
         },
-        {
-            key: '2',
-            label: 'Model metrics',
-            children: <ModelMetrics />,
-        },
+        // {
+        //     key: '2',
+        //     label: 'Model metrics',
+        //     children: <ModelMetrics run={run} />,
+        // },
         {
             key: '3',
             label: 'System metrics',
-            children: <SystemMetrics />,
+            children: <SystemMetrics run={run} />,
         },
         {
             key: '4',
             label: 'Artifacts',
-            children: <Artifacts />,
+            children: <Artifacts  />,
         },
     ];
 

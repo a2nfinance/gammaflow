@@ -1,7 +1,7 @@
-// import { MyPipelineList } from "@/components/pipline/MyPipelineList";
+import { ExperimentList } from "@/components/experiments/List";
 
 export default function Index() {
     return (
-        <></>
+        <ExperimentList />
     )
 }
