@@ -1,27 +1,27 @@
-import { Card, Col, Row, Statistic } from "antd"
-import { CustomActiveShapePieChart } from "../charts/CustomActiveShapPieChart"
-import { ArrowDownOutlined, ArrowUpOutlined } from "@ant-design/icons";
+import { ArrowUpOutlined } from "@ant-design/icons";
+import { Card, Col, Row, Statistic } from "antd";
+import { CustomActiveShapePieChart } from "../charts/CustomActiveShapPieChart";
 
 export const SystemMetrics = ({ run }) => {
 
     const diskUsageData = [
-        { name: 'Usage', value: parseFloat(run.data.metrics?.filter(m => m.key === "system/disk_usage_percentage")?.[0].value) },
-        { name: 'Remain', value: 100 - parseFloat(run.data.metrics?.filter(m => m.key === "system/disk_usage_percentage")?.[0].value) },
+        { name: 'Usage', value: parseFloat(run.data.metrics?.filter(m => m.key === "system/disk_usage_percentage")?.[0]?.value) },
+        { name: 'Remain', value: 100 - parseFloat(run.data.metrics?.filter(m => m.key === "system/disk_usage_percentage")?.[0]?.value) },
     ];
 
     const cpuUsageData = [
-        { name: 'Usage', value: parseFloat(run.data.metrics?.filter(m => m.key === "system/cpu_utilization_percentage")?.[0].value) },
-        { name: 'Remain', value: 100 - parseFloat(run.data.metrics?.filter(m => m.key === "system/cpu_utilization_percentage")?.[0].value) },
+        { name: 'Usage', value: parseFloat(run.data.metrics?.filter(m => m.key === "system/cpu_utilization_percentage")?.[0]?.value) },
+        { name: 'Remain', value: 100 - parseFloat(run.data.metrics?.filter(m => m.key === "system/cpu_utilization_percentage")?.[0]?.value) },
     ];
 
     const memoryUsageData = [
-        { name: 'Usage', value: parseFloat(run.data.metrics?.filter(m => m.key === "system/system_memory_usage_percentage")?.[0].value) },
-        { name: 'Remain', value: 100 - parseFloat(run.data.metrics?.filter(m => m.key === "system/system_memory_usage_percentage")?.[0].value) },
+        { name: 'Usage', value: parseFloat(run.data.metrics?.filter(m => m.key === "system/system_memory_usage_percentage")?.[0]?.value) },
+        { name: 'Remain', value: 100 - parseFloat(run.data.metrics?.filter(m => m.key === "system/system_memory_usage_percentage")?.[0]?.value) },
     ];
 
-    const disk_usage_megabytes = run.data.metrics?.filter(m => m.key === "system/disk_usage_megabytes")?.[0].value
-    const system_memory_usage_megabytes = run.data.metrics?.filter(m => m.key === "system/system_memory_usage_megabytes")?.[0].value
-    const network_transmit_megabytes = run.data.metrics?.filter(m => m.key === "system/network_transmit_megabytes")?.[0].value
+    const disk_usage_megabytes = run.data.metrics?.filter(m => m.key === "system/disk_usage_megabytes")?.[0]?.value
+    const system_memory_usage_megabytes = run.data.metrics?.filter(m => m.key === "system/system_memory_usage_megabytes")?.[0]?.value
+    const network_transmit_megabytes = run.data.metrics?.filter(m => m.key === "system/network_transmit_megabytes")?.[0]?.value
     return (
         <>
             <Row gutter={8}>

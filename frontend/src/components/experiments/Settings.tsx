@@ -13,7 +13,10 @@ export const Settings = () => {
     }
     return (
 
-        <Form layout="vertical" onFinish={handleSubmitForm} >
+        <Form layout="vertical" onFinish={handleSubmitForm} initialValues={{
+            'name': "Experiment 01",
+            "is_private_repo": 0
+        }} >
             <Card title="Create experiment" headStyle={headStyle}>
                 <Row gutter={12}>
                     <Col span={12}>
@@ -22,7 +25,7 @@ export const Settings = () => {
                         </Form.Item>
 
                         <Form.Item name={"github_repo"} label="Github repository" rules={[{ message: 'Incorrect contact github repo' }]}>
-                            <Input type="text" placeholder="Github repository address" size="large" />
+                            <Input type="text" placeholder="Github repository" size="large" />
                         </Form.Item>
                         <Form.Item name={"is_private_repo"} label="Is private repository">
                             <Radio.Group>
@@ -34,7 +37,7 @@ export const Settings = () => {
                     </Col>
                     <Col span={12}>
                         <Form.Item name={"node_address"} label="Theta node address">
-                            <Input type="text" placeholder="IP/Domain address" size="large" />
+                            <Input type="text" placeholder="IP/Domain address without protocols (http, https...etc)" size="large" />
                         </Form.Item>
 
                         <Form.Item name={"training_script_path"} label="Training script path">

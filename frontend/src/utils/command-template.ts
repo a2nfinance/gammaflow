@@ -13,12 +13,12 @@ export const cloneGitCommand = (
 ) => {
     let toFolder = getToFolder(gitRepo);
     if (!isPrivate) {
-        return `git clone ${gitRepo} ${toFolder};`
+        return `git clone ${gitRepo} ${toFolder};cd ${toFolder};`
     } else {
         let firstIndex = gitRepo.indexOf("github");
         let part1 = gitRepo.slice(0, firstIndex);
         let part2 = gitRepo.slice(firstIndex, gitRepo.length);
-        return `git clone ${part1}${userName}:${password}@${part2} ${toFolder};`
+        return `git clone ${part1}${userName}:${password}@${part2} ${toFolder};cd ${toFolder};`
     }
 }
 
@@ -41,17 +41,10 @@ export const pullGitCommand = (
 }
 
 export const runScriptCommand = (gitRepo: string, isClone: boolean, scriptPath: string) => {
-    if (isClone) {
-        let toFolder = getToFolder(gitRepo);
-        return `cd ${toFolder};python ${scriptPath}`;
-    } else {
-        return `python ${scriptPath}`;
-    }
+    return `python ${scriptPath}`;
 }
 
 export const installDependenciesCommand = (values: FormData) => {
-    let githubRepo = values["github_repo"];
-    let toFolder = getToFolder(githubRepo);
     let systemDependencies = values["system_dependencies"];
     let pythonDependencies = values["system_dependencies"];
     let useRequirements = values["use_requirements"];
@@ -64,7 +57,7 @@ export const installDependenciesCommand = (values: FormData) => {
         installCommand += "pip install " + pythonDependencies.split(",").join(" ") + ";";
     }
     if (useRequirements === "1") {
-        installCommand += `pip install -r ${toFolder}/requirements.txt;`;
+        installCommand += `pip install -r requirements.txt;`;
     }
     return installCommand;
 }
@@ -72,6 +65,5 @@ export const installDependenciesCommand = (values: FormData) => {
 export const generatedZipCommand = (model: any, version: string) => {
     let outputDirectory = model.name.replaceAll(" ", "_");
     let generatedCommand = `${EXPORT_COMMAND};${TRACKING_SERVER_MLFLOW_PATH} models generate-dockerfile -m models:/"${model.name}"/${version} --output-directory ${outputDirectory}_v${version} --enable-mlserver`;
-    console.log(generatedCommand);
     return generatedCommand;
 }

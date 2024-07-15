@@ -91,7 +91,10 @@ export default function Index() {
                                 onFinish={onFinish}
                                 initialValues={{
                                     "input_type": "1",
-                                    "output_type": "1"
+                                    "output_type": "1",
+                                    "sequence_services": [
+                                        {"endpoint": "", "body": ""}
+                                    ]
                                 }}>
 
 
@@ -112,11 +115,11 @@ export default function Index() {
                                 <Divider />
                                 {
                                     (inputType === "1" || inputType === "3") ?
-                                        <Form.Item label="Input" name={"input"}>
+                                        <Form.Item label="Input data" name={"input"}>
                                             <Input size="large" />
                                         </Form.Item>
                                         :
-                                        <Form.Item label="Input" name={"input"} getValueFromEvent={getFile}>
+                                        <Form.Item label="Input data" name={"input"} getValueFromEvent={getFile}>
                                             <Upload>
                                                 <Button icon={<UploadOutlined />}>Click to Upload</Button>
                                             </Upload>

@@ -91,7 +91,7 @@ export const Detail = () => {
                 columns={columns}
                 dataSource={runs?.map(r => r.info)}
             />
-            <Modal style={{minWidth: 900}} title="New run" open={isModalOpen} footer={[]}   onOk={handleOk} onCancel={handleCancel}>
+            <Modal style={{minWidth: 1024}} title="New experiment run" open={isModalOpen} footer={[]}   onOk={handleOk} onCancel={handleCancel}>
                 <NewRunForm />
             </Modal>
         </Card>
