@@ -7,7 +7,8 @@ import { useConnectWallet } from "@web3-onboard/react";
 import { AutoComplete, Button, Card, Col, Collapse, Divider, Form, Input, Radio, Row, Upload } from "antd";
 import { DefaultOptionType } from "antd/es/select";
 import { useEffect, useState } from "react";
-
+import { LuBrainCircuit } from "react-icons/lu";
+import { MdInput } from "react-icons/md";
 export default function Index() {
     const [{ wallet }] = useConnectWallet();
     const { callInferenceServicesAction } = useAppSelector(state => state.process)
@@ -115,7 +116,7 @@ export default function Index() {
                                 {
                                     (inputType === "1" || inputType === "3") ?
                                         <Form.Item label="Input data" name={"input"}>
-                                            <Input size="large" />
+                                            <Input addonBefore={<MdInput />} size="large" />
                                         </Form.Item>
                                         :
                                         <Form.Item label="Input data" name={"input"} getValueFromEvent={getFile}>
@@ -143,6 +144,7 @@ export default function Index() {
                                                                             name={[name, 'endpoint']}
                                                                             rules={[{ required: true, message: 'Missing endpoint' }]}>
                                                                             <AutoComplete
+                                                                                suffixIcon={<LuBrainCircuit />}
                                                                                 size="large"
                                                                                 onSearch={handleSearch}
                                                                                 placeholder="Enter model name to search endpoint"

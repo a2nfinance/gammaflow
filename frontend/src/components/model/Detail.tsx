@@ -4,6 +4,8 @@ import { useModels } from "@/hooks/useModels";
 import { useWebsocket } from "@/hooks/useWebsocket";
 import { headStyle } from "@/theme/layout";
 import { generatedZipCommand } from "@/utils/command-template";
+import { timeAgo } from "@/utils/timeUtils";
+import { LinkOutlined } from "@ant-design/icons";
 import { Alert, Button, Card, Col, Descriptions, Divider, Form, Input, Modal, Row, Space, Table } from "antd";
 import { useRouter } from "next/router";
 import { useCallback, useState } from "react";
@@ -21,11 +23,11 @@ export const Detail = () => {
             dataIndex: "version",
             key: "verion"
         },
-        {
-            title: "Current stage",
-            dataIndex: "current_stage",
-            key: "current_stage"
-        },
+        // {
+        //     title: "Current stage",
+        //     dataIndex: "current_stage",
+        //     key: "current_stage"
+        // },
         {
             title: "Creation time",
             dataIndex: "creation_timestamp",
@@ -39,7 +41,7 @@ export const Detail = () => {
             dataIndex: "last_updated_timestamp",
             key: "last_updated_timestamp",
             render: (_, record) => (
-                record.last_updated_timestamp ? new Date(parseInt(record.last_updated_timestamp)).toLocaleString() : "N/A"
+                record.last_updated_timestamp ? <span title={`${new Date(parseInt(record.last_updated_timestamp)).toLocaleString()}`}>{timeAgo(record.last_updated_timestamp)}</span> : "N/A"
             )
         },
         {
@@ -52,7 +54,7 @@ export const Detail = () => {
             dataIndex: "run_id",
             key: "run_id",
             render: (_, record, index) => (
-                <Button key={`link-${index}`} type="link" onClick={() => router.push(`/run/${record.run_id}`)}>Link</Button>
+                <Button icon={<LinkOutlined />} key={`link-${index}`} type="primary" onClick={() => router.push(`/run/${record.run_id}`)}></Button>
             )
         },
         {

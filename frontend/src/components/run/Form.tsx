@@ -2,6 +2,10 @@ import { useAppSelector } from "@/controller/hooks";
 import { useWebsocket } from "@/hooks/useWebsocket";
 import { cloneGitCommand, installDependenciesCommand, pullGitCommand, runScriptCommand } from "@/utils/command-template";
 import { Button, Card, Col, Collapse, Divider, Form, Input, Radio, Row, Select } from "antd";
+import { FaGithub } from "react-icons/fa";
+import { IoIosCode } from "react-icons/io";
+import { PiComputerTower } from "react-icons/pi";
+import { MdOutlineLibraryAdd } from "react-icons/md";
 
 export const NewRunForm = () => {
     const { startTrainingAction } = useAppSelector(state => state.process);
@@ -42,12 +46,12 @@ export const NewRunForm = () => {
                         }
                     }>
                         <Row gutter={8}>
-                            <Col span={20}>
+                            <Col span={18}>
                                 <Form.Item label="Theta node address" name={"remote_address"}>
-                                    <Input type="text" size="large" />
+                                    <Input addonBefore={<PiComputerTower />} type="text" size="large" />
                                 </Form.Item>
                             </Col>
-                            <Col span={4}>
+                            <Col span={6}>
                                 <Form.Item label="Port" name={"port"}>
                                     <Input type="number" size="large" />
                                 </Form.Item>
@@ -63,10 +67,10 @@ export const NewRunForm = () => {
                                     children: <>
 
                                         <Form.Item label="Repository" name={"github_repo"}>
-                                            <Input type="text" size="large" />
+                                            <Input addonBefore={<FaGithub />} type="text" size="large" />
                                         </Form.Item>
                                         <Form.Item label="Traning script path" name={"training_script_path"}>
-                                            <Input type="text" size="large" />
+                                            <Input addonBefore={<IoIosCode />} type="text" size="large" />
                                         </Form.Item>
                                         <Row gutter={12}>
 
@@ -109,10 +113,10 @@ export const NewRunForm = () => {
 
                         <Divider />
                         <Form.Item help="All system dependencies will be installed before training scripts run" label="System dependencies" name={"system_dependencies"}>
-                            <Input type="text" size="large" placeholder="E.g. ffmpeg,mlflow" />
+                            <Input addonBefore={<MdOutlineLibraryAdd />} type="text" size="large" placeholder="E.g. ffmpeg,mlflow" />
                         </Form.Item>
                         <Form.Item label="Python dependencies" help="All python dependencies will be installed using pip before training scripts run" name={"system_dependencies"}>
-                            <Input type="text" size="large" placeholder="E.g. scipy,numpy,sklearn" />
+                            <Input addonBefore={<MdOutlineLibraryAdd />} type="text" size="large" placeholder="E.g. scipy,numpy,sklearn" />
                         </Form.Item>
                         <Form.Item label="Install dependencies using requirements.txt" name={"use_requirements"}>
                             <Select size="large" options={[

@@ -4,7 +4,7 @@ import { useConnectWallet } from "@web3-onboard/react";
 import { Button, Card, Table } from "antd";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
-
+import { FaLink } from "react-icons/fa";
 export const DeployedVersion = () => {
     const [{ wallet }] = useConnectWallet();
     const router = useRouter();
@@ -20,17 +20,17 @@ export const DeployedVersion = () => {
 
     const columns = [
         {
-            title: "Version",
-            dataIndex: "version",
-            key: "verion"
-        },
-        {
             title: "Model name",
             dataIndex: "name",
             key: "name",
             render: (_, record, index) => (
                 <Button key={`model-link-${index}`} type="dashed" onClick={() => router.push(`/models/detail/${record.name}`)}>{record.name}</Button>
             )
+        },
+        {
+            title: "Version",
+            dataIndex: "version",
+            key: "verion"
         },
         {
             title: "Docker image",
@@ -62,13 +62,13 @@ export const DeployedVersion = () => {
             dataIndex: "run_id",
             key: "run_id",
             render: (_, record, index) => (
-                <Button key={`link-${index}`} type="dashed" onClick={() => router.push(`/run/${record.run_id}`)}>Link</Button>
+                <Button icon={<FaLink />} key={`link-${index}`} type="dashed" onClick={() => router.push(`/run/${record.run_id}`)}></Button>
             )
         }
 
     ]
     return (
-        <Card title="All deployed versions">
+        <Card title="Deployed AI model versions">
             <Table
                 columns={columns}
                 dataSource={deployedVersions}

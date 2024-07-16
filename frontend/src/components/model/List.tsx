@@ -1,6 +1,7 @@
 import { useAppSelector } from "@/controller/hooks";
 import { useModels } from "@/hooks/useModels";
 import { headStyle } from "@/theme/layout";
+import { timeAgo } from "@/utils/timeUtils";
 import { useConnectWallet, useWallets } from "@web3-onboard/react";
 import { Button, Card, Space, Table } from "antd";
 import { useRouter } from "next/router";
@@ -28,7 +29,7 @@ export const List = () => {
             dataIndex: "version",
             key: "verion",
             render: (_, record) => (
-                <span>version {record.latest_versions.length}</span>
+                <span>{record.latest_versions.length}</span>
             )
         },
         {
@@ -44,7 +45,7 @@ export const List = () => {
             dataIndex: "last_updated_timestamp",
             key: "last_updated_timestamp",
             render: (_, record) => (
-                record.last_updated_timestamp ? new Date(parseInt(record.last_updated_timestamp)).toLocaleString() : "N/A"
+                record.last_updated_timestamp ? <span title={`${new Date(parseInt(record.last_updated_timestamp)).toLocaleString()}`}>{timeAgo(record.last_updated_timestamp)}</span> : "N/A"
             )
         },
         {

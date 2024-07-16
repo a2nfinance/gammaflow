@@ -2,6 +2,10 @@ import { useAppSelector } from "@/controller/hooks";
 import { useExperiments } from "@/hooks/useExperiments";
 import { headStyle } from "@/theme/layout";
 import { Button, Card, Col, Form, Input, Radio, Row } from "antd";
+import { AiOutlineExperiment, AiTwotoneExperiment } from "react-icons/ai";
+import { PiComputerTower } from "react-icons/pi";
+import { IoIosCode } from "react-icons/io";
+import { FaGithub } from "react-icons/fa";
 export const Settings = () => {
     const {createExperimentAction} = useAppSelector(state => state.process);
     const { createExperiment } = useExperiments();
@@ -21,11 +25,11 @@ export const Settings = () => {
                 <Row gutter={12}>
                     <Col span={12}>
                         <Form.Item name="name" label="Experiment name">
-                            <Input size='large' placeholder="Experiment name" />
+                            <Input addonBefore={<AiOutlineExperiment />} size='large' placeholder="Experiment name" />
                         </Form.Item>
 
                         <Form.Item name={"github_repo"} label="Github repository" rules={[{ message: 'Incorrect contact github repo' }]}>
-                            <Input type="text" placeholder="Github repository" size="large" />
+                            <Input type="text" addonBefore={<FaGithub />} placeholder="Github repository" size="large" />
                         </Form.Item>
                         <Form.Item name={"is_private_repo"} label="Is private repository">
                             <Radio.Group>
@@ -37,11 +41,11 @@ export const Settings = () => {
                     </Col>
                     <Col span={12}>
                         <Form.Item name={"node_address"} label="Theta node address">
-                            <Input type="text" placeholder="IP/Domain address without protocols (http, https...etc)" size="large" />
+                            <Input type="text" addonBefore={<PiComputerTower />} placeholder="IP/Domain address without protocols (http, https...etc)" size="large" />
                         </Form.Item>
 
                         <Form.Item name={"training_script_path"} label="Training script path">
-                            <Input type="text" size='large' placeholder="E.g. scripts/main.py" />
+                            <Input type="text" addonBefore={<IoIosCode />} size='large' placeholder="E.g. scripts/main.py" />
                         </Form.Item>
 
                     </Col>
