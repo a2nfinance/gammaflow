@@ -40,7 +40,6 @@ export default function Index() {
 
         if (values["input_type"] === "1") {
             const input = values["input"];
-            console.log(firstBodyStructure.replace(":inputdata", input));
             let inputJson = JSON.parse(firstBodyStructure.replace(":inputdata", input));
             callAIEnpoint(inputJson, values);
         }
