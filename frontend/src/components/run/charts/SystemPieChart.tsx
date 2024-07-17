@@ -31,8 +31,8 @@ export const PieChartWithNeedle = ({ data }) => {
         const yp = y0 + length * sin;
 
         return [
-            <circle cx={x0} cy={y0} r={r} fill={color} stroke="none" />,
-            <path d={`M${xba} ${yba}L${xbb} ${ybb} L${xp} ${yp} L${xba} ${yba}`} stroke="#none" fill={color} />,
+            <circle key={`pc-circle-${r}`} cx={x0} cy={y0} r={r} fill={color} stroke="none" />,
+            <path key={`pc-path`}d={`M${xba} ${yba}L${xbb} ${ybb} L${xp} ${yp} L${xba} ${yba}`} stroke="#none" fill={color} />,
         ];
     };
     return (

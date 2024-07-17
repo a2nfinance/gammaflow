@@ -48,7 +48,7 @@ export const Detail = () => {
    
     return (
         <Card title={run?.info?.run_name} extra={[
-            <Button size='large' type='primary' onClick={() => showModal()}>Register model</Button>
+            <Button key={`card-regis-model`} size='large' type='primary' onClick={() => showModal()}>Register model</Button>
         ]}>
             <Tabs defaultActiveKey="1" items={items} onChange={() => { }} />
             <Modal title="Register model" open={isModalOpen} footer={[]} onOk={handleOk} onCancel={handleCancel}>
