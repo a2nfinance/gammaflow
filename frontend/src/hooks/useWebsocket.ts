@@ -8,7 +8,7 @@ export const useWebsocket = () => {
 
     const sendCommand = async (remoteHostIP: string, command: string, outputElementId: string, openPort: number) => {
         try {
-            let client = new W3CWebSocket(`ws://${remoteHostIP}:${openPort}`);
+            let client = new W3CWebSocket(`${remoteHostIP}:${openPort}`);
             client.onopen = () => {
                 dispatch(updateActionStatus({ actionName: actionNames.startTrainingAction, value: true }));
                 client.send(command);
