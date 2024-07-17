@@ -16,7 +16,7 @@ export const Detail = () => {
     const router = useRouter();
     const { model, modelVersions, selectedVersion } = useAppSelector(state => state.model);
     const { sendCommandToTrackingServer } = useWebsocket();
-    const { downloadDockerFilesAction, buildAndPushDockerFileActions, getModelVersionsByNameAction } = useAppSelector(state => state.process);
+    const { downloadDockerFilesAction, buildAndPushDockerFileActions, getModelVersionsByNameAction, generateDockerFilesAction } = useAppSelector(state => state.process);
     const columns = [
         {
             title: "Version",
@@ -136,7 +136,7 @@ export const Detail = () => {
                 <Divider />
                 <Row gutter={12}>
                     <Col span="12">
-                        <Button block size="large" type="primary" onClick={() => handleZip()}>Yes</Button>
+                        <Button block size="large" type="primary" loading={generateDockerFilesAction} onClick={() => handleZip()}>Yes</Button>
                     </Col>
                     <Col span="12">
                         <Button block size="large" type="primary" loading={downloadDockerFilesAction} onClick={() => handleDownload()}>
