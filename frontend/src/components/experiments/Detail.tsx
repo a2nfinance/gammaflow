@@ -10,12 +10,12 @@ import { MdHelp } from "react-icons/md";
 
 export const Detail = () => {
     const { runs } = useAppSelector(state => state.experiment);
+    const { searchRunByExperimentIDAction } = useAppSelector(state => state.process);
     const { searchRunByExperimentId } = useExperiments();
     const router = useRouter();
     const [isModalOpen, setIsModalOpen] = useState(false);
     useEffect(() => {
         if (router.query?.id) {
-            console.log(router?.query?.id)
             searchRunByExperimentId(router.query?.id?.toString());
         }
     }, [router.query?.id]);
@@ -137,6 +137,7 @@ export const Detail = () => {
                 </Row>
             </Form>
             <Table
+                loading={searchRunByExperimentIDAction}
                 columns={columns}
                 dataSource={runs?.map(r => r.info)}
             />

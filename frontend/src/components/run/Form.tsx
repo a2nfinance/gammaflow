@@ -135,7 +135,7 @@ export const NewRunForm = () => {
                     </Form>
                 </Col>
                 <Col span={12}>
-                    <label htmlFor={"runlog"}>Logs</label>
+                    <label htmlFor={"runlog"}>Logs on the Theta node</label>
                     <textarea readOnly placeholder="Remote server - training process logs" id={`runlog`} style={{ marginTop: 10, borderRadius: 10, height: "95%", width: "100%", backgroundColor: "#333", color: "whitesmoke", padding: "10px" }} />
                 </Col>
             </Row>

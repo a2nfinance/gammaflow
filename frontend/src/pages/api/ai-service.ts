@@ -1,4 +1,3 @@
-import connect from '@/database/connect';
 import { NextApiRequest, NextApiResponse } from 'next';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
@@ -48,7 +47,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     }
 };
 
-export default connect(handler);
+export default handler;
 
 export const config = {
     api: {

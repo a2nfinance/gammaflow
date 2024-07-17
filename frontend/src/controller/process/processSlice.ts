@@ -4,6 +4,9 @@ import {
 } from "@reduxjs/toolkit";
 
 export const actionNames = {
+    getExperimentsByCreatorAction: "getExperimentsByCreatorAction",
+    searchRunByExperimentIDAction: "searchRunByExperimentIDAction",
+    getModelVersionsByNameAction: "getModelVersionsByNameAction",
     createExperimentAction: "createExperimentAction",
     startTrainingAction: "startTrainingAction",
     createRegisteredModelAction: "createRegisteredModelAction",
@@ -31,7 +34,10 @@ const initialState: Processes = {
     buildAndPushDockerFileActions: false,
     callInferenceServicesAction: false,
     createDeploymentInfoAction: false,
-    getFileContentAction: false
+    getFileContentAction: false,
+    getExperimentsByCreatorAction: false,
+    searchRunByExperimentIDAction: false,
+    getModelVersionsByNameAction: false
 }
 
 export const processesSlice = createSlice({

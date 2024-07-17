@@ -16,7 +16,7 @@ export const Detail = () => {
     const router = useRouter();
     const { model, modelVersions, selectedVersion } = useAppSelector(state => state.model);
     const { sendCommandToTrackingServer } = useWebsocket();
-    const { downloadDockerFilesAction, buildAndPushDockerFileActions } = useAppSelector(state => state.process);
+    const { downloadDockerFilesAction, buildAndPushDockerFileActions, getModelVersionsByNameAction } = useAppSelector(state => state.process);
     const columns = [
         {
             title: "Version",
@@ -123,6 +123,7 @@ export const Detail = () => {
             </Descriptions>
             <Card title="All registered version" headStyle={headStyle}>
                 <Table
+                    loading={getModelVersionsByNameAction}
                     columns={columns}
                     dataSource={modelVersions}
                 />

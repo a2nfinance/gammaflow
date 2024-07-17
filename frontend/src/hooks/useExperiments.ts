@@ -46,6 +46,7 @@ export const useExperiments = () => {
     const getExperimentsByCreator = async () => {
         try {
             if (!wallet?.accounts?.length) return;
+            dispatch(updateActionStatus({actionName: actionNames.getExperimentsByCreatorAction, value: true}))
             let createReq = await fetch(`${SEARCH_EXPERIMENT_ENDPOINT}`, {
                 method: "POST",
                 headers: {
@@ -62,7 +63,7 @@ export const useExperiments = () => {
             console.log(e);
         }
 
-
+        dispatch(updateActionStatus({actionName: actionNames.getExperimentsByCreatorAction, value: false}))
     }
     const getExperimentById = async (id: string) => {
         try {
@@ -80,6 +81,7 @@ export const useExperiments = () => {
 
     const searchRunByExperimentId = async (id: string) => {
         try {
+            dispatch(updateActionStatus({actionName: actionNames.searchRunByExperimentIDAction, value: true}));
             let req = await fetch(`${SEARCH_RUNS}`, {
                 method: "POST",
                 headers: {
@@ -90,12 +92,11 @@ export const useExperiments = () => {
                 })
             })
             let res = await req.json();
-            console.log(res)
             dispatch(setRuns(res.runs));
         } catch (e) {
             console.log(e);
         }
-
+        dispatch(updateActionStatus({actionName: actionNames.searchRunByExperimentIDAction, value: false}));
     }
     return { getExperimentsByCreator, createExperiment, getExperimentById, searchRunByExperimentId };
 };

@@ -26,7 +26,7 @@ export const useModels = () => {
 
     const getRegisteredModelsByName = async (name: string) => {
         try {
-            if (!wallet?.accounts?.length) return;
+            // if (!wallet?.accounts?.length) return;
             let req = await fetch(`${GET_REGISTERED_MODEL_ENDPOINT}?name=${name}`, {
                 method: "GET"
             })
@@ -40,7 +40,8 @@ export const useModels = () => {
 
     const getModelVersionsByName = async (name: string) => {
         try {
-            if (!wallet?.accounts?.length) return;
+            // if (!wallet?.accounts?.length) return;
+            dispatch(updateActionStatus({ actionName: actionNames.getModelVersionsByNameAction, value: true }));
             let req = await fetch(`${SEARCH_MODEL_VERSIONS_ENDPOINT}?filter=name LIKE '${name}'`, {
                 method: "GET"
             })
@@ -50,6 +51,7 @@ export const useModels = () => {
         } catch (e) {
             console.log(e);
         }
+        dispatch(updateActionStatus({ actionName: actionNames.getModelVersionsByNameAction, value: false }));
     }
 
     const createRegisteredModel = async (values: FormData) => {
