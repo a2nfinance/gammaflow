@@ -95,10 +95,10 @@ export const Detail = () => {
             generatedZipCommand(model, selectedVersion),
             "runlog"
         )
-    }, [selectedVersion])
+    }, [selectedVersion, model])
     const handleDownload = useCallback(() => {
         downloadDockerFile(model.name, selectedVersion);
-    }, [selectedVersion])
+    }, [selectedVersion, model])
 
 
 
