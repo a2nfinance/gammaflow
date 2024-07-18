@@ -7,7 +7,7 @@ export default function Document() {
                 <meta name="title" content="Gamma Flow" />
                 <meta name="description" content="Gamma Flow"/>
                 <link rel="icon" type="image/x-icon" href="/favicon.ico" />
-                <title>GammaFlow - AI tranining tools for the Theta cloud</title>
+                <title>GammaFlow - Tools for experimenting and testing AI models on the Theta Cloud</title>
                 <link
                     rel="stylesheet"
                     href="https://cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.css"

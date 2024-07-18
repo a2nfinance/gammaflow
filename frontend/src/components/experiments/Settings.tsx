@@ -41,7 +41,7 @@ export const Settings = () => {
                     </Col>
                     <Col span={12}>
                         <Form.Item name={"node_address"} label="Theta node address">
-                            <Input type="text" addonBefore={<PiComputerTower />} placeholder="IP/Domain address without protocols (http, https...etc)" size="large" />
+                            <Input type="text" addonBefore={<PiComputerTower />} placeholder="IP/Domain address with protocol (https, http)" size="large" />
                         </Form.Item>
 
                         <Form.Item name={"training_script_path"} label="Training script path">
