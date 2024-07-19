@@ -1,6 +1,8 @@
 import transformers
 
 import mlflow
+mlflow.set_tracking_uri("https://tracking-server.a2n.finance")
+mlflow.set_experiment(experiment_id="605664796441147527")
 
 conversational_pipeline = transformers.pipeline(model="microsoft/DialoGPT-medium")
 

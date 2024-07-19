@@ -40,7 +40,7 @@ To address these issues, we developed the GammaFlow project.
 
 ### Workflow
 
-| ![](https://gammaflow.a2n.finance/docs/workflow.jpg)  |
+| ![](https://gammaflow.a2n.finance/docs/workflow.jpg) |
 |:--:|
 |This is a basic workflow for using GammaFlow with Theta cloud nodes to train and test AI models. For detailed instructions, please refer to our video demo.|
 

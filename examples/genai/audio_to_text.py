@@ -2,7 +2,7 @@ import requests
 import transformers
 
 import mlflow
-mlflow.set_tracking_uri("http://34.125.25.91:8080")
+mlflow.set_tracking_uri("https://tracking-server.a2n.finance")
 
 
 # Sets the current active experiment to the "Apple_Models" experiment and

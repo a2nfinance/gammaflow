@@ -7,7 +7,7 @@ from dataset import generate_apple_sales_data_with_promo_adjustment
 import os
 
 os.environ["MLFLOW_ENABLE_SYSTEM_METRICS_LOGGING"] = "true"
-mlflow.set_tracking_uri("http://34.125.25.91:8080")
+mlflow.set_tracking_uri("https://tracking-server.a2n.finance")
 
 # Sets the current active experiment to the "Apple_Models" experiment and
 # returns the Experiment metadata
@@ -42,9 +42,11 @@ params = {
 # Train the RandomForestRegressor
 rf = RandomForestRegressor(**params)
 
+print("Start the training process")
 # Fit the model on the training data
 rf.fit(X_train, y_train)
 
+print("Start the evaluation process")
 # Predict on the validation set
 y_pred = rf.predict(X_val)
 
@@ -56,15 +58,19 @@ r2 = r2_score(y_val, y_pred)
 
 # Assemble the metrics we're going to write into a collection
 metrics = {"mae": mae, "mse": mse, "rmse": rmse, "r2": r2}
+print("Model metrics:", metrics)
 
 # Initiate the MLflow run context
 with mlflow.start_run(run_name=run_name) as run:
+    print("Log params to the tracking server")
     # Log the parameters used for the model fit
     mlflow.log_params(params)
 
+    print("Log metrics to the tracking server")
     # Log the error metrics that were calculated during validation
     mlflow.log_metrics(metrics)
 
+    print("Log model and artifacts to the tracking server")
     # Log an instance of the trained model for later use
     mlflow.sklearn.log_model(
         sk_model=rf, input_example=X_val, artifact_path=artifact_path
