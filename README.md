@@ -2,10 +2,10 @@
 GammaFlow: A tool for AI model training, testing, and deployment on Theta Edge Cloud nodes.
 ## Demo information
 - [GammaFlow dApp](https://gammaflow.a2n.finance)
-- [Video demo]()
-- [Theta node conenctor docker image](https://hub.docker.com/r/a2nfinance/theta-node-connector)
-- [Audio to text docker image](https://hub.docker.com/r/a2nfinance/audio_to_text)
+- [Video demo](https://www.youtube.com/watch?v=2uHTbVN08L0)
+- [Theta node connector docker image](https://hub.docker.com/r/a2nfinance/theta-node-connector)
 - [Text to video docker image](https://hub.docker.com/r/a2nfinance/text_to_video)
+- [Audio to text docker image](https://hub.docker.com/r/a2nfinance/audio_to_text)
 
 For more detailed information on product features, you can refer to [our project description on DevPost.](https://devpost.com/software/gammaflow)
 ## System design
