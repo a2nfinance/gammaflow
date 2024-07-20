@@ -1,5 +1,7 @@
 ## Introduction
 Currently, there are some AI models for generating video from prompts. However, we are particularly impressed with MoCoGAN, which can be trained from text to class to generate video. Our text-to-video generation source code is referenced from [MoCoGAN](https://github.com/CarloP95/mocogan/tree/a71449c0b617265b8c5193449b8121267941bf4c) [[1]](#1).
+
+The setup begins with the installation of essential tools like ffmpeg and necessary Python dependencies. Users are instructed to download and prepare the Actions as Space-Time Shapes Data Set. The guide then details the steps to resize the videos, train the video generator, and train the text-to-class model. Finally, we explain how to combine these models to achieve text-to-video generation. Unit tests and evaluation procedures are included to ensure the models' accuracy and effectiveness. 
 ## Implementation
 ### Installation
 Install ffmpeg: 
@@ -24,7 +26,7 @@ Download Actions as Space-Time Shapes Data Set [here](https://www.wisdom.weizman
 python resize.py
 ```
 ### Train video generator
-If using GPUs then don't need to set --cuda:
+If using GPUs, there is no need to set --cuda:
 ```
 python train.py  --cuda 1 \
 --ngpu 7 \
@@ -37,7 +39,7 @@ python train.py  --cuda 1 \
 --i_epochs_display 10
 ```
 ### Train text to class
-In the folder text_to_class, run:
+In the `text_to_class` folder, run:
 ```
 python train.py --cuda 1 --ngpu 7 \
 --n_epochs 10000 \
@@ -49,7 +51,7 @@ python train.py --cuda 1 --ngpu 7 \
 --path data/action_classes.txt
 ```
 ### Text to video
-To implement text to video, we combine two models: text to class and video generator.
+To implement text-to-video generation, combine the text-to-class and video generator models:
 ```
 python main.py \
 --cuda 1 \
@@ -59,21 +61,24 @@ python main.py \
 ```
 ## Run unit tests
 ### Text to class
-
+To run the unit tests for the text-to-class model:
 ```
 python .\unit_test\text_to_class.test.py
 ```
 ### Generate videos
+To run the unit tests for generating videos:
 ```
 python .\unit_test\generate_videos.test.py
 ```
 
 ## Evaluate Models
 ### Text to class
+To evaluate the text-to-class model:
 ```
 python .\evaluate_models\eval_text_to_class.py
 ```
 ### Generate videos
+To evaluate the video generation model:
 ```
 python .\evaluate_models\eval_generate_videos.py
 ```
