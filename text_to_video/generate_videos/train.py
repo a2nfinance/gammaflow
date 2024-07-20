@@ -1,3 +1,8 @@
+##############################################################################################
+## The source code is referenced from MoCoGAN                                               ##
+## (see https://github.com/CarloP95/mocogan/tree/a71449c0b617265b8c5193449b8121267941bf4c), ##
+## where we add labels for generate fake videos via the gen function.                       ##
+##############################################################################################
 # coding: utf-8
 
 import os

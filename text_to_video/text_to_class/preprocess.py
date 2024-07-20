@@ -1,3 +1,8 @@
+##############################################################################################
+## The source code is referenced from MoCoGAN                                               ##
+## (see https://github.com/CarloP95/mocogan/tree/a71449c0b617265b8c5193449b8121267941bf4c), ##
+##############################################################################################
+
 from argparse import ArgumentParser
 from itertools import product
 
@@ -128,58 +133,6 @@ if __name__ == '__main__':
 
         print(f'End processing.')
 
-        ## 4. Decide strategy to eliminate duplicates
-        """
-        toDelete_keys       = []
-        notToDelete_keys    = []
-
-        words = None
-        with open('TextToClass/included_words.json') as checkWords:
-            words = json.load(checkWords)
-        
-
-        for (className, description), num_occurrencies in tqdm(occurrencies_to_check.items()):
-            
-            if (className, description) in toDelete_keys:
-                continue
-
-            toBe_counter = 0
-            try:
-                for word in words[className]['notToBe']:
-                    if word in description:
-                        toDelete_keys.append((className, description))
-
-                for word in words[className]['toBe']:
-                    if word in description:
-                        toBe_counter += 1
-                        
-                        if toBe_counter >= 3:
-                            notToDelete_keys.append((className, description))
-                            break
-            except KeyError as _:
-                pass
-            
-        toDelete_keys   = list(dict.fromkeys(toDelete_keys))
-        ## 5. Apply the strategies decided above
-        newDataset = {}
-
-        for actionClass, descriptions in action_descriptions.items():
-            
-            for description in descriptions:
-
-                if not (actionClass, description) in toDelete_keys:
-
-                    try:
-                        isinstance(newDataset[actionClass], list)
-                        idx = newDataset[actionClass].index(description)
-                        print(idx)
-                    except KeyError as _:
-                        newDataset[actionClass] = []
-                    except ValueError as _:
-                        pass
-
-                    newDataset[actionClass].append(description)
-        """
         newDataset = occurrencies_to_write
         with open('processed_dataset.txt', 'w') as output:
             for action, descriptions in newDataset.items():

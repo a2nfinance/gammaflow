@@ -1,3 +1,9 @@
+##############################################################################################
+## The source code is referenced from MoCoGAN                                               ##
+## (see https://github.com/CarloP95/mocogan/tree/a71449c0b617265b8c5193449b8121267941bf4c), ##
+## where we improved the save_video function with increasing sharpness and resolution.      ##
+##############################################################################################
+
 from torch import nn as nn, optim
 from time import sleep, time
 

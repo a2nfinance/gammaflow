@@ -1,3 +1,8 @@
+##############################################################################################
+## The source code is referenced from Text2VideoGAN                                         ##
+## (see https://github.com/CarloP95/Text2VideoGAN).                                         ##
+##############################################################################################
+
 from generate_videos.models import VideoGenerator
 import os
 from generate_videos.trainer import loadState, save_video

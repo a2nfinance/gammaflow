@@ -1,5 +1,5 @@
 ## Introduction
-Text to video AI models.
+Currently, there are some AI models for generating video from prompts. However, we are particularly impressed with MoCoGAN, which can be trained from text to class to generate video. Our text-to-video generation source code is referenced from [MoCoGAN](https://github.com/CarloP95/mocogan/tree/a71449c0b617265b8c5193449b8121267941bf4c) [[1]](#1).
 ## Implementation
 ### Installation
 Install ffmpeg: 
@@ -77,3 +77,6 @@ python .\evaluate_models\eval_text_to_class.py
 ```
 python .\evaluate_models\eval_generate_videos.py
 ```
+## References
+<a id="1">[1]</a> 
+Tulyakov, S., Liu, M. Y., Yang, X., & Kautz, J. (2018). Mocogan: Decomposing motion and content for video generation. In *Proceedings of the IEEE conference on computer vision and pattern recognition* (pp. 1526-1535).

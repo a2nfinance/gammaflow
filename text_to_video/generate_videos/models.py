@@ -1,4 +1,12 @@
+##############################################################################################
+## The model source code is referenced from MoCoGAN                                         ##
+## (see https://github.com/CarloP95/mocogan/tree/a71449c0b617265b8c5193449b8121267941bf4c), ##
+## where we added the sigmoid activation function to the VideoGenerator function.           ##
+## Additionally, we improved the sample_videos to call the GRU pre-trained model.           ##
+##############################################################################################
+
 # coding: utf-8
+
 import sys
 import os
 # Add the parent directory to sys.path
@@ -155,7 +163,6 @@ class VideoGenerator(nn.Module):
 
     def forward(self, input, labels):
         if isinstance(input, torch.Tensor) and self.ngpu > 1:
-        #if isinstance(input.data, torch.cuda.FloatTensor) and self.ngpu > 1:
             # Addition to prepare labels to be concatenated with input.
             labels = nn.parallel.data_parallel(self.label_sequence, labels, device_ids=range(self.ngpu))
             labels = labels.unsqueeze(0).unsqueeze(0)
@@ -192,9 +199,7 @@ class VideoGenerator(nn.Module):
         labels = self.label_sequence(z_category_labels)  # Map labels to embedding vectors
         
         labels = labels.view(self.batch_size, self.nz, 1, 1)  # Reshape into (batch_size, nz, 1, 1)
-       
-        # labels = z_category_labels.clone().detach()
-        # labels = labels.repeat(self.batch_size)
+
 
         if self.gpu:
             labels = labels.cuda()
@@ -210,21 +215,7 @@ class VideoGenerator(nn.Module):
         input = input[id-1:id, :, :, :, :]
         # Reshape to size: (bach_size*video_len, nz, 1, 1)
         input = input.view(self.batch_size*video_len, self.nz, 1, 1)
-        # print("input", input.size())
 
-        '''
-        # Create a unique basic noise vector
-        base_z = torch.randn(1, self.nz)
-        if self.gpu:
-            base_z = base_z.cuda()
-
-        # Create smooth variations around the underlying noise vector for each frame
-        z = self.create_smooth_variations(base_z, video_len)
-        
-        # Guaranteed size: (video_len, nz, 1, 1)
-        input = z.view(video_len, self.nz, 1, 1)
-        '''
-        
         combinedInput = torch.cat((input, labels), 0)
 
         h = self.main(combinedInput)
@@ -263,14 +254,6 @@ class VideoGenerator(nn.Module):
 
         return input, z_category_labels
 
-    
-    def create_smooth_variations(self, base_z, num_steps, variation_scale=0.3):
-    
-        # Create smooth variations around the underlying noise vector
-   
-        steps = torch.linspace(0, 1, num_steps)
-        z = [base_z + variation_scale * torch.randn_like(base_z) * step for step in steps]
-        return torch.cat(z, dim=0)
 
 class GRU(nn.Module):
     def __init__(self, input_size = 10, hidden_size = 10, gpu=True):
