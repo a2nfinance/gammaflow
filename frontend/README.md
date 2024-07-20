@@ -1,3 +1,3 @@
 ## Introduction
 
-Tools to create clusters and to support distributed AI model training.
+The GammaFlow dApp functions as a control panel, connecting and managing all components.

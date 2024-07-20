@@ -3,7 +3,7 @@ import { setSelectedVersion } from "@/controller/model/modelSlice";
 import { useModels } from "@/hooks/useModels";
 import { useWebsocket } from "@/hooks/useWebsocket";
 import { headStyle } from "@/theme/layout";
-import { generatedZipCommand } from "@/utils/command-template";
+import { buildAndPushImageCommand, generatedZipCommand } from "@/utils/command-template";
 import { timeAgo } from "@/utils/timeUtils";
 import { LinkOutlined } from "@ant-design/icons";
 import { Alert, Button, Card, Col, Descriptions, Divider, Form, Input, Modal, Row, Space, Table } from "antd";
@@ -15,7 +15,7 @@ export const Detail = () => {
     const { downloadDockerFile } = useModels();
     const router = useRouter();
     const { model, modelVersions, selectedVersion } = useAppSelector(state => state.model);
-    const { sendCommandToTrackingServer } = useWebsocket();
+    const { sendCommandToTrackingServer, buildAndPushDockerImageOnServer } = useWebsocket();
     const { downloadDockerFilesAction, buildAndPushDockerFileActions, getModelVersionsByNameAction, generateDockerFilesAction } = useAppSelector(state => state.process);
     const columns = [
         {
@@ -23,11 +23,6 @@ export const Detail = () => {
             dataIndex: "version",
             key: "verion"
         },
-        // {
-        //     title: "Current stage",
-        //     dataIndex: "current_stage",
-        //     key: "current_stage"
-        // },
         {
             title: "Creation time",
             dataIndex: "creation_timestamp",
@@ -96,11 +91,16 @@ export const Detail = () => {
             "runlog"
         )
     }, [selectedVersion, model])
+
     const handleDownload = useCallback(() => {
         downloadDockerFile(model.name, selectedVersion);
     }, [selectedVersion, model])
 
-
+    const handlBuildAndPush = useCallback((values: FormData) => {
+        buildAndPushDockerImageOnServer(
+            buildAndPushImageCommand(model, selectedVersion, values)
+        )
+    }, [selectedVersion, model])
 
     const [isBuildModalOpen, setIsBuildModalOpen] = useState(false);
 
@@ -152,7 +152,7 @@ export const Detail = () => {
                 <Card>
                     <Alert showIcon={true} type="info" message="Please be patient, as building Docker images and publishing them to Docker Hub can take several minutes. The completion time depends on the size of your Docker images." />
                     <Divider />
-                    <Form onFinish={() => { }} layout="vertical">
+                    <Form onFinish={handlBuildAndPush} layout="vertical">
                         <Row gutter={12}>
                             <Col span={12}>
                                 <Form.Item label={"Username"} name={"username"} rules={[{ required: true, message: "Missing username" }]}>
@@ -172,13 +172,13 @@ export const Detail = () => {
                                 </Form.Item>
                             </Col>
                             <Col span={12}>
-                                <Form.Item label={"Version"} name={"version"} rules={[{ required: true, message: "Missing version" }]}>
+                                <Form.Item label={"Tag"} name={"version"} rules={[{ required: true, message: "Missing version" }]}>
                                     <Input size="large" type="text" />
                                 </Form.Item>
                             </Col>
                         </Row>
 
-                        <Button block size="large" type="primary" htmlType="submit" loading={buildAndPushDockerFileActions} onClick={() => handleDownload()}>
+                        <Button block size="large" type="primary" htmlType="submit" loading={buildAndPushDockerFileActions}>
                             {buildAndPushDockerFileActions ? "Processing..." : "Build and Push"}
                         </Button>
 
