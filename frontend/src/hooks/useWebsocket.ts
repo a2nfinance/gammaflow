@@ -77,6 +77,39 @@ export const useWebsocket = () => {
         }
     }
 
+    const buildAndPushDockerImageOnServer = async (command: string) => {
+        try {
+            const client = new W3CWebSocket(`${process.env.NEXT_PUBLIC_SERVER_COMMANDER}`);
 
-    return { sendCommand, sendCommandToTrackingServer };
+            client.onopen = () => {
+                dispatch(updateActionStatus({ actionName: actionNames.buildAndPushDockerFileActions, value: true }));
+                client.send(command);
+                console.log('WebSocket Client Connected');
+            };
+
+            client.onmessage = (message) => {
+                try {
+                    new Blob([message.data]).text().then(value => {
+                        if (value.includes("end-process")) {
+                            dispatch(updateActionStatus({ actionName: actionNames.buildAndPushDockerFileActions, value: false }));
+                        }
+
+                    });
+
+                } catch (e: any) {
+                    console.log(e.message);
+                    dispatch(updateActionStatus({ actionName: actionNames.buildAndPushDockerFileActions, value: false }));
+                }
+            };
+
+            return () => {
+                client.close();
+            };
+        } catch (e) {
+            console.log(e);
+        }
+    }
+
+
+    return { sendCommand, sendCommandToTrackingServer, buildAndPushDockerImageOnServer };
 }

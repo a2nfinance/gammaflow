@@ -67,3 +67,13 @@ export const generatedZipCommand = (model: any, version: string) => {
     let generatedCommand = `${EXPORT_COMMAND};${TRACKING_SERVER_MLFLOW_PATH} models generate-dockerfile -m models:/"${model.name}"/${version} --output-directory ${outputDirectory}_v${version} --enable-mlserver`;
     return generatedCommand;
 }
+
+export const buildAndPushImageCommand = (model: any, version: string, values: FormData) => {
+    let outputDirectory = model.name.replaceAll(" ", "_");
+    let cdCommand = `cd ${outputDirectory}_v${version};`;
+    let loginCommand = `docker login -u "${values["username"]}" -p "${values["password"]}"" docker.io;`;
+    let buildCommand = `docker build --tag '${values["username"]}/${values["repository"]}:${values["version"]}' . --network=host;`;
+    let pushCommand = `docker push '${values["username"]}/${values["repository"]}:${values["version"]}';`;
+    let finalCommands = cdCommand + loginCommand + buildCommand + pushCommand;
+    return finalCommands;
+} 
