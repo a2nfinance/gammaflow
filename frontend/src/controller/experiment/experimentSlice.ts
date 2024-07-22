@@ -4,6 +4,7 @@ export type ExperimentState = {
     experiments: any[],
     currentExperiment: any,
     runs: any[],
+    selectedRun: any,
 }
 
 
@@ -11,11 +12,12 @@ const initialExperimentState: ExperimentState = {
     experiments: [],
     currentExperiment: {
         tags: [
-            {key: "github_repo", value: ""},
-            {key: "is_private_repo", value: "0"},
+            { key: "github_repo", value: "" },
+            { key: "is_private_repo", value: "0" },
         ]
     },
-    runs: []
+    runs: [],
+    selectedRun: null
 }
 
 export const experimentSlice = createSlice({
@@ -25,13 +27,16 @@ export const experimentSlice = createSlice({
         setList: (state: ExperimentState, action: PayloadAction<any[]>) => {
             state.experiments = action.payload
         },
-        setRuns:  (state: ExperimentState, action: PayloadAction<any[]>) => {
+        setRuns: (state: ExperimentState, action: PayloadAction<any[]>) => {
             state.runs = action.payload
         },
         setCurrentExperiment: (state: ExperimentState, action: PayloadAction<any>) => {
             state.currentExperiment = action.payload
         },
+        setSelectedRun: (state: ExperimentState, action: any) => {
+            state.selectedRun = action.payload
+        },
     }
 })
-export const { setList, setRuns, setCurrentExperiment } = experimentSlice.actions;
+export const { setList, setRuns, setCurrentExperiment, setSelectedRun } = experimentSlice.actions;
 export default experimentSlice.reducer;

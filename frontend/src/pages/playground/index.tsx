@@ -115,7 +115,7 @@ export default function Index() {
                                 <Divider />
                                 {
                                     (inputType === "1" || inputType === "3") ?
-                                        <Form.Item label="Input data" name={"input"}>
+                                        <Form.Item label="Input data" name={"input"} rules={[{ required: true, message: 'Missing input data'}]}>
                                             <Input addonBefore={<MdInput />} size="large" />
                                         </Form.Item>
                                         :

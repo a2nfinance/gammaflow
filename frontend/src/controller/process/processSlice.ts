@@ -16,7 +16,8 @@ export const actionNames = {
     buildAndPushDockerFileActions: "buildAndPushDockerFileActions",
     callInferenceServicesAction: "callInferenceServicesAction",
     createDeploymentInfoAction: "createDeploymentInfoAction",
-    getFileContentAction: "getFileContentAction"
+    getFileContentAction: "getFileContentAction",
+    deleteRunAction: "deleteRunAction"
 }
 
 
@@ -37,7 +38,8 @@ const initialState: Processes = {
     getFileContentAction: false,
     getExperimentsByCreatorAction: false,
     searchRunByExperimentIDAction: false,
-    getModelVersionsByNameAction: false
+    getModelVersionsByNameAction: false,
+    deleteRunAction: false
 }
 
 export const processesSlice = createSlice({

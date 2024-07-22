@@ -3,15 +3,18 @@ import { useExperiments } from "@/hooks/useExperiments"
 import { headStyle } from "@/theme/layout";
 import { Button, Card, Col, Form, Input, Modal, Row, Select, Space, Table, Tag } from "antd";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 import { NewRunForm } from "../run/Form";
 import { SearchOutlined } from "@ant-design/icons";
 import { MdHelp } from "react-icons/md";
+import { setSelectedRun } from "@/controller/experiment/experimentSlice";
+import { useDispatch } from "react-redux";
 
 export const Detail = () => {
-    const { runs } = useAppSelector(state => state.experiment);
-    const { searchRunByExperimentIDAction } = useAppSelector(state => state.process);
-    const { searchRunByExperimentId } = useExperiments();
+    const dispatch = useDispatch();
+    const { runs, selectedRun } = useAppSelector(state => state.experiment);
+    const { searchRunByExperimentIDAction, deleteRunAction } = useAppSelector(state => state.process);
+    const { searchRunByExperimentId, deleteRunById } = useExperiments();
     const router = useRouter();
     const [isModalOpen, setIsModalOpen] = useState(false);
     useEffect(() => {
@@ -56,7 +59,10 @@ export const Detail = () => {
             key: "action",
             render: (_, record, index) => (
                 <Space>
-                    <Button type="default">Delete</Button>
+                    <Button type="default" onClick={() => {
+                        dispatch(setSelectedRun(record));
+                        showConfirmModal();
+                    }}>Delete</Button>
                     <Button type="primary" onClick={() => router.push(`/run/${record.run_id}`)}>Details</Button>
                 </Space>
             )
@@ -81,6 +87,20 @@ export const Detail = () => {
     const onFinishSearchForm = (values: FormData) => {
         // Filter feature at here
     }
+
+    const [isConfirmModalOpen, setConfirmModalOpen] = useState(false);
+
+    const showConfirmModal = () => {
+        setConfirmModalOpen(true);
+    };
+
+    const handleConfirmOk = useCallback(() => {
+        deleteRunById(selectedRun).then(() => setConfirmModalOpen(false))
+    }, [selectedRun]);
+
+    const handleConfirmCancel = () => {
+        setConfirmModalOpen(false);
+    };
     return (
         <Card title="Expirement runs" headStyle={headStyle} extra={
             <Space>
@@ -89,13 +109,13 @@ export const Detail = () => {
 
         }>
             <Form
-            onFinish={onFinishSearchForm}
-            initialValues={{
-                "time_created": 0,
-                "state": 1,
-                "sort_by": 1
+                onFinish={onFinishSearchForm}
+                initialValues={{
+                    "time_created": 0,
+                    "state": 1,
+                    "sort_by": 1
 
-            }}>
+                }}>
                 <Row gutter={12}>
                     <Col span={10}>
                         <Form.Item>
@@ -143,6 +163,12 @@ export const Detail = () => {
             />
             <Modal style={{ minWidth: 1024 }} title="New experiment run" open={isModalOpen} footer={[]} onOk={handleOk} onCancel={handleCancel}>
                 <NewRunForm />
+            </Modal>
+            <Modal title="Do you want to delete this experiment run?" open={isConfirmModalOpen} footer={[]}  onOk={() => handleConfirmOk()} onCancel={handleConfirmCancel}>
+                        <Space>
+                            <Button type="primary" loading={deleteRunAction} onClick={() => handleConfirmOk()}>Yes</Button>
+                            <Button type="default" onClick={() => handleConfirmCancel()}>No</Button>
+                        </Space>
             </Modal>
         </Card>
 

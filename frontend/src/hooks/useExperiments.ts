@@ -1,4 +1,4 @@
-import { CREATE_EXPERIMENT_ENDPOINT, GET_EXPERIMENT_ENDPOINT, SEARCH_EXPERIMENT_ENDPOINT, SEARCH_RUNS } from "@/configs";
+import { CREATE_EXPERIMENT_ENDPOINT, DELETE_RUN_ENDPOINT, GET_EXPERIMENT_ENDPOINT, SEARCH_EXPERIMENT_ENDPOINT, SEARCH_RUNS } from "@/configs";
 import { createExperimentMessage } from "@/configs/messages";
 import { setCurrentExperiment, setList, setRuns } from "@/controller/experiment/experimentSlice";
 import { useAppDispatch } from "@/controller/hooks";
@@ -98,5 +98,23 @@ export const useExperiments = () => {
         }
         dispatch(updateActionStatus({actionName: actionNames.searchRunByExperimentIDAction, value: false}));
     }
-    return { getExperimentsByCreator, createExperiment, getExperimentById, searchRunByExperimentId };
+    const deleteRunById = async (run: any) => {
+        try {
+            dispatch(updateActionStatus({actionName: actionNames.deleteRunAction, value: true}));
+            await fetch(`${DELETE_RUN_ENDPOINT}`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    run_id: run.run_id,
+                })
+            })
+            await searchRunByExperimentId(run.experiment_id);
+        } catch (e) {
+            console.log(e);
+        }
+        dispatch(updateActionStatus({actionName: actionNames.deleteRunAction, value: false}));
+    }
+    return { getExperimentsByCreator, createExperiment, getExperimentById, searchRunByExperimentId, deleteRunById };
 };

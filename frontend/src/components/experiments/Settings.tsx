@@ -24,14 +24,14 @@ export const Settings = () => {
             <Card title="Create experiment" headStyle={headStyle}>
                 <Row gutter={12}>
                     <Col span={12}>
-                        <Form.Item name="name" label="Experiment name">
+                        <Form.Item name="name" label="Experiment name" rules={[{ required: true, message: 'Missing experiment name'}]} >
                             <Input addonBefore={<AiOutlineExperiment />} size='large' placeholder="Experiment name" />
                         </Form.Item>
 
-                        <Form.Item name={"github_repo"} label="Github repository" rules={[{ message: 'Incorrect contact github repo' }]}>
+                        <Form.Item name={"github_repo"} label="Github repository" rules={[{ required: true, message: 'Incorrect contact github repo', type: "url" }]}>
                             <Input type="text" addonBefore={<FaGithub />} placeholder="Github repository" size="large" />
                         </Form.Item>
-                        <Form.Item name={"is_private_repo"} label="Is private repository">
+                        <Form.Item name={"is_private_repo"} label="Is private repository" rules={[{ required: true, message: 'Missing github repository type'}]}>
                             <Radio.Group>
                                 <Radio value={1}>Yes</Radio>
                                 <Radio value={0}>No</Radio>
@@ -40,7 +40,7 @@ export const Settings = () => {
 
                     </Col>
                     <Col span={12}>
-                        <Form.Item name={"node_address"} label="Theta node address">
+                        <Form.Item name={"node_address"} label="Theta node address" rules={[{ required: true, message: 'Incorrect node address', type: "url" }]}>
                             <Input type="text" addonBefore={<PiComputerTower />} placeholder="IP/Domain address with protocol (https, http)" size="large" />
                         </Form.Item>
 

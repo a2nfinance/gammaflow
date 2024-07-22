@@ -40,7 +40,7 @@ export const DeploymentForm = () => {
 
                 <Row gutter={12}>
                     <Col span={12}>
-                        <Form.Item name={"model_name"} label={"Select AI model"}>
+                        <Form.Item name={"model_name"} label={"Select AI model"} rules={[{ required: true, message: 'Missing selected AI model'}]}>
                             <AutoComplete
                                 suffixIcon={<LuBrainCircuit />}
                                 size="large"
@@ -51,19 +51,19 @@ export const DeploymentForm = () => {
                         </Form.Item>
                     </Col>
                     <Col span={12}>
-                        <Form.Item name={"version"} label={"Version"}>
+                        <Form.Item name={"version"} label={"Version"} rules={[{ required: true, message: 'Missing version'}]}>
                             <Input addonBefore={<GoVersions />} size="large" />
                         </Form.Item>
                     </Col>
                 </Row>
                 <Row gutter={12}>
                     <Col span={12}>
-                        <Form.Item name={"docker_image"} label={"Docker image"}>
+                        <Form.Item name={"docker_image"} label={"Docker image"} rules={[{ required: true, message: 'Missing docker image' }]}>
                             <Input addonBefore={<FaDocker/>} size="large" />
                         </Form.Item>
                     </Col>
                     <Col span={12}>
-                        <Form.Item name={"inference_endpoint"} label={"Inference endpoint"}>
+                        <Form.Item name={"inference_endpoint"} label={"Inference endpoint"} rules={[{ required: true, message: 'Incorrect inference endpoint', type: "url" }]}>
                             <Input addonBefore={<TbApi/>} size="large" />
                         </Form.Item>
                     </Col>

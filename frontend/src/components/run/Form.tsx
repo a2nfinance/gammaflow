@@ -47,12 +47,12 @@ export const NewRunForm = () => {
                     }>
                         <Row gutter={8}>
                             <Col span={18}>
-                                <Form.Item label="Theta node address" name={"remote_address"}>
+                                <Form.Item label="Theta node address" name={"remote_address"} rules={[{ required: true, message: 'Incorrect node address', type: "url" }]}>
                                     <Input addonBefore={<PiComputerTower />} type="text" size="large" />
                                 </Form.Item>
                             </Col>
                             <Col span={6}>
-                                <Form.Item label="Port" name={"port"}>
+                                <Form.Item label="Port" name={"port"} rules={[{ required: true, message: 'Missing port'}]}>
                                     <Input type="number" size="large" />
                                 </Form.Item>
                             </Col>
@@ -66,10 +66,10 @@ export const NewRunForm = () => {
                                     label: "Github settings",
                                     children: <>
 
-                                        <Form.Item label="Repository" name={"github_repo"}>
+                                        <Form.Item label="Repository" name={"github_repo"} rules={[{ required: true, message: 'Incorrect github repository', type: "url" }]}>
                                             <Input addonBefore={<FaGithub />} type="text" size="large" />
                                         </Form.Item>
-                                        <Form.Item label="Traning script path" name={"training_script_path"}>
+                                        <Form.Item label="Traning script path" name={"training_script_path"} rules={[{ required: true, message: 'Missing script path'}]}>
                                             <Input addonBefore={<IoIosCode />} type="text" size="large" />
                                         </Form.Item>
                                         <Row gutter={12}>
@@ -88,7 +88,7 @@ export const NewRunForm = () => {
                                         </Row>
                                         <Row gutter={12}>
                                             <Col span={12}>
-                                                <Form.Item name={"is_private_repo"} label="Is private repository">
+                                                <Form.Item name={"is_private_repo"} label="Is private repository" rules={[{ required: true, message: 'Missing github repository type'}]}>
                                                     <Radio.Group>
                                                         <Radio value={"1"}>Yes</Radio>
                                                         <Radio value={"0"}>No</Radio>
