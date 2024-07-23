@@ -16,7 +16,7 @@ import pandas as pd
 def initialize_mlflow():
     os.environ["MLFLOW_ENABLE_SYSTEM_METRICS_LOGGING"] = "true"
     os.environ["MLFLOW_HTTP_REQUEST_MAX_RETRIES"] = "5"
-    mlflow.set_tracking_uri("http://34.125.25.91:8080")
+    mlflow.set_tracking_uri("https://tracking-server.a2n.finance")
     mlflow.set_experiment(experiment_id="560267043823286999")
 
 # Function to parse arguments
